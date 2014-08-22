@@ -75,6 +75,15 @@ class Uri {
     protected $baseURL;
 
     /**
+     * $query_string
+     * holds teh array of query string from get requests
+     * @access protected
+     * @var array
+     **/
+    protected $query_string;
+
+
+    /**
      * __construct
      * Sets reuqestedPath and rootPath, ROOT must be defined
      * @access public
@@ -82,6 +91,8 @@ class Uri {
      */
     public function __construct() {
         $this->requestedPath = $_SERVER['REQUEST_URI'];
+	$this->requestedPath = (strstr($this->requestedPath, '?') ? substr($this->requestedPath, 0, strpos($this->requestedPath, '?')) : $this->requestedPath);
+	$this->query_string = $_GET;
         if(defined('PUBLIC_PATH')):
             $this->rootPath = PUBLIC_PATH;
         else:
@@ -134,6 +145,17 @@ class Uri {
         self::init()->baseURL = $url;
     }
 
+    /**
+     * getQueryString()
+     * return the query string
+     *
+     * @access public
+     * @return array
+     **/
+    public function getQueryString()
+    {
+	    return $this->query_string;
+    }
     /**
      * getPath()
      * if is set requestedPath object reutns, otherwise false is returned 
