@@ -16,4 +16,4 @@ shipped composer.phar:
 	cd my/project/dir
 	git clone git://github.com/ngfw/skeleton-app.git .
 	php composer.phar self-update
-	php composer.phar installed
+	php composer.phar install
