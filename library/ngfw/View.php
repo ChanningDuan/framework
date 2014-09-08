@@ -133,7 +133,7 @@ class View {
     public function loadLayout() {
         if ($this->layout):
             try {
-                $layoutFile = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFile . '.phtml';
+                $layoutFile = (defined('PUBLIC_PATH') ? PUBLIC_PATH : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFile . '.phtml';
                 if (!file_exists($layoutFile)):
                     throw new Exception($layoutFile);
                 endif;
@@ -159,7 +159,7 @@ class View {
     public function render() {
         if ($this->render):
             try {
-                $viewFile = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . '.phtml';
+                $viewFile = (defined('PUBLIC_PATH') ? PUBLIC_PATH : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . '.phtml';
                 if (!file_exists($viewFile)):
                     throw new Exception($viewFile);
                 endif;
