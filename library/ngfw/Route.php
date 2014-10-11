@@ -263,32 +263,27 @@ class Route {
      * @return array
      */
     public static function getRequests() {
-	    self::determineRoute();
-	    $uri = new \ngfw\Uri();
-	    if (!self::init()->request)
-	    {
-		    //$path = \ngfw\Uri::init()->getPathArray();
-		    $path = $uri->getPathArray();
-		    if (is_array($path) and !empty($path))
-		    {
-			    foreach (array_slice($path, 1) as $key => $value)
-			    {
-				    self::init()->setRequest($key, $value);
-			    }
-		    }
-
-	    }
-	    if(is_array($uri->getQueryString()))
-	    {
-		    $tmp = self::init()->request;
-		    foreach($uri->getQueryString() as $key=> $value)
-		    {
-			    //dont overwrite request vars with query string
-			    if(!$tmp[$key])
-				    self::init()->setRequest($key, $value);
-		    }
-	    }
-	    return self::init()->request;
+        self::determineRoute();
+        $uri = new \ngfw\Uri();
+        if (!self::init()->request):
+            //$path = \ngfw\Uri::init()->getPathArray();
+            $path = $uri->getPathArray();
+            if (is_array($path) and !empty($path)):
+                foreach (array_slice($path, 1) as $key => $value):
+                    self::init()->setRequest($key, $value);
+                endforeach;
+            endif;
+        endif;
+        if(is_array($uri->getQueryString())):
+            $tmp = self::init()->request;
+            foreach($uri->getQueryString() as $key=> $value):
+                //dont overwrite request vars with query string
+                if(!isset($tmp[$key])):
+                    self::init()->setRequest($key, $value);
+                endif;
+            endforeach;
+        endif;
+        return self::init()->request;
     }
 
     /**
