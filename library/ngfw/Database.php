@@ -4,22 +4,22 @@
  * ngfw
  * ---
  * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -33,13 +33,12 @@ namespace ngfw;
  */
 class Database extends \PDO
 {
-    
+
     /**
      * Default CHARSET
      */
-    
     const CHARSET = 'UTF8';
-    
+
     /**
      * $options
      * Database Parameters
@@ -47,7 +46,7 @@ class Database extends \PDO
      * @var array
      */
     private $options;
-    
+
     /**
      * __construct
      * sets options and Connections to Database
@@ -70,7 +69,7 @@ class Database extends \PDO
             $this->options = $options;
         endif;
     }
-    
+
     /**
      * connect
      * Connects to database
@@ -90,7 +89,7 @@ class Database extends \PDO
             endif;
         }
     }
-    
+
     /**
      * createdsn
      * Creates Data Source Name
@@ -102,7 +101,7 @@ class Database extends \PDO
         endif;
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
     }
-    
+
     /**
      * fetchAll
      * Fetches database and returns result as array
@@ -126,7 +125,7 @@ class Database extends \PDO
             return false;
         }
     }
-    
+
     /**
      * fetchRow
      * Retuns single row from database and return result as array
@@ -150,13 +149,14 @@ class Database extends \PDO
             return false;
         }
     }
-    
+
     /**
      * run
      * Executes Query
      * @param string $sql
      * @param array $data
-     * @return mixed
+     * @access public
+     * @return array|int|boolean
      */
     public function query($sql, $data=null) {
         try {
@@ -176,7 +176,7 @@ class Database extends \PDO
             return false;
         }
     }
-    
+
     /**
      * escape, quote() method alias
      * @param  string $value
@@ -186,7 +186,7 @@ class Database extends \PDO
     public function escape($value, $parameter_type = \PDO::PARAM_STR) {
         return $this->quote($value, $parameter_type);
     }
-    
+
     /**
      * quote via parent class
      * @param  string $value
@@ -199,7 +199,7 @@ class Database extends \PDO
         }
         return substr(parent::quote($value, $parameter_type), 1, -1);
     }
-    
+
     /**
      * Get last insert id
      * @param  string $name
@@ -208,7 +208,7 @@ class Database extends \PDO
     public function lastInsertId($name = null) {
         return parent::lastInsertId($name);
     }
-    
+
     /**
      * ping
      * Pings Database
