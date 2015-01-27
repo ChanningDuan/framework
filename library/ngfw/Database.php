@@ -30,9 +30,11 @@ class Database extends \PDO
      * @access public
      * @param type $options
      */
-    public function __construct($options) {
+    public function __construct($options, $autoConnect = true) {
         $this->options = $options;
-        $this->connect($this->options);
+        if($autoConnect):
+            $this->connect($this->options);
+        endif;
     }
     
     /**
@@ -42,6 +44,9 @@ class Database extends \PDO
      * @param array $options
      */
     private function connect($options) {
+        if(!isset($options) or empty($options)):
+            $options = $this->options;
+        endif;
         $dsn = $this->createdsn($options);
         $attrs = !isset($options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $options['charset']);
         try {
