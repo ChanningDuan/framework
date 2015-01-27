@@ -1,10 +1,34 @@
 <?php
+
+/**
+ * ngfw
+ * ---
+ * Copyright (c) 2014, Nick Gejadze
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the 
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included 
+ * in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
 namespace ngfw;
 
 /**
  * Database
  * @package ngfw
- * @version 1.0
+ * @version 1.1
  * @author Nick Gejadze
  */
 class Database extends \PDO
@@ -25,32 +49,40 @@ class Database extends \PDO
     private $options;
     
     /**
-     * __construct()
-     * sets Opetions and Connections to Database
+     * __construct
+     * sets options and Connections to Database
      * @access public
      * @param type $options
      */
-    public function __construct($options, $autoConnect = true) {
-        $this->options = $options;
-        if($autoConnect):
+    public function __construct($options = null, $autoConnect = true) {
+        $this->setOptions( $options );
+        if($autoConnect and isset($this->options) and !empty($this->options)):
             $this->connect($this->options);
+        endif;
+    }
+
+    /**
+     * Set options object
+     * @param array $options database connection settings
+     */
+    private function setOptions($options){
+        if(!isset($options) or empty($options)):
+            $this->options = $options;
         endif;
     }
     
     /**
-     * connect()
+     * connect
      * Connects to database
      * @access private
      * @param array $options
      */
     private function connect($options) {
-        if(!isset($options) or empty($options)):
-            $options = $this->options;
-        endif;
-        $dsn = $this->createdsn($options);
-        $attrs = !isset($options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $options['charset']);
+        $this->setOptions( $options );
+        $dsn = $this->createdsn();
+        $attrs = !isset($this->options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $this->options['charset']);
         try {
-            parent::__construct($dsn, $options['username'], $options['password'], $attrs);
+            parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         }
         catch(PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
@@ -62,16 +94,17 @@ class Database extends \PDO
     /**
      * createdsn
      * Creates Data Source Name
-     * @param array $options
-     * @access private
      * @return string
      */
-    private function createdsn($options) {
-        return $options['dbtype'] . ':host=' . $options['host'] . ';port=' . $options['port'] . ';dbname=' . $options['dbname'];
+    private function createdsn() {
+        if(!isset($this->options) or empty($this->options)):
+            return false;
+        endif;
+        return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
     }
     
     /**
-     * fetchAll()
+     * fetchAll
      * Fetches database and returns result as array
      * @param string $sql
      * @access public
@@ -95,7 +128,7 @@ class Database extends \PDO
     }
     
     /**
-     * fetchRow()
+     * fetchRow
      * Retuns single row from database and return result as array
      * @param string $sql
      * @access public
@@ -119,7 +152,7 @@ class Database extends \PDO
     }
     
     /**
-     * run()
+     * run
      * Executes Query
      * @param string $sql
      * @access public
@@ -177,7 +210,7 @@ class Database extends \PDO
     }
     
     /**
-     * ping()
+     * ping
      * Pings Database
      * @access public
      * @return boolean
