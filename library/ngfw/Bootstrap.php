@@ -36,6 +36,13 @@ class Bootstrap {
 
     /**
      * $_controllerLoaded
+     * Holds path to template directory
+     * @var mixed
+     */
+    protected $_ViewTemplate = false;
+
+    /**
+     * $_controllerLoaded
      * Holds boolean value of controller loaded status
      * @access protected
      * @var boolean
@@ -68,6 +75,14 @@ class Bootstrap {
     }
 
     /**
+     * Set Template path object
+     * @param string $templatePath 
+     */
+    protected function setTemplate($templatePath){
+        $this->_ViewTemplate = $templatePath;
+    }
+
+    /**
      * _initStorage()
      * Instantiates \ngfw\Registry
      * @see \ngfw\Registry
@@ -93,7 +108,9 @@ class Bootstrap {
                 $app = new $className;
             else:
                 \ngfw\Route::redirect(\ngfw\Uri::baseUrl() . "error/notfound", "404");
-                exit();
+            endif;
+            if($this->_ViewTemplate):
+                $app->set("template", $this->_ViewTemplate);
             endif;
             $this->_controllerLoaded = true;
             $method = \ngfw\Route::getAction() . "Action";
