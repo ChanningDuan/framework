@@ -107,7 +107,11 @@ class Bootstrap {
             if (class_exists($className)):
                 $app = new $className;
             else:
-                \ngfw\Route::redirect(\ngfw\Uri::baseUrl() . "error/notfound", "404");
+                if (DEVELOPMENT_ENVIRONMENT):
+                    App::debug("Error: Controller ".$className." does not exists");
+                else:
+                    \ngfw\Route::redirect(\ngfw\Uri::baseUrl() . "en/error/notfound", "404");  
+                endif;
             endif;
             if($this->_ViewTemplate):
                 $app->set("template", $this->_ViewTemplate);
