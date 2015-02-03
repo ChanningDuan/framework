@@ -22,17 +22,22 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 namespace ngfw;
 
 /**
  * Httpclient
  * @package ngfw
- * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.1
+ * @author Nick Gejadze
  */
 class Httpclient {
+
+    /**
+     * $fakeXMLHttpRequest 
+     * @access protected
+     * @var boolean
+     */
+    protected $fakeXMLHttpRequest = false;
 
     /**
      * $uri
@@ -63,13 +68,6 @@ class Httpclient {
     protected $userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13";
 
     /**
-     * $cookie
-     * @access protected
-     * @var string
-     */
-    protected $cookie;
-
-    /**
      * $postData
      * @access protected
      * @var string
@@ -78,10 +76,16 @@ class Httpclient {
 
     /**
      * $postDataArray
-     * @access array
+     * @access protected
      * @var type 
      */
     protected $postDataArray;
+
+     /**
+     * $requestHeadersArray
+     * stores requests headers used in CURLOPT_HTTPHEADER
+     */
+    protected $requestHeadersArray = array();
 
     /**
      * __construct()
@@ -118,6 +122,15 @@ class Httpclient {
     }
 
     /**
+    * addRequestHeader
+    * Adds a header to the request
+    * header_str is a fully qualified header, like "Content-type: text/plain"
+    */
+    public function addRequestHeader($header_str) {
+      $this->requestHeadersArray[] = $header_str;
+    }
+
+    /**
      * setUri()
      * Sets URI object
      * @access public
@@ -125,7 +138,7 @@ class Httpclient {
      * @return object \ngfw\Httpclient
      */
     public function setUri($uri = null) {
-        $this->uri = str_replace("&amp;", "&", urldecode(trim($uri)));
+        $this->uri = str_replace("&amp;", "&", trim($uri));
         return $this;
     }
 
@@ -173,31 +186,15 @@ class Httpclient {
     }
 
     /**
-     * setupCookie()
-     * Create TMP directory Under root dir if does not exsist and sames cookie as temporary file
-     * @access private
-     * @return void
+     * fakeXMLHttpRequest()
+     * 
+     * @access public
+     * @param  boolean $bool
+     * @return object $this 
      */
-    private function setupCookie() {
-        if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES")):
-            if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP")):
-                @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP", 0777);
-            endif;
-            @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", 0777);
-        endif;
-        $this->cookie = tempnam($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", "CURLCOOKIE");
-    }
-
-    /**
-     * cleanUpCookie()
-     * removes Created cookie
-     * Removes Created cookie file
-     * @access private
-     */
-    private function cleanUpCookie() {        
-        if(isset($this->cookie)):
-            unlink($this->cookie);
-        endif;
+    public function fakeXMLHttpRequest($bool=true){
+        $this->fakeXMLHttpRequest = true;
+        return $this;
     }
 
     /**
@@ -208,15 +205,21 @@ class Httpclient {
      * @return array
      */
     public function request() {
-        $this->setupCookie();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $this->uri);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
+
         if (isset($this->postData) and !empty($this->postData)):
             curl_setopt($ch, CURLOPT_POST, count($this->postDataArray));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
         endif;
+
+        if($this->fakeXMLHttpRequest) {
+          $this->addRequestHeader("X_REQUESTED_WITH: xmlhttprequest");
+        } 
+        if(count($this->requestHeadersArray) > 0 ) {
+               curl_setopt($ch, CURLOPT_HTTPHEADER, $this->requestHeadersArray);
+        }
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_ENCODING, "");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -228,7 +231,6 @@ class Httpclient {
         $response['info'] = curl_getinfo($ch);
         curl_close($ch);
         unset($ch);
-        $this->cleanUpCookie();
         if ($response['info']['http_code'] == 301 || $response['info']['http_code'] == 302):
             $headers = get_headers($response['info']['url']);
             foreach ($headers as $value) :
@@ -247,4 +249,3 @@ class Httpclient {
         endif;
     }
 }
-
