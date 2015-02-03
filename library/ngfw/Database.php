@@ -66,7 +66,7 @@ class Database extends \PDO
      * @param array $options database connection settings
      */
     private function setOptions($options){
-        if(!isset($options) or empty($options)):
+        if(isset($options) or !empty($options)):
             $this->options = $options;
         endif;
     }
