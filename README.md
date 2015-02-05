@@ -3,7 +3,7 @@ Installation
 
 With Composer (Recommended)
 
-	Composer create-project -sdev --repository-url="http://ng.framework.im/" ngfw/skeleton-app .
+	composer create-project -sdev --repository-url="http://ng.framework.im/" ngfw/skeleton-app .
 
 <dl>
   <dt>assuming you have installed Composer globally</dt>
