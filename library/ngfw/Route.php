@@ -38,7 +38,6 @@ class Route {
     /**
      * $instance
      * Holds Class Instance
-     * @access protected 
      * @var object
      */
     private static $instance;
@@ -46,7 +45,6 @@ class Route {
     /**
      * $controller
      * Holds controller name
-     * @access protected 
      * @var string
      */
     protected $controller;
@@ -54,7 +52,6 @@ class Route {
     /**
      * $action
      * Holds action name
-     * @access protected 
      * @var string
      */
     protected $action;
@@ -62,7 +59,6 @@ class Route {
     /**
      * $routes
      * Holds routes
-     * @access protected 
      * @var array
      */
     protected $routes;
@@ -70,7 +66,6 @@ class Route {
     /**
      * $routeSelected
      * identifies if route is selected
-     * @access protected 
      * @var bool
      */
     protected $routeSelected;
@@ -78,7 +73,6 @@ class Route {
     /**
      * $defaultController
      * Default Controller, Default value "Index"
-     * @access protected 
      * @var string
      */
     protected $defaultController = "Index";
@@ -86,7 +80,6 @@ class Route {
     /**
      * $defaultAction
      * Default Action, Default value "Index"
-     * @access protected 
      * @var string
      */
     protected $defaultAction = "Index";
@@ -94,7 +87,6 @@ class Route {
     /**
      * $request
      * Holds all requests
-     * @access public
      * @var array
      */
     public $request = array();
@@ -102,7 +94,6 @@ class Route {
     /**
      * init()
      * if $instance is not set starts new \ngfw\Route and return instance
-     * @access public
      * @return object
      */
     public static function init() {
@@ -115,7 +106,6 @@ class Route {
     /**
      * setController()
      * Sets Controller Object
-     * @access private
      * @param string $controller
      * @return void
      */
@@ -130,7 +120,6 @@ class Route {
     /**
      * setAction()
      * Sets Action Object
-     * @access private
      * @param string $action
      * @return void
      */
@@ -145,7 +134,6 @@ class Route {
     /**
      * setRequest()
      * Sets Request Object
-     * @access private
      * @param string $key
      * @param string $value
      * @return void
@@ -157,7 +145,6 @@ class Route {
     /**
      * addRoute()
      * Adds Route to Application
-     * @access public
      * @param array $route
      * @return boolean
      */
@@ -179,7 +166,6 @@ class Route {
     /**
      * determineRoute()
      * is route is not selected and route is added, determines route
-     * @access private
      * @return bool
      */
     private static function determineRoute() {
@@ -227,7 +213,6 @@ class Route {
     /**
      * getController()
      * Returns Controller
-     * @access public
      * @return string
      */
     public static function getController() {
@@ -243,7 +228,6 @@ class Route {
     /**
      * getAction()
      * Returns Action
-     * @access public
      * @return string
      */
     public static function getAction() {
@@ -259,14 +243,12 @@ class Route {
     /**
      * getRequests()
      * Returns requests
-     * @access public
      * @return array
      */
     public static function getRequests() {
         self::determineRoute();
         $uri = new \ngfw\Uri();
         if (!self::init()->request):
-            //$path = \ngfw\Uri::init()->getPathArray();
             $path = $uri->getPathArray();
             if (is_array($path) and !empty($path)):
                 foreach (array_slice($path, 1) as $key => $value):
@@ -277,7 +259,7 @@ class Route {
         if(is_array($uri->getQueryString())):
             $tmp = self::init()->request;
             foreach($uri->getQueryString() as $key=> $value):
-                //dont overwrite request vars with query string
+                //don't overwrite request vars with query string
                 if(!isset($tmp[$key])):
                     self::init()->setRequest($key, $value);
                 endif;

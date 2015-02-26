@@ -22,66 +22,60 @@
  * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
+
 namespace ngfw;
 
 /**
  * Httpclient
  * @package ngfw
- * @version 1.1
- * @author Nick Gejadze
+ * @version 1.2
+ * @copyright (c) 2014, Nick Gejadze
  */
 class Httpclient {
 
     /**
-     * $fakeXMLHttpRequest 
-     * @access protected
-     * @var boolean
-     */
-    protected $fakeXMLHttpRequest = false;
-
-    /**
      * $uri
-     * @access protected
      * @var string
      */
     protected $uri;
 
     /**
      * $maxredirects;
-     * @access protected
      * @var int
      */
     protected $maxredirects = 0;
 
     /**
      * $timeout
-     * @access protected
      * @var int
      */
     protected $timeout = 30;
 
     /**
      * $userAgent
-     * @access protected
      * @var string
      */
     protected $userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13";
 
     /**
+     * $cookie
+     * @var string
+     */
+    protected $cookie;
+
+    /**
      * $postData
-     * @access protected
      * @var string
      */
     protected $postData;
 
     /**
      * $postDataArray
-     * @access protected
      * @var type 
      */
     protected $postDataArray;
 
-     /**
+    /**
      * $requestHeadersArray
      * stores requests headers used in CURLOPT_HTTPHEADER
      */
@@ -90,7 +84,6 @@ class Httpclient {
     /**
      * __construct()
      * Sets $uri, $maxredirects and $timeout objects if passed
-     * @access public
      * @param string $uri
      * @param int $maxredirects
      * @param int $timeout
@@ -122,10 +115,10 @@ class Httpclient {
     }
 
     /**
-    * addRequestHeader
-    * Adds a header to the request
-    * header_str is a fully qualified header, like "Content-type: text/plain"
-    */
+     * addRequestHeader
+     * Adds a header to the request
+     * header_str is a fully qualified header, like "Content-type: text/plain"
+     */
     public function addRequestHeader($header_str) {
       $this->requestHeadersArray[] = $header_str;
     }
@@ -133,19 +126,17 @@ class Httpclient {
     /**
      * setUri()
      * Sets URI object
-     * @access public
      * @param string $uri
      * @return object \ngfw\Httpclient
      */
     public function setUri($uri = null) {
-        $this->uri = str_replace("&amp;", "&", trim($uri));
+        $this->uri = str_replace("&amp;", "&", urldecode(trim($uri)));
         return $this;
     }
 
     /**
      * setMaxredirects()
      * sets Max Redirects object, default 0
-     * @access public
      * @param int $maxredirects
      * @return object \ngfw\Httpclient
      */
@@ -157,7 +148,6 @@ class Httpclient {
     /**
      * setTimeout()
      * Sets timeout object
-     * @access public
      * @param int $timeout
      * @return \ngfw\Httpclient
      */
@@ -170,7 +160,6 @@ class Httpclient {
      * post()
      * sets post object
      * @param array $array
-     * @access public
      * @return \ngfw\Httpclient
      */
     public function post($array) {
@@ -186,37 +175,48 @@ class Httpclient {
     }
 
     /**
-     * fakeXMLHttpRequest()
-     * 
-     * @access public
-     * @param  boolean $bool
-     * @return object $this 
+     * setupCookie()
+     * Create TMP directory Under root dir if does not exsist and sames cookie as temporary file
+     * @return void
      */
-    public function fakeXMLHttpRequest($bool=true){
-        $this->fakeXMLHttpRequest = true;
-        return $this;
+    private function setupCookie() {
+        if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES")):
+            if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP")):
+                @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP", 0777);
+            endif;
+            @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", 0777);
+        endif;
+        $this->cookie = tempnam($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", "CURLCOOKIE");
+    }
+
+    /**
+     * cleanUpCookie()
+     * removes Created cookie
+     * Removes Created cookie file
+     * @return  void
+     */
+    private function cleanUpCookie() {        
+        if(isset($this->cookie)):
+            unlink($this->cookie);
+        endif;
     }
 
     /**
      * request()
      * Requests uri via Curl, if 301 or 302 found, follows the link
      * @todo add other mothods
-     * @access public
      * @return array
      */
     public function request() {
+        $this->setupCookie();
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $this->uri);
-
+        curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
         if (isset($this->postData) and !empty($this->postData)):
             curl_setopt($ch, CURLOPT_POST, count($this->postDataArray));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
         endif;
-
-        if($this->fakeXMLHttpRequest) {
-          $this->addRequestHeader("X_REQUESTED_WITH: xmlhttprequest");
-        } 
         if(count($this->requestHeadersArray) > 0 ) {
                curl_setopt($ch, CURLOPT_HTTPHEADER, $this->requestHeadersArray);
         }
@@ -231,6 +231,7 @@ class Httpclient {
         $response['info'] = curl_getinfo($ch);
         curl_close($ch);
         unset($ch);
+        $this->cleanUpCookie();
         if ($response['info']['http_code'] == 301 || $response['info']['http_code'] == 302):
             $headers = get_headers($response['info']['url']);
             foreach ($headers as $value) :
