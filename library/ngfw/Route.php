@@ -4,22 +4,22 @@
  * ngfw
  * ---
  * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -38,7 +38,7 @@ class Route {
     /**
      * $instance
      * Holds Class Instance
-     * @access protected 
+     * @access protected
      * @var object
      */
     private static $instance;
@@ -46,7 +46,7 @@ class Route {
     /**
      * $controller
      * Holds controller name
-     * @access protected 
+     * @access protected
      * @var string
      */
     protected $controller;
@@ -54,7 +54,7 @@ class Route {
     /**
      * $action
      * Holds action name
-     * @access protected 
+     * @access protected
      * @var string
      */
     protected $action;
@@ -62,7 +62,7 @@ class Route {
     /**
      * $routes
      * Holds routes
-     * @access protected 
+     * @access protected
      * @var array
      */
     protected $routes;
@@ -70,7 +70,7 @@ class Route {
     /**
      * $routeSelected
      * identifies if route is selected
-     * @access protected 
+     * @access protected
      * @var bool
      */
     protected $routeSelected;
@@ -78,7 +78,7 @@ class Route {
     /**
      * $defaultController
      * Default Controller, Default value "Index"
-     * @access protected 
+     * @access protected
      * @var string
      */
     protected $defaultController = "Index";
@@ -86,7 +86,7 @@ class Route {
     /**
      * $defaultAction
      * Default Action, Default value "Index"
-     * @access protected 
+     * @access protected
      * @var string
      */
     protected $defaultAction = "Index";
@@ -284,7 +284,7 @@ class Route {
 		    foreach($uri->getQueryString() as $key=> $value)
 		    {
 			    //dont overwrite request vars with query string
-			    if(!$tmp[$key])
+			    if ( ! isset($tmp[$key]) )
 				    self::init()->setRequest($key, $value);
 		    }
 	    }
@@ -327,10 +327,10 @@ class Route {
                     $msg = '302 Found';
                     break;
             endswitch;
-        endif;        
+        endif;
         if (isset($msg)):
             header('HTTP/1.1 ' . $msg);
-        endif;        
+        endif;
         header("Location: ". $url);
         exit();
     }
