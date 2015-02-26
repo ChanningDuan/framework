@@ -4,22 +4,22 @@
  * ngfw
  * ---
  * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -69,8 +69,8 @@ class Uri {
     /**
      * $baseURL
      * Holds base URL of application
-     * @access protected 
-     * @var string 
+     * @access protected
+     * @var string
      */
     protected $baseURL;
 
@@ -92,7 +92,7 @@ class Uri {
     public function __construct() {
         $this->requestedPath = $_SERVER['REQUEST_URI'];
 	$this->requestedPath = (strstr($this->requestedPath, '?') ? substr($this->requestedPath, 0, strpos($this->requestedPath, '?')) : $this->requestedPath);
-	$this->query_string = $_REQUEST;
+	$this->query_string = $_GET;
         if(defined('PUBLIC_PATH')):
             $this->rootPath = PUBLIC_PATH;
         else:
@@ -124,7 +124,7 @@ class Uri {
             $subdirectories = null;
             if(isset(self::init()->subdirectories) and is_array(self::init()->subdirectories) and !empty(self::init()->subdirectories)):
                 $subdirectories = implode("/",self::init()->subdirectories)."/";
-            endif;    
+            endif;
             if(!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""):
                 self::setBaseUrl('http://' . $_SERVER['HTTP_HOST'] . "/".$subdirectories);
             else:
@@ -158,7 +158,7 @@ class Uri {
     }
     /**
      * getPath()
-     * if is set requestedPath object reutns, otherwise false is returned 
+     * if is set requestedPath object reutns, otherwise false is returned
      * @access public
      * @return string|boolean
      */
@@ -171,7 +171,7 @@ class Uri {
 
     /**
      * getPathArray()
-     * Returns path as array     
+     * Returns path as array
      * e.g.:  /category/music/page/123 will be trnaslated to array("category" => "music", "page" => "123")
      * @see pathToArray()
      * @access public
@@ -214,7 +214,7 @@ class Uri {
             foreach (self::init()->subdirectories as $key => $directory):
                 unset($pathChunks[$key]);
             endforeach;
-            $pathChunks = array_values($pathChunks);            
+            $pathChunks = array_values($pathChunks);
             if (!empty($pathChunks[0])):
                 return $pathChunks;
             endif;
