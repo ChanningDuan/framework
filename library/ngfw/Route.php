@@ -307,6 +307,7 @@ class Route {
         endif;        
         if (isset($msg)):
             header('HTTP/1.1 ' . $msg);
+            exit();
         endif;        
         header("Location: ". $url);
         exit();
