@@ -24,6 +24,7 @@
  */
 
 namespace ngfw;
+use ngfw\Exception;
 
 /**
  * Query
@@ -41,6 +42,8 @@ class Query {
      * @var string
      */
     protected $query = '';
+    protected $orderBy;
+    protected $limit;
 
     /**
      * $select
@@ -167,7 +170,7 @@ class Query {
      * Starts select statement
      * @access public
      * @param string $select Default '*' , The array of strings to select from database
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function select($select = "*") {
         $this->select = $select;
@@ -189,13 +192,13 @@ class Query {
      * @access public     
      * @param string $table Table name you want to insert into
      * @param array $data Array of strings, example array("fieldname" => "value")
-     * @return object \ngfw\Query()
-     * @throws \ngfw\Exception
+     * @return object ngfw\Query()
+     * @throws Exception
      */
     public function insert($table, $data) {
         $this->table = $table;
         if (!isset($data) or !is_array($data)):
-            throw new \ngfw\Exception("Insert Values are required to build query");
+            throw new Exception("Insert Values are required to build query");
         endif;
         $this->insertData = $data;
         if (isset($this->table) and isset($this->insertData)):
@@ -213,14 +216,14 @@ class Query {
      * Builds update statement
      * @access public     
      * @param string $table Table name you want to update
-     * @param type $data Array of strings that needs to be updated, example array("fieldname" => "value");
-     * @return object \ngfw\Query()
-     * @throws \ngfw\Exception
+     * @param array $data Array of strings that needs to be updated, example array("fieldname" => "value");
+     * @return object ngfw\Query()
+     * @throws Exception
      */
     public function update($table, $data) {
         $this->table = $table;
         if (!isset($data) or !is_array($data)):
-            throw new \ngfw\Exception("Update Values are required to build query");
+            throw new Exception("Update Values are required to build query");
         endif;
         $this->updateData = $data;
         if (isset($this->table) and isset($this->updateData)):
@@ -239,7 +242,7 @@ class Query {
      * delete()
      * Starts delete statement 
      * @access public     
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function delete() {
         $this->deleteTable = true;
@@ -254,12 +257,12 @@ class Query {
      * Sets from object
      * @access public     
      * @param string|array $from Table name as a string or Array of strings, example: array("table1 a", "table2 b", "table3 c")
-     * @return object \ngfw\Query()
-     * @throws \ngfw\Exception
+     * @return object ngfw\Query()
+     * @throws Exception
      */
     public function from($from) {
         if (!isset($from)):
-            throw new \ngfw\Exception("FROM is Required to build query");
+            throw new Exception("FROM is Required to build query");
         endif;
         $this->from = $from;
         if (isset($this->from)):
@@ -282,7 +285,7 @@ class Query {
      * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function join($table, $clause) {
         $k = (count($this->join) > 0) ? count($this->join) + 1 : 0;
@@ -298,7 +301,7 @@ class Query {
      * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function innerJoin($table, $clause) {
         $k = (count($this->innerJoin) > 0) ? count($this->innerJoin) + 1 : 0;
@@ -315,7 +318,7 @@ class Query {
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $value string value to be replaced in where statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function leftJoin($table, $clause, $value = null) {
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
@@ -332,7 +335,7 @@ class Query {
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $value string value to be replaced in where statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function rightJoin($table, $clause, $value = null) {
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
@@ -347,7 +350,7 @@ class Query {
      * Sets where object         
      * @param string $where where statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in where statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function where($where, $value = null) {
         $where = $this->escapeField($where);
@@ -361,7 +364,7 @@ class Query {
      * Sets and where object     
      * @param string $where where statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in where statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function andWhere($where, $value = null) {
         $where = $this->escapeField($where);
@@ -375,7 +378,7 @@ class Query {
      * Sets or where object
      * @param string $where where statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in where statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function orWhere($where, $value = null) {
         $where = $this->escapeField($where);
@@ -389,7 +392,7 @@ class Query {
      * Set having object     
      * @param string $condition having statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in having statement
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function having($condition, $value = null) {
         $condition = $this->escapeField($condition);
@@ -406,7 +409,7 @@ class Query {
      * group()
      * Sets groupBy object     
      * @param string $field Name of field to group by
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function group($field) {
         $this->groupBy = $field;
@@ -425,7 +428,7 @@ class Query {
      * @access public     
      * @param string $field fieldname to order by, exampe "Fieldname" or "RAND(" . date("Ymd") . ")"
      * @param string $clause order clause, example: "DESC" or "ASC"
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function order($field, $clause = null) {
         if (strpos($field, "(") === false):
@@ -438,14 +441,14 @@ class Query {
             $this->query.="ORDER BY " . end($this->orderBy) . " ";
         endif;
         return $this;
-    }
+    }/** @noinspection PhpUndefinedNamespaceInspection */
 
     /**
      * limit()
      * Sets limit object
      * @access public     
      * @param int $int Must be numeric 
-     * @return object \ngfw\Query()
+     * @return object ngfw\Query()
      */
     public function limit($int) {
         $this->limit = $int;
