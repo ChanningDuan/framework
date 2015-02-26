@@ -74,6 +74,7 @@ class Database extends \PDO
      * connect
      * Connects to database
      * Connects to database
+     * @access private
      * @param array $options
      */
     private function connect($options) {
@@ -151,7 +152,7 @@ class Database extends \PDO
     }
 
     /**
-     * run
+     * run()
      * Executes Query
      * @param string $sql
      * @param array $data
