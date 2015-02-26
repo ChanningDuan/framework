@@ -97,7 +97,7 @@ class Bootstrap {
             endif;
             $this->_controllerLoaded = true;
             $method = \ngfw\Route::getAction() . "Action";
-            if (is_callable($app, $method)):
+            if (is_callable(array($app, $method))):
                 call_user_func(array($app, $method));
             else:
                 if(defined('DEVELOPMENT_ENVIRONMENT')):
