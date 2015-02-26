@@ -43,7 +43,7 @@ class Database extends \PDO
     /**
      * $options
      * Database Parameters
-     * @access private
+     * Database Parameters
      * @var array
      */
     private $options;
@@ -51,7 +51,7 @@ class Database extends \PDO
     /**
      * __construct
      * sets options and Connections to Database
-     * @access public
+     * sets options and Connections to Database
      * @param type $options
      */
     public function __construct($options = null, $autoConnect = true) {
@@ -74,7 +74,7 @@ class Database extends \PDO
     /**
      * connect
      * Connects to database
-     * @access private
+     * Connects to database
      * @param array $options
      */
     private function connect($options) {
@@ -107,8 +107,8 @@ class Database extends \PDO
      * fetchAll
      * Fetches database and returns result as array
      * @param string $sql
-     * @access public
-     * @return array|boolean
+     * @param string $sql
+     * @return mixed
      */
     public function fetchAll($sql) {
         try {
@@ -131,8 +131,8 @@ class Database extends \PDO
      * fetchRow
      * Retuns single row from database and return result as array
      * @param string $sql
-     * @access public
-     * @return array|boolean
+     * @param string $sql
+     * @return mixed
      */
     public function fetchRow($sql) {
         try {
@@ -155,13 +155,13 @@ class Database extends \PDO
      * run
      * Executes Query
      * @param string $sql
-     * @access public
-     * @return array|int|boolean
+     * @param array $data
+     * @return mixed
      */
-    public function query($sql) {
+    public function query($sql, $data=null) {
         try {
             $pdostmt = $this->prepare($sql);
-            if ($pdostmt->execute() !== false):
+            if ($pdostmt->execute($data) !== false):
                 if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", $sql)):
                     return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
                 elseif (preg_match("/^(" . implode("|", array("DELETE", "INSERT", "UPDATE")) . ") /i", $sql)):
@@ -212,7 +212,7 @@ class Database extends \PDO
     /**
      * ping
      * Pings Database
-     * @access public
+     * Pings Database
      * @return boolean
      */
     public function ping() {
