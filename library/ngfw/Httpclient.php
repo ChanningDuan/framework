@@ -130,7 +130,7 @@ class Httpclient {
      * @return object \ngfw\Httpclient
      */
     public function setUri($uri = null) {
-        $this->uri = str_replace("&amp;", "&", urldecode(trim($uri)));
+        $this->uri = str_replace("&amp;", "&", trim($uri));
         return $this;
     }
 
