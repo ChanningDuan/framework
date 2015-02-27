@@ -30,7 +30,7 @@ use ngfw\Exception;
  * Configuration
  * @package ngfw
  * @subpackage library
- * @version 1.2.0
+ * @version 1.2.1
  * @copyright (c) 2015, Nick Gejadze
  */
 class Configuration {
