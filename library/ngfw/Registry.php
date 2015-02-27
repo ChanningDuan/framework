@@ -3,7 +3,7 @@
 /**
  * ngfw
  * Version 0.1 
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -29,8 +29,8 @@ namespace ngfw;
  * Registry
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Registry extends \ArrayObject {
 

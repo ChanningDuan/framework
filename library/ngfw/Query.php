@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -28,35 +28,43 @@ use ngfw\Exception;
 
 /**
  * Query
+ * @todo  add missing methods
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Query {
 
     /**
      * $query
      * Holds full query string
-     * @access protected
      * @var string
      */
     protected $query = '';
+
+    /**
+     * Hold orderby value
+     * @var string
+     */
     protected $orderBy;
+
+    /**
+     * holds limit value
+     * @var mixed
+     */
     protected $limit;
 
     /**
      * $select
      * Holds select variables, can be string or array
-     * @access private
-     * @var array|string
+     * @var mixed
      */
     private $select;
 
     /**
      * $table
      * Holds table name
-     * @access private
      * @var string
      */
     private $table;
@@ -64,7 +72,6 @@ class Query {
     /**
      * $insertData
      * Holds inset data
-     * @access private
      * @var array
      */
     private $insertData;
@@ -72,7 +79,6 @@ class Query {
     /**
      * $updateData
      * Holds update data
-     * @access private
      * @var array
      */
     private $updateData;
@@ -80,7 +86,6 @@ class Query {
     /**
      * $deleteTable
      * Holds boolean value if delete query is requested or not
-     * @access private
      * @var boolean
      */
     private $deleteTable;
@@ -88,15 +93,13 @@ class Query {
     /**
      * $from
      * Holds from string or array
-     * @access private 
-     * @var string|array
+     * @var mixed
      */
     private $from;
 
     /**
      * $join
      * Holds join data as an array
-     * @access private
      * @var array
      */
     private $join;
@@ -104,7 +107,6 @@ class Query {
     /**
      * $innerJoin
      * Holds innerJoin data as an array
-     * @access private
      * @var array
      */
     private $innerJoin;
@@ -112,7 +114,6 @@ class Query {
     /**
      * $leftJoin
      * Holds leftJoin data as an array
-     * @access private
      * @var array
      */
     private $leftJoin;
@@ -120,7 +121,6 @@ class Query {
     /**
      * $rightJoin
      * Holds rightJoin data as an array
-     * @access private
      * @var array
      */
     private $rightJoin;
@@ -128,7 +128,6 @@ class Query {
     /**
      * $where
      * Holds where clause
-     * @access private
      * @var string
      */
     private $where;
@@ -136,7 +135,6 @@ class Query {
     /**
      * $andWhere
      * Holds where clause
-     * @access private
      * @var array
      */
     private $andWhere;
@@ -144,7 +142,6 @@ class Query {
     /**
      * $orWhere
      * Holds where clause
-     * @access private
      * @var array
      */
     private $orWhere;
@@ -152,7 +149,6 @@ class Query {
     /**
      * $groupBy
      * Holds groupdBy clause
-     * @access private
      * @var string
      */
     private $groupBy;
@@ -160,7 +156,6 @@ class Query {
     /**
      * $having
      * Holds having clause
-     * @access private
      * @var string
      */
     private $having;
@@ -168,7 +163,6 @@ class Query {
     /**
      * select()
      * Starts select statement
-     * @access public
      * @param string $select Default '*' , The array of strings to select from database
      * @return object ngfw\Query()
      */
@@ -189,7 +183,6 @@ class Query {
     /**
      * insert()
      * Builds insert statement 
-     * @access public     
      * @param string $table Table name you want to insert into
      * @param array $data Array of strings, example array("fieldname" => "value")
      * @return object ngfw\Query()
@@ -214,7 +207,6 @@ class Query {
     /**
      * update()
      * Builds update statement
-     * @access public     
      * @param string $table Table name you want to update
      * @param array $data Array of strings that needs to be updated, example array("fieldname" => "value");
      * @return object ngfw\Query()
@@ -241,7 +233,6 @@ class Query {
     /**
      * delete()
      * Starts delete statement 
-     * @access public     
      * @return object ngfw\Query()
      */
     public function delete() {
@@ -255,8 +246,7 @@ class Query {
     /**
      * from()
      * Sets from object
-     * @access public     
-     * @param string|array $from Table name as a string or Array of strings, example: array("table1 a", "table2 b", "table3 c")
+     * @param mixed $from Table name as a string or Array of strings, example: array("table1 a", "table2 b", "table3 c")
      * @return object ngfw\Query()
      * @throws Exception
      */
@@ -282,7 +272,6 @@ class Query {
     /**
      * join()
      * Sets join object
-     * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @return object ngfw\Query()
@@ -298,7 +287,6 @@ class Query {
     /**
      * innerJoin()
      * Sets inner join object 
-     * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @return object ngfw\Query()
@@ -314,7 +302,6 @@ class Query {
     /**
      * leftKoin()
      * Sets left join object 
-     * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $value string value to be replaced in where statement
@@ -331,7 +318,6 @@ class Query {
     /**
      * rightJoin()
      * Sets right join object
-     * @access public     
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $value string value to be replaced in where statement
@@ -425,7 +411,6 @@ class Query {
     /**
      * order()
      * Sets orderBy Object     
-     * @access public     
      * @param string $field fieldname to order by, exampe "Fieldname" or "RAND(" . date("Ymd") . ")"
      * @param string $clause order clause, example: "DESC" or "ASC"
      * @return object ngfw\Query()
@@ -446,7 +431,6 @@ class Query {
     /**
      * limit()
      * Sets limit object
-     * @access public     
      * @param int $int Must be numeric 
      * @return object ngfw\Query()
      */
@@ -461,7 +445,6 @@ class Query {
     /**
      * escapeField
      * will identify and escape first field
-     * @access private
      * @param string $str example a.fieldname 
      * @return string
      */
@@ -482,7 +465,6 @@ class Query {
     /**
      * escapeValue
      * will escape string or array
-     * @access private
      * @param mixed $value
      * @return mixed
      */
@@ -504,7 +486,6 @@ class Query {
      * Alias to __toString() Function.
      * Returns query as a string
      * @see __toString()
-     * @access public
      * @return string
      */
     public function getQuery() {
@@ -514,7 +495,6 @@ class Query {
     /**
      * __toString()
      * Returns query as a string
-     * @access public
      * @return string 
      */
     public function __toString() {

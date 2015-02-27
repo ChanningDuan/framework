@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,13 +24,14 @@
  */
 
 namespace ngfw;
+use ngfw\Exception;
 
 /**
  * Configuration
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Configuration {
 
@@ -44,7 +45,7 @@ class Configuration {
      */
     public static function loadConfigFile($filename) {
         if (!isset($filename) or !is_string($filename)):
-            throw new \ngfw\Exception("Filename is Required For Configuration");
+            throw new Exception("Filename is Required For Configuration");
         endif;
         $ini = parse_ini_file($filename);
         $ini_array = self::convertINIToArray($ini);
@@ -69,7 +70,6 @@ class Configuration {
      *        ["controller"] => "Index"
      *        ["action"] => "Index"
      * }}}}
-     * @access private
      * @param array $ini_arr
      * @return array
      */

@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,54 +24,48 @@
  */
 
 namespace ngfw;
-
+use ngfw\Httpclient;
 /**
  * Webquery
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Webquery {
 
     /**
      * $select
-     * @access protected
      * @var string
      */
     protected $select;
 
     /**
      * $from
-     * @access protected
      * @var string
      */
     protected $from;
 
     /**
      * $where
-     * @access protected
      * @var array
      */
     protected $where;
 
     /**
      * $whereKey
-     * @access protected
      * @var int
      */
     protected $whereKey = 0;
 
     /**
      * $httpclient
-     * @access protected
      * @var object
      */
     protected $httpclient;
 
     /**
      * $dom
-     * @access protecteds
      * @var object
      */
     protected $dom;
@@ -79,18 +73,16 @@ class Webquery {
     /**
      * __construct()
      * Sets Httpclient and DOMDocument objects
-     * @access public
      * @return void
      */
     public function __construct() {
-        $this->httpclient = new \ngfw\Httpclient();
+        $this->httpclient = new Httpclient();
         $this->dom = new \DOMDocument();
     }
 
     /**
      * select()
      * Sets select object
-     * @access public
      * @param string $select
      * @return \ngfw\Webquery
      */
@@ -102,7 +94,6 @@ class Webquery {
     /**
      * from()
      * passes uri param to Httpclient::setUri()
-     * @access public
      * @see Httpclient::setUri()
      * @param string $uri
      * @return \ngfw\Webquery
@@ -117,7 +108,6 @@ class Webquery {
     /**
      * where()
      * Sets where object
-     * @access public
      * @param string $where
      * @param string $value
      * @return \ngfw\Webquery
@@ -134,7 +124,6 @@ class Webquery {
     /**
      * execute()
      * builds and runs query, result returned as array
-     * @access public
      * @return array
      */
     public function execute() {
