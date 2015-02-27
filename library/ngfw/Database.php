@@ -28,7 +28,7 @@ namespace ngfw;
 /**
  * Database
  * @package ngfw
- * @version 1.2.1
+ * @version 1.2.2
  * @author Nick Gejadze
  */
 class Database extends \PDO

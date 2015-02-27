@@ -30,7 +30,7 @@ use ngfw\Exception;
  * Cookie
  * @package ngfw
  * @subpackage library
- * @version 1.2.1
+ * @version 1.2.2
  * @copyright (c) 2015, Nick Gejadze
  */
 class Cookie {
