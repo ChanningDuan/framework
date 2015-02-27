@@ -29,7 +29,7 @@ namespace ngfw;
  * Session
  * @package ngfw
  * @subpackage library
- * @version 1.2.0
+ * @version 1.2.1
  * @copyright (c) 2015, Nick Gejadze
  */
 class Session {
@@ -37,7 +37,6 @@ class Session {
     /**
      * $instance
      * Holds Class Instance
-     * @access protected 
      * @var object
      */
     protected static $instance = null;
@@ -45,7 +44,6 @@ class Session {
     /**
      * init()
      * if $instance is not set and headers_sent() == false, starts new session and starts new \ngfw\Session and return instance
-     * @access public
      * @return object
      */
     public static function init() {
@@ -61,7 +59,6 @@ class Session {
     /**
      * set()
      * sets PHP session
-     * @access public
      * @param string $key
      * @param string $value
      * @return void
@@ -74,8 +71,7 @@ class Session {
     /**
      * get()
      * Gets PHP Session, Returns false if Session not set
-     * @access public
-	 * @param string $key
+     * @param string $key
      * @return mixed
      */
     public static function get($key) {

@@ -30,7 +30,7 @@ use ngfw\Registry;
  * Header
  * @package ngfw
  * @subpackage library
- * @version 1.2.0
+ * @version 1.2.1
  * @copyright (c) 2015, Nick Gejadze
  */
 class Header
@@ -44,7 +44,7 @@ class Header
      * @param  int $code HTTP response code
      * @return int response code
      */
-    public static function responseCode($code) {
+    public static function responseCode($code = null) {
         if (!function_exists('http_response_code')):
             if (isset($code) and is_numeric($code)):
                 switch ($code) {
