@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -28,8 +28,8 @@ namespace ngfw;
 /**
  * Httpclient
  * @package ngfw
- * @version 1.2
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Httpclient {
 

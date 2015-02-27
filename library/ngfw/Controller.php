@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,13 +24,14 @@
  */
 
 namespace ngfw;
-
+use ngfw\Route;
+use ngfw\View;
 /**
  * Controller
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Controller {
 
@@ -46,37 +47,34 @@ class Controller {
      * check if init() method is declared and runs
      * @see \ngfw\Route
      * @see \ngfw\View
-     * @access public
      * @return void
      */
     public function __construct() {
-        $className = \ngfw\Route::getController();
-        $method = \ngfw\Route::getAction();
-        $this->view = new \ngfw\View($className, $method);
+        $className = Route::getController();
+        $method = Route::getAction();
+        $this->view = new View($className, $method);
         if (method_exists($this, 'init')):
             $this->init();
         endif;
     }
 
     /**
-     * set()
+     * setViewObject()
      * Sets View object
      * @param type $name
      * @param type $value
      * @return void
-     * @access public
      */
-    public function set($name, $value) {
+    public function setViewObject($name, $value) {
         $this->view->set($name, $value);
     }
 
     /**
      * __destruct()
      * loads layout from view
-     * @access public
      * @return void
      */
-    public function __destruct() {
+    public function startRander() {
         $this->view->loadLayout();
     }
 

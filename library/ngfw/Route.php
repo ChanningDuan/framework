@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,14 +24,14 @@
  */
 
 namespace ngfw;
-
-
+use ngfw\Header;
+use ngfw\Uri;
 /**
  * Route
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Route {
 
@@ -172,7 +172,7 @@ class Route {
         if (!isset(self::init()->routeSelected)):
             $routes = self::init()->routes;
             if (isset($routes) and is_array($routes)):
-                $pathArray = \ngfw\Uri::init()->getPathChunks();
+                $pathArray = Uri::init()->getPathChunks();
                 foreach ($routes as $route):
                     if (!isset(self::init()->routeSelected)):
                         $routeArray = explode('/', trim($route['route'], '/'));
@@ -218,7 +218,7 @@ class Route {
     public static function getController() {
         self::determineRoute();
         if (!isset(self::init()->controller)):
-            $path = \ngfw\Uri::init()->getPathArray();
+            $path = Uri::init()->getPathArray();
             $controller = @key($path);
             self::init()->setController($controller);
         endif;
@@ -233,7 +233,7 @@ class Route {
     public static function getAction() {
         self::determineRoute();
         if (!isset(self::init()->action)):
-            $path = \ngfw\Uri::init()->getPathArray();
+            $path = Uri::init()->getPathArray();
             $action = @reset($path);
             self::init()->setAction($action);
         endif;
@@ -247,7 +247,7 @@ class Route {
      */
     public static function getRequests() {
         self::determineRoute();
-        $uri = new \ngfw\Uri();
+        $uri = new Uri();
         if (!self::init()->request):
             $path = $uri->getPathArray();
             if (is_array($path) and !empty($path)):
@@ -276,41 +276,7 @@ class Route {
      * @return boolean
      */
     public static function redirect($url = '/', $status = '302') {
-        if (headers_sent()):
-            return false;
-        endif;
-        if (is_numeric($status)):
-            switch ($status):
-                case '301':
-                    $msg = '301 Moved Permanently';
-                    break;
-                case '307':
-                    $msg = '307 Temporary Redirect';
-                    break;
-                case '401':
-                    $msg = '401 Access Denied';
-                    break;
-                case '403':
-                    $msg = '403 Request Forbidden';
-                    break;
-                case '404':
-                    $msg = '404 Not Found';
-                    break;
-                case '405':
-                    $msg = '405 Method Not Allowed';
-                    break;
-                case '302':
-                default:
-                    $msg = '302 Found';
-                    break;
-            endswitch;
-        endif;        
-        if (isset($msg)):
-            header('HTTP/1.1 ' . $msg);
-            exit();
-        endif;        
-        header("Location: ". $url);
-        exit();
+        Header::redirect($url, $status);        
     }
 
 }

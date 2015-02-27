@@ -3,23 +3,23 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * copyright (c) 2015, Nick Gejadze
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -55,18 +55,18 @@ class Database extends \PDO
      * @param type $options
      */
     public function __construct($options = null, $autoConnect = true) {
-        $this->setOptions( $options );
-        if($autoConnect and isset($this->options) and !empty($this->options)):
+        $this->setOptions($options);
+        if ($autoConnect and isset($this->options) and !empty($this->options)):
             $this->connect($this->options);
         endif;
     }
-
+    
     /**
      * Set options object
      * @param array $options database connection settings
      */
-    private function setOptions($options){
-        if(isset($options) or !empty($options)):
+    private function setOptions($options) {
+        if (isset($options) or !empty($options)):
             $this->options = $options;
         endif;
     }
@@ -78,7 +78,7 @@ class Database extends \PDO
      * @param array $options
      */
     private function connect($options) {
-        $this->setOptions( $options );
+        $this->setOptions($options);
         $dsn = $this->createdsn();
         $attrs = !isset($this->options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $this->options['charset']);
         try {
@@ -97,7 +97,7 @@ class Database extends \PDO
      * @return string
      */
     private function createdsn() {
-        if(!isset($this->options) or empty($this->options)):
+        if (!isset($this->options) or empty($this->options)):
             return false;
         endif;
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
@@ -158,7 +158,7 @@ class Database extends \PDO
      * @param array $data
      * @return mixed
      */
-    public function query($sql, $data=null) {
+    public function query($sql, $data = null) {
         try {
             $pdostmt = $this->prepare($sql);
             if ($pdostmt->execute($data) !== false):

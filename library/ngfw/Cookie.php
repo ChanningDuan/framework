@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,20 +24,20 @@
  */
 
 namespace ngfw;
+use ngfw\Exception;
 
 /**
  * Cookie
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Cookie {
 
     /**
      * $instance
      * Holds Class instance
-     * @access protected
      * @var object
      */
     protected static $instance = null;
@@ -45,7 +45,6 @@ class Cookie {
     /**
      * $name
      * Holds Cookie Name
-     * @access protected
      * @var string
      */
     protected $name;
@@ -53,7 +52,6 @@ class Cookie {
     /**
      * $value
      * Holds Cookie Value
-     * @access protected
      * @var string
      */
     protected $value;
@@ -61,7 +59,6 @@ class Cookie {
     /**
      * $expire
      * Holds expiration date, Default value 0
-     * @access protected
      * @var string
      */
     protected $expire = 0;
@@ -69,7 +66,6 @@ class Cookie {
     /**
      * $path
      * Holds Cookie path, Default "/"
-     * @access protected
      * @var string
      */
     protected $path = "/";
@@ -77,7 +73,6 @@ class Cookie {
     /**
      * $domain
      * Holds domain value, default null
-     * @access protected
      * @var string
      */
     protected $domain = null;
@@ -85,7 +80,6 @@ class Cookie {
     /**
      * $secure
      * coolie should only be transmitter over a secure HTTPS
-     * @access protected
      * @var bool
      */
     protected $secure = false;
@@ -93,7 +87,6 @@ class Cookie {
     /**
      * $httponly
      * When True the cookie will be made accessible only throuth the HTTP protocol
-     * @access protected
      * @var boot
      */
     protected $httponly = false;
@@ -101,7 +94,6 @@ class Cookie {
     /**
      * init()
      * if $instance is not set starts new \ngfw\Cookie and return instance
-     * @access public
      * @return object
      */
     public static function init() {
@@ -130,7 +122,6 @@ class Cookie {
      * @param bool $secure
      * @param bool $httponly
      * @throws Exception
-     * @access public
      * @return void
      */
     public static function set($name, $value, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null) {
@@ -166,7 +157,6 @@ class Cookie {
      * get()
      * Gets Cookie
      * @param string $name
-     * @access public
      * @return boolean|string
      */
     public static function get($name) {
@@ -180,7 +170,6 @@ class Cookie {
      * setName()
      * sets name object
      * @param string $name
-     * @access public
      * @return void
      */
     public function setName($name) {
@@ -191,7 +180,6 @@ class Cookie {
      * setValue()
      * sets value object
      * @param string $value
-     * @access public
      * @return void
      */
     public function setValue($value) {
@@ -202,7 +190,6 @@ class Cookie {
      * setExpire()
      * sets expire object
      * @param string $expire
-     * @access public
      * @return void
      */
     public function setExpire($expire) {
@@ -213,7 +200,6 @@ class Cookie {
      * setPath()
      * sets path object
      * @param string $path
-     * @access public
      * @return void
      */
     public function setPath($path) {
@@ -224,7 +210,6 @@ class Cookie {
      * setDomain
      * sets domain object
      * @param string $domain
-     * @access public
      * @return void
      */
     public function setDomain($domain) {
@@ -235,7 +220,6 @@ class Cookie {
      * setSecure
      * sets secure object
      * @param bool $secure
-     * @access public
      * @return void
      */
     public function setSecure($secure) {
@@ -246,7 +230,6 @@ class Cookie {
      * setHttponly
      * set httponly object     * 
      * @param type $httponly
-     * @access public
      * @return void
      */
     public function setHttponly($httponly) {
@@ -257,7 +240,6 @@ class Cookie {
      * save()
      * Sets Cookie
      * @throws Exception
-     * @access public
      * @return void
      */
     public function save() {

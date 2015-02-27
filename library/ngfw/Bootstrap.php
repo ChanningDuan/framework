@@ -3,67 +3,75 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * copyright (c) 2015, Nick Gejadze
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace ngfw;
+use ngfw\Header;
+use ngfw\Route;
+use ngfw\Exception;
 
 /**
  * Bootstrap
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.0
+ * @copyright (c) 2015, Nick Gejadze
  */
-class Bootstrap {
-
+class Bootstrap
+{
+    
     /**
      * $_controllerLoaded
      * Holds path to template directory
      * @var mixed
      */
-    protected $_ViewTemplate = false;
-
+    protected $_viewTemplate = false;
+    
     /**
      * $_controllerLoaded
      * Holds boolean value of controller loaded status
-     * @access protected
      * @var boolean
      */
     protected $_controllerLoaded = false;
 
     /**
+     * $_controllerObject
+     * Holds controller instance 
+     * @var onject
+     */
+    protected $_controllerObject;
+    
+    /**
      * __construct()
      * Instantiates new Autoloader and all methods
      * @see initMethods()
-     * @access public
      * @return void
      */
     public function __construct() {
         $this->initMethods();
     }
-
+    
     /**
      * initMethods()
      * Calls Every Class method with starts with "_" OR "__"
-     * @access private
      * @return void
      */
     private function initMethods() {
@@ -72,63 +80,43 @@ class Bootstrap {
                 call_user_func(array($this, $method));
             endif;
         endforeach;
+        $this->loadController();
     }
-
+    
     /**
      * Set Template path object
-     * @param string $templatePath 
+     * @param string $templatePath
      */
-    protected function setTemplate($templatePath){
-        $this->_ViewTemplate = $templatePath;
+    protected function setTemplate($templatePath) {
+        $this->_viewTemplate = $templatePath;
     }
-
-    /**
-     * _initStorage()
-     * Instantiates \ngfw\Registry
-     * @see \ngfw\Registry
-     * @access private
-     * @return void
-     */
-    private function _initStorage() {
-        \ngfw\Registry::init();
-    }
-
+    
     /**
      * _loadController()
      * Loads application controller
      * @see \ngfw\Route
      * @throws \ngfw\Exception
-     * @access private
      * @return void
      */
-    private function _loadController() {
+    private function loadController() {
         if (!$this->_controllerLoaded):
-            $className = \ngfw\Route::getController() . "Controller";
-            if (class_exists($className)):
-                $app = new $className;
+            $controllerTitle = Route::getController() . "Controller";
+            if (class_exists($controllerTitle)):
+                $this->_controllerObject = new $controllerTitle;
             else:
-                if (DEVELOPMENT_ENVIRONMENT):
-                    App::debug("Error: Controller ".$className." does not exists");
-                else:
-                    \ngfw\Route::redirect(\ngfw\Uri::baseUrl() . "en/error/notfound", "404");  
-                endif;
+                throw new Exception(sprintf('The requested Controller "%s" does not exist.', $controllerTitle));
             endif;
-            if($this->_ViewTemplate):
-                $app->set("template", $this->_ViewTemplate);
+            if ($this->_viewTemplate):
+                $this->_controllerObject->setViewObject("template", $this->_viewTemplate);
             endif;
             $this->_controllerLoaded = true;
-            $method = \ngfw\Route::getAction() . "Action";
-            if (is_callable(array($app, $method))):
-                call_user_func(array($app, $method));
+            $method = Route::getAction() . "Action";
+            if (is_callable(array($this->_controllerObject, $method))):
+                call_user_func(array($this->_controllerObject, $method));
+                $this->_controllerObject->startRander();
             else:
-                if(defined('DEVELOPMENT_ENVIRONMENT')):
-                    if (DEVELOPMENT_ENVIRONMENT):
-                        throw new \ngfw\Exception(sprintf('The required method "%s" does not exist for %s', $method, $className));
-                        exit();
-                    endif;
-                endif;
+                throw new Exception(sprintf('The requested method "%s" does not exist in %s.', $method, $controllerTitle));
             endif;
         endif;
     }
-
 }
