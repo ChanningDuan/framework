@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -24,29 +24,45 @@
  */
 
 namespace ngfw;
+use ngfw\Header;
+use ngfw\Route;
+use ngfw\Exception;
 
 /**
  * Bootstrap
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
-class Bootstrap {
+class Bootstrap
+{
+
+    /**
+     * $_controllerLoaded
+     * Holds path to template directory
+     * @var mixed
+     */
+    protected $_viewTemplate = false;
 
     /**
      * $_controllerLoaded
      * Holds boolean value of controller loaded status
-     * @access protected
      * @var boolean
      */
     protected $_controllerLoaded = false;
 
     /**
+     * $_controllerObject
+     * Holds controller instance
+     * @var onject
+     */
+    protected $_controllerObject;
+
+    /**
      * __construct()
      * Instantiates new Autoloader and all methods
      * @see initMethods()
-     * @access public
      * @return void
      */
     public function __construct() {
@@ -56,7 +72,6 @@ class Bootstrap {
     /**
      * initMethods()
      * Calls Every Class method with starts with "_" OR "__"
-     * @access private
      * @return void
      */
     private function initMethods() {
@@ -65,17 +80,15 @@ class Bootstrap {
                 call_user_func(array($this, $method));
             endif;
         endforeach;
+        $this->loadController();
     }
 
     /**
-     * _initStorage()
-     * Instantiates \ngfw\Registry
-     * @see \ngfw\Registry
-     * @access private
-     * @return void
+     * Set Template path object
+     * @param string $templatePath
      */
-    private function _initStorage() {
-        \ngfw\Registry::init();
+    protected function setTemplate($templatePath) {
+        $this->_viewTemplate = $templatePath;
     }
 
     /**
@@ -83,31 +96,27 @@ class Bootstrap {
      * Loads application controller
      * @see \ngfw\Route
      * @throws \ngfw\Exception
-     * @access private
      * @return void
      */
-    private function _loadController() {
+    private function loadController() {
         if (!$this->_controllerLoaded):
-            $className = \ngfw\Route::getController() . "Controller";
-            if (class_exists($className)):
-                $app = new $className;
+            $controllerTitle = Route::getController() . "Controller";
+            if (class_exists($controllerTitle)):
+                $this->_controllerObject = new $controllerTitle;
             else:
-                \ngfw\Route::redirect(\ngfw\Uri::baseUrl() . "error/notfound", "404");
-                exit();
+                throw new Exception(sprintf('The requested Controller "%s" does not exist.', $controllerTitle));
+            endif;
+            if ($this->_viewTemplate):
+                $this->_controllerObject->setViewObject("template", $this->_viewTemplate);
             endif;
             $this->_controllerLoaded = true;
-            $method = \ngfw\Route::getAction() . "Action";
-            if (is_callable(array($app, $method))):
-                call_user_func(array($app, $method));
+            $method = Route::getAction() . "Action";
+            if (is_callable(array($this->_controllerObject, $method))):
+                call_user_func(array($this->_controllerObject, $method));
+                $this->_controllerObject->startRander();
             else:
-                if(defined('DEVELOPMENT_ENVIRONMENT')):
-                    if (DEVELOPMENT_ENVIRONMENT):
-                        throw new \ngfw\Exception(sprintf('The required method "%s" does not exist for %s', $method, $className));
-                        exit();
-                    endif;
-                endif;
+                throw new Exception(sprintf('The requested method "%s" does not exist in %s.', $method, $controllerTitle));
             endif;
         endif;
     }
-
 }

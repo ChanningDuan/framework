@@ -3,7 +3,7 @@
 /**
  * ngfw
  * Version 0.1 
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -29,21 +29,19 @@ namespace ngfw;
  * Registry
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Registry extends \ArrayObject {
 
     /**
      * Holds Class Instance
-     * @access protected 
      * @var object
      */
     private static $instance = null;
 
     /**
      * if $instance is not set starts new \ngfw\Registry and return instance
-     * @access public 
      * @return object Class instance
      */
     public static function init() {
@@ -57,7 +55,6 @@ class Registry extends \ArrayObject {
      * Sets key and value in registry
      * @param mixed $index Unique key identifier
      * @param mixed $value Value for the specified index
-     * @access public
      * @return void No value is returned.
      */
     public static function set($index, $value) {
@@ -67,7 +64,6 @@ class Registry extends \ArrayObject {
     /**
      * Gets value for key from Registry
      * @param mixed $index Unique key identifier
-     * @access public
      * @return mixed The value at the specified index or FALSE.
      */
     public static function get($index) {
@@ -91,7 +87,6 @@ class Registry extends \ArrayObject {
 
     /**
      * Returns instance object
-     * @access public
      * @return object returns singelton registry object
      */
     public static function getInstance() {

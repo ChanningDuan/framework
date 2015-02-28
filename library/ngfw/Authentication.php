@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -24,61 +24,55 @@
  */
 
 namespace ngfw;
+use ngfw\Session;
 
 /**
  * Authentication
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Authentication {
 
     /**
      * $dbAdapter
-     * @access protected
      * @var object
      */
     protected $dbAdapter;
 
     /**
      * @table
-     * @access protected
      * @var string
      */
     protected $table;
 
     /**
      * $identityColumn
-     * @access protected
      * @var string
      */
     protected $identityColumn;
 
     /**
      * $identity
-     * @access protected
      * @var string
      */
     protected $identity;
 
     /**
      * $credentialColumn
-     * @access protected
      * @var string
      */
     protected $credentialColumn;
 
     /**
      * $credential
-     * @access protected
      * @var string
      */
     protected $credential;
 
     /**
      * $sessionName
-     * @access protected
      * @var string
      */
     protected $sessionName = "NG_AUTH";
@@ -94,7 +88,6 @@ class Authentication {
      * @see setDBTable()
      * @see setIdentityColum()
      * @see setCredentialColumn()
-     * @access public
      * @return \ngfw\Authentication
      */
     public function __construct($dbAdapter = null, $table = null, $identityColumn = null, $credentialColumn = null) {
@@ -116,7 +109,6 @@ class Authentication {
     /**
      * setDBAdapter()
      * if isset $dbAdapter sets dbAdapter object otherwise returns false
-     * @access public
      * @param object $dbAdapter
      * @return boolean|\ngfw\Authentication
      */
@@ -131,7 +123,6 @@ class Authentication {
     /**
      * setDBTable()
      * if isset $table sets Table object otherwise returns false
-     * @access public
      * @param string $table
      * @return boolean|\ngfw\Authentication
      */
@@ -147,7 +138,6 @@ class Authentication {
     /**
      * setIdentityColumn()
      * if isset $identityColumn sets identityColumn object otherwise returns false
-     * @access public
      * @param string $identityColumn
      * @return boolean|\ngfw\Authentication
      */
@@ -162,7 +152,6 @@ class Authentication {
     /**
      * setIdentity()
      * if isset $identity sets identity object otherwise returns false
-     * @access public
      * @param string $identity
      * @return boolean|\ngfw\Authentication
      */
@@ -177,7 +166,6 @@ class Authentication {
     /**
      * setCredentialColumn()
      * sets credential column object
-     * @access public
      * @param string $credentialColumn
      * @return boolean|\ngfw\Authentication
      */
@@ -192,7 +180,6 @@ class Authentication {
     /**
      * setCredential
      * sets credential object
-     * @access public
      * @param string $credential
      * @return boolean|\ngfw\Authentication
      */
@@ -207,11 +194,10 @@ class Authentication {
     /**
      * isValid()
      * Checks if user is authenticated
-     * @access public
      * @return boolean
      */
     public function isValid() {
-        $auth = \ngfw\Session::get($this->sessionName);
+        $auth = Session::get($this->sessionName);
         if ($auth):
             return true;
         endif;
@@ -233,7 +219,6 @@ class Authentication {
     /**
      * checkUserInDB()
      * Builds select query to check user in DB and returns result as an array
-     * @access private
      * @return array|false
      */
     private function checkUserInDB() {
@@ -246,23 +231,21 @@ class Authentication {
     /**
      * setSessionIdentity
      * sets identity in the session
-     * @access private
      * @param array $identity
      */
     private function setSessionIdentity($identity) {
-        \ngfw\Session::set($this->sessionName, serialize($identity));
+        Session::set($this->sessionName, serialize($identity));
     }
 
     /**
      * getIdentity()
      * checks if user is authenticated and return user data from session
      * @see isValid()
-     * @access public
      * @return array|boolean
      */
     public function getIdentity() {
         if ($this->isValid()):
-            return unserialize(\ngfw\Session::get($this->sessionName));
+            return unserialize(Session::get($this->sessionName));
         endif;
         return false;
     }
@@ -270,11 +253,10 @@ class Authentication {
     /**
      * clearIdentity()
      * sets auth session to null
-     * @access public
      * @return void
      */
     public function clearIdentity() {
-        \ngfw\Session::set($this->sessionName, NULL);
+        Session::set($this->sessionName, NULL);
     }
 
 }

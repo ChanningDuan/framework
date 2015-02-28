@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"),
@@ -28,74 +28,86 @@ namespace ngfw;
 /**
  * Database
  * @package ngfw
- * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @author Nick Gejadze
  */
-class Database extends \PDO {
+class Database extends \PDO
+{
+
     /**
      * Default CHARSET
      */
-
-    const CHARSET = 'UTF-8';
+    const CHARSET = 'UTF8';
 
     /**
      * $options
      * Database Parameters
-     * @access private
+     * Database Parameters
      * @var array
      */
     private $options;
 
     /**
-     * __construct()
-     * sets Opetions and Connections to Database
-     * @access public
+     * __construct
+     * sets options and Connections to Database
+     * sets options and Connections to Database
      * @param type $options
      */
-    public function __construct($options, $autoConnect = true) {
-        $this->options = $options;
-        if($autoConnect):
+    public function __construct($options = null, $autoConnect = true) {
+        $this->setOptions($options);
+        if ($autoConnect and isset($this->options) and !empty($this->options)):
             $this->connect($this->options);
         endif;
     }
 
     /**
-     * connect()
+     * Set options object
+     * @param array $options database connection settings
+     */
+    private function setOptions($options) {
+        if (isset($options) or !empty($options)):
+            $this->options = $options;
+        endif;
+    }
+
+    /**
+     * connect
      * Connects to database
-     * @access private
+     * Connects to database
      * @param array $options
      */
     private function connect($options) {
-        if(!isset($options) or empty($options)):
-            $options = $this->options;
-        endif;
-        $dsn = $this->createdsn($options);
-        $attrs = !isset($options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $options['charset']);
+        $this->setOptions($options);
+        $dsn = $this->createdsn();
+        $attrs = !isset($this->options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $this->options['charset']);
         try {
-            parent::__construct($dsn, $options['username'], $options['password'], $attrs);
-        } catch (PDOException $e) {
-            echo 'Connection failed: ' . $e->getMessage();
+            parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
+        }
+        catch(PDOException $e) {
+            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+                echo 'Connection failed: ' . $e->getMessage();
+            endif;
         }
     }
 
     /**
      * createdsn
      * Creates Data Source Name
-     * @param array $options
-     * @access private
      * @return string
      */
-    private function createdsn($options) {
-        return $options['dbtype'] . ':host=' . $options['host'] . ';dbname=' . $options['dbname'];
+    private function createdsn() {
+        if (!isset($this->options) or empty($this->options)):
+            return false;
+        endif;
+        return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
     }
 
     /**
-     * fetchAll()
+     * fetchAll
      * Fetches database and returns result as array
      * @param string $sql
-     * @access public
-     * @return array|boolean
+     * @param string $sql
+     * @return mixed
      */
     public function fetchAll($sql) {
         try {
@@ -105,18 +117,21 @@ class Database extends \PDO {
                     return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
                 endif;
             endif;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
+        }
+        catch(PDOException $e) {
+            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+                echo $e->getMessage();
+            endif;
             return false;
         }
     }
 
     /**
-     * fetchRow()
+     * fetchRow
      * Retuns single row from database and return result as array
      * @param string $sql
-     * @access public
-     * @return array|boolean
+     * @param string $sql
+     * @return mixed
      */
     public function fetchRow($sql) {
         try {
@@ -126,21 +141,23 @@ class Database extends \PDO {
                     return $pdostmt->fetch(\PDO::FETCH_ASSOC);
                 endif;
             endif;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
+        }
+        catch(PDOException $e) {
+            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+                echo $e->getMessage();
+            endif;
             return false;
         }
     }
 
     /**
-     * run()
+     * run
      * Executes Query
      * @param string $sql
      * @param array $data
-     * @access public
-     * @return array|int|boolean
+     * @return mixed
      */
-    public function query($sql, $data=null) {
+    public function query($sql, $data = null) {
         try {
             $pdostmt = $this->prepare($sql);
             if ($pdostmt->execute($data) !== false):
@@ -150,16 +167,31 @@ class Database extends \PDO {
                     return $pdostmt->rowCount();
                 endif;
             endif;
-        } catch (PDOException $e) {
-            echo $e->getMessage();
+        }
+        catch(PDOException $e) {
+            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+                echo $e->getMessage();
+            endif;
             return false;
         }
     }
 
+    /**
+     * escape, quote() method alias
+     * @param  string $value
+     * @param  object $parameter_type
+     * @return string
+     */
     public function escape($value, $parameter_type = \PDO::PARAM_STR) {
         return $this->quote($value, $parameter_type);
     }
 
+    /**
+     * quote via parent class
+     * @param  string $value
+     * @param  object $parameter_type
+     * @return string
+     */
     public function quote($value, $parameter_type = \PDO::PARAM_STR) {
         if (is_null($value)) {
             return "NULL";
@@ -167,24 +199,28 @@ class Database extends \PDO {
         return substr(parent::quote($value, $parameter_type), 1, -1);
     }
 
+    /**
+     * Get last insert id
+     * @param  string $name
+     * @return mixed
+     */
     public function lastInsertId($name = null) {
         return parent::lastInsertId($name);
     }
 
     /**
-     * ping()
+     * ping
      * Pings Database
-     * @access public
+     * Pings Database
      * @return boolean
      */
     public function ping() {
         try {
             $this->query('SELECT 1');
-        } catch (PDOException $e) {
+        }
+        catch(PDOException $e) {
             $this->connect($this->options);
         }
         return true;
     }
-
 }
-

@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -29,15 +29,14 @@ namespace ngfw;
  * Session
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Session {
 
     /**
      * $instance
      * Holds Class Instance
-     * @access protected 
      * @var object
      */
     protected static $instance = null;
@@ -45,7 +44,6 @@ class Session {
     /**
      * init()
      * if $instance is not set and headers_sent() == false, starts new session and starts new \ngfw\Session and return instance
-     * @access public
      * @return object
      */
     public static function init() {
@@ -61,7 +59,6 @@ class Session {
     /**
      * set()
      * sets PHP session
-     * @access public
      * @param string $key
      * @param string $value
      * @return void
@@ -74,9 +71,8 @@ class Session {
     /**
      * get()
      * Gets PHP Session, Returns false if Session not set
-     * @access public
-	 * @param string $key
-     * @return string|boolean
+     * @param string $key
+     * @return mixed
      */
     public static function get($key) {
         self::init();

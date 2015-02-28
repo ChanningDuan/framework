@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -29,17 +29,16 @@ namespace ngfw;
  * Exception
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Exception extends \Exception {
 
     /**
      * __construct()
-     * @access public
      * @param string $message
      * @param int $code
-     * @param \ngfw\Exception $previous
+     * @param Exception $previous
      */
     public function __construct($message, $code = 0, Exception $previous = null) {
         parent::__construct($message, $code, $previous);
@@ -48,7 +47,6 @@ class Exception extends \Exception {
     /**
      * __toString()
      * Custom string representation of object
-     * @access public
      * @return string
      */
     public function __toString() {

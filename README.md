@@ -3,7 +3,7 @@ Installation
 
 With Composer (Recommended)
 
-	Composer create-project -sdev --repository-url="http://ng.framework.im/" ngfw/skeleton-app /path/to/project/
+	composer create-project -sdev --repository-url="http://ng.framework.im/" ngfw/skeleton-app .
 
 <dl>
   <dt>assuming you have installed Composer globally</dt>
@@ -16,4 +16,4 @@ shipped composer.phar:
 	cd my/project/dir
 	git clone git://github.com/ngfw/skeleton-app.git .
 	php composer.phar self-update
-	php composer.phar installed
+	php composer.phar install

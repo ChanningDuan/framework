@@ -3,120 +3,154 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ * copyright (c) 2015, Nick Gejadze
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace ngfw;
+use ngfw\Exception;
+use ngfw\Header;
 
 /**
  * View
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
-class View {
-
+class View
+{
+    
     /**
      * $controller
      * Holds Conroller name
-     * @access protected
      * @var string
      */
     protected $controller;
-
+    
     /**
      * $action
-     * Holds Action name
-     * @access protected
+     * View file filename without extenstion
      * @var string
      */
     protected $action;
-
+    
     /**
      * $layout
-     * @access protected
+     * Enable or disable layout
      * @var boolean
      */
     protected $layout = true;
-
+    
     /**
      * $render
-     * @access protected
+     * Enable or disable view (View Component)
      * @var boolean
      */
     protected $render = true;
-
+    
     /**
      * $layoutFile
-     * @access protected
+     * Layout file filename without extension
      * @var string
      */
-    protected $layoutFile = 'Layout';
+    protected $layoutFilename = 'Layout';
+    
+    /**
+     * $template
+     * Template directory, Must be under '~Application' Directory and should contain Layout and View Directories
+     * @var mixed
+     */
+    protected $template = null;
 
     /**
-     * __construct()
+     * $extension
+     * View and Layout files extension
+     * @var string
+     */
+    protected $extension = ".phtml";
+
+    /**
+     * $layoutFilePath
+     * Full path of layout file
+     * @var string
+     */
+    protected $layoutFilePath;
+
+    /**
+     * $viewFilePath
+     * Full path of view file
+     * @var string
+     */
+    protected $viewFilePath;
+
+    
+    /**
+     * __construct
      * Sets controller and action object
      * @param string $controller
      * @param string $action
-     * @access public
      */
     public function __construct($controller, $action) {
         $this->controller = $controller;
         $this->action = strtolower($action);
     }
-
+    
     /**
-     * enableLayout()
+     * enableLayout
      * Sets layout object
-     * @access public
      * @param boolean $bool
      */
     public function enableLayout($bool = true) {
         $this->layout = $bool;
     }
-
+    
     /**
-     * enableView()
+     * enableView
      * Sets render object
-     * @access public
      * @param boolean $bool
      */
     public function enableView($bool = true) {
         $this->render = $bool;
     }
-
+    
     /**
-     * setLayoutFile()
+     * setLayoutFile
      * sets layout filename object
-     * @access public
      * @param string $filename
      */
     public function setLayoutFile($filename) {
-        $this->layoutFile = $filename;
+        $this->layoutFilename = $filename;
     }
 
     /**
-     * set()
+     * setFileExtension
+     * override default file extension
+     * @param string $extension file extension
+     */
+    public function setFileExtension($extension){
+        $this->extension = $extension;
+    }
+    
+    /**
+     * set
      * Set object to be used from view
-     * @access public
      * @param string $name
      * @param string $value
      */
@@ -125,53 +159,57 @@ class View {
     }
 
     /**
-     * loadLayout()
+     * Check if Layout file exists
+     * @return bool
+     */
+    public function setLayoutPath(){
+        $this->layoutFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (!empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFilename . $this->extension;
+        if (file_exists($this->layoutFilePath)):
+            return true;
+        endif;
+        return false;
+    }
+
+    /**
+     * Check if View file exists
+     * @return bool
+     */
+    public function setViewPath(){
+        $this->viewFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (!empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . $this->extension;
+        if (file_exists($this->viewFilePath)):
+            return true;
+        endif;
+        return false;
+    }
+    
+    /**
+     * loadLayout
      * Includes layout file
-     * @access public
-     * @throws Exception
+     * @throws \ngfw\Exception If View or layout file is enable but does not exists
      */
     public function loadLayout() {
+        if ($this->render and !$this->setViewPath()):
+            throw new Exception(sprintf('View file "%s" does not exist.', $this->viewFilePath));
+        endif;
         if ($this->layout):
-            try {
-                $layoutFile = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFile . '.phtml';
-                if (!file_exists($layoutFile)):
-                    throw new Exception($layoutFile);
-                endif;
-                include ($layoutFile);
-            } catch (\ngfw\Exception $e) {
-                if(defined('DEVELOPMENT_ENVIRONMENT')):
-                    if (DEVELOPMENT_ENVIRONMENT):
-                        exit("Could not find view file: " . $e->getMessage());
-                    endif;
-                endif;
-            }
+            if($this->setLayoutPath()):
+                include ($this->layoutFilePath);
+            else:
+                throw new Exception(sprintf('Layout file "%s" does not exist.', $this->layoutFilePath));
+            endif;
         else:
             $this->render();
         endif;
     }
-
+    
     /**
-     * render()
+     * render
      * Check is render is enabled and includes view file
-     * @access public
-     * @throws Exception
      */
     public function render() {
         if ($this->render):
-            try {
-                $viewFile = $_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "Application" . DIRECTORY_SEPARATOR . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . '.phtml';
-                if (!file_exists($viewFile)):
-                    throw new Exception($viewFile);
-                endif;
-                include ($viewFile);
-            } catch (Exception $e) {
-                if(defined('DEVELOPMENT_ENVIRONMENT')):
-                    if (DEVELOPMENT_ENVIRONMENT):
-                        exit("Could not find view file: " . $e->getMessage());
-                    endif;
-                endif;
-            }
+            include ($this->viewFilePath);
         endif;
     }
-
 }
+    

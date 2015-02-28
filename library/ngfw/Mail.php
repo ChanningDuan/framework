@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -27,161 +27,141 @@ namespace ngfw;
 
 /**
  * Mail
+ * @todo CLASS in not stable 
  * @package ngfw
  * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Mail {
+    
     /**
      * newline     
      */
-
     const newline = "\r\n";
 
     /**
      * $isSMTP
-     * @access protected
      * @var bool
      */
     protected $isSMTP = false;
 
     /**
      * $isHTML
-     * @access protected
      * @var bool
      */
     protected $isHTML = false;
 
     /**
      * $server
-     * @access protected
      * @var string
      */
     protected $server = "127.0.0.1";
 
     /**
      * $port
-     * @access protected
      * @var int
      */
     protected $port = 25;
 
     /**
      * $smtp
-     * @access protected
      * @var resource
      */
     protected $smtp;
 
     /**
      * $username
-     * @access protected
      * @var string
      */
     protected $username;
 
     /**
      * $password
-     * @access protected
      * @var string
      */
     protected $password;
 
     /**
      * $connectTimeout
-     * @access protected
      * @var int
      */
     protected $connectTimeout = 30;
 
     /**
      * $responseTimeout
-     * @access protected
      * @var type 
      */
     protected $responseTimeout = 8;
 
     /**
      * $headers
-     * @access protected
      * @var array
      */
     protected $headers;
 
     /**
      * $from 
-     * @access protected
      * @var array
      */
     protected $from = array();
 
     /**
      * $to
-     * @access protected
      * @var array
      */
     protected $to = array();
 
     /**
      * $cc
-     * @access protected
      * @var array
      */
     protected $cc = array();
 
     /**
      * $replyTo
-     * @access protected
      * @var array
      */
     protected $replyTo;
 
     /**
      * $subject
-     * @access protected 
      * @var string
      */
     protected $subject;
 
     /**
      * $body
-     * @access protected
      * @var type 
      */
     protected $body;
 
     /**
      * $html
-     * @access protected
      * @var string
      */
     protected $html;
 
     /**
      * $text
-     * @access protected
      * @var string
      */
     protected $text;
 
     /**
      * $boundary
-     * @access protected
      * @var string
      */
     protected $boundary;
 
     /**
      * $debug
-     * @access protected 
      * @var bool
      */
     protected $debug = false;
 
     /**
      * $charset
-     * @access protected
      * @var string
      */
     protected $charset = "UTF-8";
@@ -189,7 +169,6 @@ class Mail {
     /**
      * __construct()
      * Sets Default Headers
-     * @access public 
      * @return void
      */
     public function __construct() {
@@ -201,7 +180,6 @@ class Mail {
     /**
      * setCharset()
      * Sets Charset, Default Value = UTF-8
-     * @access public
      * @param string $charset
      * @return \ngfw\Mail
      */
@@ -216,7 +194,6 @@ class Mail {
     /**
      * isSMTP()
      * Indicates if Email should go out through SMTP or regular MAIL function
-     * @access public
      * @param bool $boolean
      * @return \ngfw\Mail
      */
@@ -230,7 +207,6 @@ class Mail {
     /**
      * isHtml()
      * Indicates if Email is HTML format, Default Email is set to text
-     * @access public
      * @param bool $boolean
      * @return \ngfw\Mail
      */
@@ -245,7 +221,6 @@ class Mail {
     /**
      * setUsername()
      * Sets username for SMTP connection
-     * @access public
      * @param string $username
      * @return \ngfw\Mail
      */
@@ -257,7 +232,6 @@ class Mail {
     /**
      * setPassword()
      * Sets password for SMTP connection
-     * @access public
      * @param string $password
      * @return \ngfw\Mail
      */
@@ -269,7 +243,6 @@ class Mail {
     /**
      * setServer()
      * Sets SMTP server hostname
-     * @access public
      * @param string $server
      * @return \ngfw\Mail
      */
@@ -281,7 +254,6 @@ class Mail {
     /**
      * setPort()
      * Sets SMTP port
-     * @access public
      * @param int $port
      * @return \ngfw\Mail
      */
@@ -293,7 +265,6 @@ class Mail {
     /**
      * setHeader()
      * Sets HTML header, if Header with same key was already set, it will be overwritten.
-     * @access public
      * @param string $key
      * @param string $value
      * @return \ngfw\Mail
@@ -306,7 +277,6 @@ class Mail {
     /**
      * setTo()
      * Sets TO address, name not required
-     * @access public
      * @param string $address
      * @param string $name
      * @return \ngfw\Mail
@@ -319,7 +289,6 @@ class Mail {
     /**
      * setCc()
      * Sets CC address, name not required
-     * @access public
      * @param string $address
      * @param string $name
      * @return \ngfw\Mail
@@ -332,7 +301,6 @@ class Mail {
     /**
      * setFrom()
      * Sets FROM address, name not required
-     * @access public
      * @param string $address
      * @param string $name
      * @return \ngfw\Mail
@@ -345,7 +313,6 @@ class Mail {
     /**
      * setReplyTo()
      * Sets ReplyTo, Name not required
-     * @access public
      * @param type $address
      * @param type $name
      * @return \ngfw\Mail
@@ -357,7 +324,6 @@ class Mail {
 
     /**
      * Sets Email subject
-     * @access public
      * @param string $subject
      * @return \ngfw\Mail
      */
@@ -371,7 +337,6 @@ class Mail {
     /**
      * setHtml()
      * Sets Email HTML Body
-     * @access public
      * @param string $html
      * @return \ngfw\Mail
      */
@@ -385,7 +350,6 @@ class Mail {
     /**
      * setText()
      * Sets Email TEXT body
-     * @access public
      * @param string $text
      * @return \ngfw\Mail
      */
@@ -399,7 +363,6 @@ class Mail {
     /**
      * setContentType()
      * Sets Email Content Type Header
-     * @access private
      * @return void
      */
     private function setContentType() {
@@ -414,7 +377,6 @@ class Mail {
     /**
      * smtpCmd()
      * Sends SMTP Command and Returns Response
-     * @access private
      * @see getResponse()
      * @param stirng $command
      * @return string
@@ -427,7 +389,6 @@ class Mail {
     /**
      * getResponse()
      * Gets response from SMTP Socket and returns as String
-     * @access private
      * @return string
      */
     private function getResponse() {
@@ -444,7 +405,6 @@ class Mail {
     /**
      * formatAddress()
      * Formats email Addess and returns as string
-     * @access private
      * @param string $address
      * @return string
      */
@@ -459,7 +419,6 @@ class Mail {
     /**
      * formatAddressArray()
      * Formats emails array as a string
-     * @access private
      * @param array $address
      * @return string
      */
@@ -473,7 +432,6 @@ class Mail {
     /**
      * comileBody()
      * Builds email body
-     * @access private
      * @return string
      */
     private function compileBody() {
@@ -495,7 +453,6 @@ class Mail {
     /**
      * send()
      * Builds Email body and sends via SMTP or Mail
-     * @access public
      * @return bool
      */
     public function send() {
@@ -510,7 +467,6 @@ class Mail {
     /**
      * sendViaMail()
      * Send Email via MAIL function
-     * @access private
      * @return bool
      */
     private function sendViaMail() {
@@ -535,7 +491,6 @@ class Mail {
     /**
      * sendViaSmtp()
      * Send Email via SMTP server
-     * @access private
      * @return boolean
      */
     private function sendViaSmtp() {
@@ -577,7 +532,6 @@ class Mail {
     /**
      * setStreamTimeout()
      * Sets stream_set_time with $resposeTimeout
-     * @access private
      * @return void
      */
     private function setStreamTimeout() {

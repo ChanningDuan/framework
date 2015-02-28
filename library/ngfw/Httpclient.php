@@ -3,7 +3,7 @@
 /**
  * ngfw
  * ---
- * Copyright (c) 2014, Nick Gejadze
+ * copyright (c) 2015, Nick Gejadze
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy 
  * of this software and associated documentation files (the "Software"), 
@@ -28,57 +28,49 @@ namespace ngfw;
 /**
  * Httpclient
  * @package ngfw
- * @subpackage library
- * @version 0.1
- * @copyright (c) 2014, Nick Gejadze
+ * @version 1.2.2
+ * @copyright (c) 2015, Nick Gejadze
  */
 class Httpclient {
 
     /**
      * $uri
-     * @access protected
      * @var string
      */
     protected $uri;
 
     /**
      * $maxredirects;
-     * @access protected
      * @var int
      */
     protected $maxredirects = 0;
 
     /**
      * $timeout
-     * @access protected
      * @var int
      */
     protected $timeout = 30;
 
     /**
      * $userAgent
-     * @access protected
      * @var string
      */
     protected $userAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13";
 
     /**
      * $cookie
-     * @access protected
      * @var string
      */
     protected $cookie;
 
     /**
      * $postData
-     * @access protected
      * @var string
      */
     protected $postData;
 
     /**
      * $postDataArray
-     * @access array
      * @var type 
      */
     protected $postDataArray;
@@ -92,7 +84,6 @@ class Httpclient {
     /**
      * __construct()
      * Sets $uri, $maxredirects and $timeout objects if passed
-     * @access public
      * @param string $uri
      * @param int $maxredirects
      * @param int $timeout
@@ -135,19 +126,17 @@ class Httpclient {
     /**
      * setUri()
      * Sets URI object
-     * @access public
      * @param string $uri
      * @return object \ngfw\Httpclient
      */
     public function setUri($uri = null) {
-        $this->uri = str_replace("&amp;", "&", urldecode(trim($uri)));
+        $this->uri = str_replace("&amp;", "&", trim($uri));
         return $this;
     }
 
     /**
      * setMaxredirects()
      * sets Max Redirects object, default 0
-     * @access public
      * @param int $maxredirects
      * @return object \ngfw\Httpclient
      */
@@ -159,7 +148,6 @@ class Httpclient {
     /**
      * setTimeout()
      * Sets timeout object
-     * @access public
      * @param int $timeout
      * @return \ngfw\Httpclient
      */
@@ -172,7 +160,6 @@ class Httpclient {
      * post()
      * sets post object
      * @param array $array
-     * @access public
      * @return \ngfw\Httpclient
      */
     public function post($array) {
@@ -190,7 +177,6 @@ class Httpclient {
     /**
      * setupCookie()
      * Create TMP directory Under root dir if does not exsist and sames cookie as temporary file
-     * @access private
      * @return void
      */
     private function setupCookie() {
@@ -207,7 +193,7 @@ class Httpclient {
      * cleanUpCookie()
      * removes Created cookie
      * Removes Created cookie file
-     * @access private
+     * @return  void
      */
     private function cleanUpCookie() {        
         if(isset($this->cookie)):
@@ -219,7 +205,6 @@ class Httpclient {
      * request()
      * Requests uri via Curl, if 301 or 302 found, follows the link
      * @todo add other mothods
-     * @access public
      * @return array
      */
     public function request() {
@@ -265,4 +250,3 @@ class Httpclient {
         endif;
     }
 }
-
