@@ -38,6 +38,7 @@ class Route {
     /**
      * $instance
      * Holds Class Instance
+     * @access protected
      * @var object
      */
     private static $instance;
@@ -45,6 +46,7 @@ class Route {
     /**
      * $controller
      * Holds controller name
+     * @access protected
      * @var string
      */
     protected $controller;
@@ -52,6 +54,7 @@ class Route {
     /**
      * $action
      * Holds action name
+     * @access protected
      * @var string
      */
     protected $action;
@@ -59,6 +62,7 @@ class Route {
     /**
      * $routes
      * Holds routes
+     * @access protected
      * @var array
      */
     protected $routes;
@@ -66,6 +70,7 @@ class Route {
     /**
      * $routeSelected
      * identifies if route is selected
+     * @access protected
      * @var bool
      */
     protected $routeSelected;
@@ -73,6 +78,7 @@ class Route {
     /**
      * $defaultController
      * Default Controller, Default value "Index"
+     * @access protected
      * @var string
      */
     protected $defaultController = "Index";
@@ -80,6 +86,7 @@ class Route {
     /**
      * $defaultAction
      * Default Action, Default value "Index"
+     * @access protected
      * @var string
      */
     protected $defaultAction = "Index";
@@ -248,23 +255,27 @@ class Route {
     public static function getRequests() {
         self::determineRoute();
         $uri = new Uri();
-        if (!self::init()->request):
+        if (!self::init()->request) {
             $path = $uri->getPathArray();
-            if (is_array($path) and !empty($path)):
-                foreach (array_slice($path, 1) as $key => $value):
+            if (is_array($path) and !empty($path))
+            {
+                foreach (array_slice($path, 1) as $key => $value)
+                {
                     self::init()->setRequest($key, $value);
-                endforeach;
-            endif;
-        endif;
-        if(is_array($uri->getQueryString())):
+                }
+            }
+
+        }
+        if(is_array($uri->getQueryString()))
+        {
             $tmp = self::init()->request;
-            foreach($uri->getQueryString() as $key=> $value):
-                //don't overwrite request vars with query string
-                if(!isset($tmp[$key])):
+            foreach($uri->getQueryString() as $key=> $value)
+            {
+                //dont overwrite request vars with query string
+                if ( ! isset($tmp[$key]) )
                     self::init()->setRequest($key, $value);
-                endif;
-            endforeach;
-        endif;
+            }
+        }
         return self::init()->request;
     }
 
