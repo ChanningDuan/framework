@@ -1,3 +1,12 @@
+[![Build Status](https://travis-ci.org/ngfw/framework.svg)](https://travis-ci.org/ngfw/framework)
+[![Latest Stable
+Version](https://poser.pugx.org/ngfw/framework/v/stable.svg)](https://packagist.org/packages/ngfw/framework)
+[![Total
+Downloads](https://poser.pugx.org/ngfw/framework/downloads.svg)](https://packagist.org/packages/ngfw/framework)
+[![Latest Unstable
+Version](https://poser.pugx.org/ngfw/framework/v/unstable.svg)](https://packagist.org/packages/ngfw/framework)
+[![License](https://poser.pugx.org/ngfw/framework/license.svg)](https://packagist.org/packages/ngfw/framework)
+
 Installation
 -------------------------
 
