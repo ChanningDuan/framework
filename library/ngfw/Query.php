@@ -59,13 +59,15 @@ class Query
     public $fields;
     
     /**
-     * Hold orderby value
+     * $orderBy
+     * Holds order by value
      * @var string
      */
     protected $orderBy;
     
     /**
-     * holds limit value
+     * $limit
+     * Holds limit value
      * @var mixed
      */
     protected $limit;
@@ -545,7 +547,7 @@ class Query
     /**
      * order()
      * Sets orderBy Object
-     * @param string $field fieldname to order by, exampe "Fieldname" or "RAND(" . date("Ymd") . ")"
+     * @param string $field field name to order by, example "Fieldname" or "RAND(" . date("Ymd") . ")"
      * @param string $clause order clause, example: "DESC" or "ASC"
      * @return object ngfw\Query()
      */
@@ -705,14 +707,14 @@ class Query
     
     /**
      * getQuery()
-     * Aliases __toString() Function if $complieQuery param is set to true
+     * Aliases __toString() Function if $compileQuery param is set to true
      * Returns query as a string
-     * @param $complieQuery boolean Default false
+     * @param $compileQuery boolean Default false
      * @see __toString()
      * @return mixed
      */
-    public function getQuery($complieQuery = false) {
-        if ($complieQuery):
+    public function getQuery($compileQuery = false) {
+        if ($compileQuery):
             return $this->__toString();
         else:
             return $this;
