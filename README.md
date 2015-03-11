@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/ngfw/framework.svg)](https://travis-ci.org/ngfw/framework)
 [![Latest Stable
 Version](https://poser.pugx.org/ngfw/framework/v/stable.svg)](https://packagist.org/packages/ngfw/framework)
 [![Total
