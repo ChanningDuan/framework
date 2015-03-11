@@ -24,11 +24,12 @@
  */
 
 namespace ngfw;
+use ngfw\Query;
 
 /**
  * Database
  * @package ngfw
- * @version 1.2.2
+ * @version 1.2.3
  * @author Nick Gejadze
  */
 class Database extends \PDO
@@ -39,6 +40,13 @@ class Database extends \PDO
      */
     
     const CHARSET = 'UTF8';
+
+    /**
+     * Default Fetch Mode
+     * available values : all | row
+     * @var string
+     */
+    private $fetchmode = "all";
     
     /**
      * $options
@@ -84,7 +92,7 @@ class Database extends \PDO
         try {
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         }
-        catch(PDOException $e) {
+        catch(\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
                 echo 'Connection failed: ' . $e->getMessage();
             endif;
@@ -110,21 +118,8 @@ class Database extends \PDO
      * @param string $sql
      * @return mixed
      */
-    public function fetchAll($sql) {
-        try {
-            $pdostmt = $this->prepare($sql);
-            if ($pdostmt->execute() !== false):
-                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW")) . ") /i", $sql)):
-                    return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
-                endif;
-            endif;
-        }
-        catch(PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
-                echo $e->getMessage();
-            endif;
-            return false;
-        }
+    public function fetchAll($query, $data = null) {
+        return $this->query($query);
     }
     
     /**
@@ -134,21 +129,11 @@ class Database extends \PDO
      * @param string $sql
      * @return mixed
      */
-    public function fetchRow($sql) {
-        try {
-            $pdostmt = $this->prepare($sql);
-            if ($pdostmt->execute() !== false):
-                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW")) . ") /i", $sql)):
-                    return $pdostmt->fetch(\PDO::FETCH_ASSOC);
-                endif;
-            endif;
-        }
-        catch(PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
-                echo $e->getMessage();
-            endif;
-            return false;
-        }
+    public function fetchRow($query, $data = null) {
+        $this->fetchmode = "row";
+        $result = $this->query($query);
+        $this->fetchmode = "all";
+        return $result;
     }
     
     /**
@@ -158,18 +143,49 @@ class Database extends \PDO
      * @param array $data
      * @return mixed
      */
-    public function query($sql, $data = null) {
+    public function query($query, $data = null) {
         try {
-            $pdostmt = $this->prepare($sql);
+            if ($query instanceof Query):
+                $pdostmt = $this->prepare(trim($query->query));
+                if(isset($query->bind) && is_array($query->bind)):
+                    foreach ($query->bind as $k => $bind):
+                        switch(gettype($bind)):
+                            case "boolean":
+                                $data_type = \PDO::PARAM_BOOL;
+                                break;
+                            case "integer":
+                            case "double":
+                                $data_type = \PDO::PARAM_INT;
+                                break;
+                            case NULL:
+                                $data_type = \PDO::PARAM_NULL;
+                                break;
+                            case "string":
+                            default:
+                                $data_type = \PDO::PARAM_STR;
+                                break;
+                        endswitch;
+                        $pdostmt->bindValue(':' . $k, $bind, $data_type);
+                    endforeach;
+                endif;
+            else:
+                $pdostmt = $this->prepare($sql);
+            endif;
             if ($pdostmt->execute($data) !== false):
-                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", $sql)):
-                    return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
-                elseif (preg_match("/^(" . implode("|", array("DELETE", "INSERT", "UPDATE")) . ") /i", $sql)):
+                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)):
+                    if($this->fetchmode == "all"):
+                        return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
+                    elseif($this->fetchmode == "row"):
+                        return $pdostmt->fetch(\PDO::FETCH_ASSOC);
+                    else:
+                        throw new Exception("Fetch mode is unidentified");
+                    endif;
+                elseif (preg_match("/^(" . implode("|", array("DELETE", "INSERT", "UPDATE")) . ") /i", is_string($query) ? $query : $query->query)):
                     return $pdostmt->rowCount();
                 endif;
             endif;
         }
-        catch(PDOException $e) {
+        catch(\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
                 echo $e->getMessage();
             endif;
@@ -219,7 +235,7 @@ class Database extends \PDO
         try {
             $this->query('SELECT 1');
         }
-        catch(PDOException $e) {
+        catch(\PDOException $e) {
             $this->connect($this->options);
         }
         return true;
