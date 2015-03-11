@@ -24,8 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Exception;
-use ngfw\Header;
 
 /**
  * View
@@ -36,42 +34,42 @@ use ngfw\Header;
  */
 class View
 {
-    
+
     /**
      * $controller
      * Holds Conroller name
      * @var string
      */
     protected $controller;
-    
+
     /**
      * $action
      * View file filename without extenstion
      * @var string
      */
     protected $action;
-    
+
     /**
      * $layout
      * Enable or disable layout
      * @var boolean
      */
     protected $layout = true;
-    
+
     /**
      * $render
      * Enable or disable view (View Component)
      * @var boolean
      */
     protected $render = true;
-    
+
     /**
      * $layoutFile
      * Layout file filename without extension
      * @var string
      */
     protected $layoutFilename = 'Layout';
-    
+
     /**
      * $template
      * Template directory, Must be under '~Application' Directory and should contain Layout and View Directories
@@ -100,7 +98,7 @@ class View
      */
     protected $viewFilePath;
 
-    
+
     /**
      * __construct
      * Sets controller and action object
@@ -111,7 +109,7 @@ class View
         $this->controller = $controller;
         $this->action = strtolower($action);
     }
-    
+
     /**
      * enableLayout
      * Sets layout object
@@ -120,7 +118,7 @@ class View
     public function enableLayout($bool = true) {
         $this->layout = $bool;
     }
-    
+
     /**
      * enableView
      * Sets render object
@@ -129,7 +127,7 @@ class View
     public function enableView($bool = true) {
         $this->render = $bool;
     }
-    
+
     /**
      * setLayoutFile
      * sets layout filename object
@@ -147,7 +145,7 @@ class View
     public function setFileExtension($extension){
         $this->extension = $extension;
     }
-    
+
     /**
      * set
      * Set object to be used from view
@@ -181,7 +179,7 @@ class View
         endif;
         return false;
     }
-    
+
     /**
      * loadLayout
      * Includes layout file
@@ -201,7 +199,7 @@ class View
             $this->render();
         endif;
     }
-    
+
     /**
      * render
      * Check is render is enabled and includes view file
@@ -212,4 +210,3 @@ class View
         endif;
     }
 }
-    

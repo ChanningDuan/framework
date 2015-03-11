@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Registry;
 
 /**
  * Header
@@ -35,7 +34,7 @@ use ngfw\Registry;
  */
 class Header
 {
-    
+
     /**
      * response code
      * Get or Set the HTTP response code.
@@ -200,7 +199,7 @@ class Header
                         exit('Unknown http status code "' . htmlentities($code) . '"');
                         break;
                 }
-                
+
                 $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
                 self::set($protocol . ' ' . $code . ' ' . $text);
                 Registry::set('http_response_code', $code);
@@ -219,14 +218,15 @@ class Header
             return http_response_code($code);
         endif;
     }
-    
+
     /**
      * Redirect
      * Redirect to URL & Returns a REDIRECT (302) status code to the browser unless the 201 or a 3xx status code has already been set.
+     *
      * @param string $url
-     * @param int $http_response_code http response code
-     * @param bool $exit exit after redirect or continue executing the code
+     * @param int    $http_response_code http response code
      * @return mixed
+     * @internal param bool $exit exit after redirect or continue executing the code
      */
     public static function redirect($url = '/', $http_response_code) {
         if (isset($http_response_code) and is_numeric($http_response_code)):
@@ -236,25 +236,30 @@ class Header
         endif;
         exit();
     }
-    
+
     /**
      * Set Header
      * Send a raw HTTP header
+     *
      * @param string $string Header to set
+     * @param bool   $replace
+     * @param null   $http_response_code
      */
     public static function set($string = "", $replace = true, $http_response_code = null) {
         header($string, $replace, $http_response_code);
     }
-    
+
     /**
      * Powered By
      * Set new output source
-     * @param string $source X-Powered-By source
+     *
+     * @param $string
+     * @internal param string $source X-Powered-By source
      */
     public static function poweredBy($string) {
         self::set('X-Powered-By: ' . $string);
     }
-    
+
     /**
      * MIME type
      * set custom mime type
@@ -263,7 +268,7 @@ class Header
     public static function mimeType($mimeType = "text/html") {
         self::set('Content-Type: ' . $mimeType);
     }
-    
+
     /**
      * Set Content length
      * @param int $length size of the file in bytes
@@ -271,7 +276,7 @@ class Header
     public static function contentLength($length = 0) {
         self::set('Content-Length: ' . $length);
     }
-    
+
     /**
      * Download Name
      * set new download name
@@ -283,7 +288,7 @@ class Header
         self::set('Pragma: cache');
         self::set('Content-Disposition: attachment; filename="' . $name . '"');
     }
-    
+
     /**
      * Expires
      * Set expiration date for cached data
@@ -294,7 +299,7 @@ class Header
         self::set('Cache-Control: maxage=' . ($time - time()));
         self::set('Pragma: public');
     }
-    
+
     /**
      * disable cache
      * Force proxies and clients to disable caching

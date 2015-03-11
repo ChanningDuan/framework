@@ -4,22 +4,22 @@
  * ngfw
  * ---
  * copyright (c) 2015, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -27,16 +27,17 @@ namespace ngfw;
 
 /**
  * Mail
- * @todo CLASS in not stable 
+ *
+ * @todo CLASS in not stable
  * @package ngfw
  * @subpackage library
  * @version 1.2.2
  * @copyright (c) 2015, Nick Gejadze
  */
 class Mail {
-    
+
     /**
-     * newline     
+     * newline
      */
     const newline = "\r\n";
 
@@ -90,7 +91,7 @@ class Mail {
 
     /**
      * $responseTimeout
-     * @var type 
+     * @var int
      */
     protected $responseTimeout = 8;
 
@@ -101,7 +102,7 @@ class Mail {
     protected $headers;
 
     /**
-     * $from 
+     * $from
      * @var array
      */
     protected $from = array();
@@ -132,7 +133,7 @@ class Mail {
 
     /**
      * $body
-     * @var type 
+     * @var string
      */
     protected $body;
 
@@ -169,7 +170,6 @@ class Mail {
     /**
      * __construct()
      * Sets Default Headers
-     * @return void
      */
     public function __construct() {
         $this->headers['MIME-Version'] = "1.0";
@@ -267,7 +267,7 @@ class Mail {
      * Sets HTML header, if Header with same key was already set, it will be overwritten.
      * @param string $key
      * @param string $value
-     * @return \ngfw\Mail
+     * @return Mail
      */
     public function setHeader($key, $value) {
         $this->header[$key] = $value;
@@ -313,9 +313,9 @@ class Mail {
     /**
      * setReplyTo()
      * Sets ReplyTo, Name not required
-     * @param type $address
-     * @param type $name
-     * @return \ngfw\Mail
+     * @param string $address
+     * @param string $name
+     * @return Mail
      */
     public function setReplyTo($address, $name = "") {
         $this->replyTo = array($address, $name);
@@ -378,7 +378,7 @@ class Mail {
      * smtpCmd()
      * Sends SMTP Command and Returns Response
      * @see getResponse()
-     * @param stirng $command
+     * @param string $command
      * @return string
      */
     private function smtpCmd($command) {

@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Query;
 
 /**
  * Database
@@ -59,7 +58,9 @@ class Database extends \PDO
      * __construct
      * sets options and Connections to Database
      * sets options and Connections to Database
-     * @param type $options
+     *
+     * @param array $options
+     * @param bool  $autoConnect
      */
     public function __construct($options = null, $autoConnect = true) {
         $this->setOptions($options);
@@ -114,8 +115,8 @@ class Database extends \PDO
     /**
      * fetchAll
      * Fetches database and returns result as array
-     * @param string $sql
-     * @param string $sql
+     * @param string $query
+     * @param array $data
      * @return mixed
      */
     public function fetchAll($query, $data = null) {
@@ -125,8 +126,8 @@ class Database extends \PDO
     /**
      * fetchRow
      * Retuns single row from database and return result as array
-     * @param string $sql
-     * @param string $sql
+     * @param string $query
+     * @param array $data
      * @return mixed
      */
     public function fetchRow($query, $data = null) {
@@ -139,10 +140,13 @@ class Database extends \PDO
     /**
      * run()
      * Executes Query
-     * @param string $sql
-     * @param array $data
-     * @access public
-     * @return array|int|boolean
+     *
+     * @param string $query
+     * @param array  $data
+     * @return array|bool|int
+     * @throws Exception
+     * @internal param string $sql
+     * @access   public
      */
     public function query($query, $data = null) {
         try {
@@ -196,8 +200,9 @@ class Database extends \PDO
 
     /**
      * escape, quote() method alias
-     * @param  string $value
-     * @param  object $parameter_type
+     *
+     * @param  string    $value
+     * @param int|object $parameter_type
      * @return string
      */
     public function escape($value, $parameter_type = \PDO::PARAM_STR) {
@@ -206,8 +211,9 @@ class Database extends \PDO
 
     /**
      * quote via parent class
-     * @param  string $value
-     * @param  object $parameter_type
+     *
+     * @param  string    $value
+     * @param int|object $parameter_type
      * @return string
      */
     public function quote($value, $parameter_type = \PDO::PARAM_STR) {

@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Exception;
 
 /**
  * Query
@@ -229,7 +228,7 @@ class Query
      * Builds insert statement
      * @param string $table Table name you want to insert into
      * @param array $data Array of strings, example array("fieldname" => "value")
-     * @return object ngfw\Query()
+     * @return object Query()
      * @throws Exception
      */
     public function insert($table, $data) {
@@ -378,7 +377,7 @@ class Query
     }
 
     /**
-     * leftKoin()
+     * leftJoin()
      * Sets left join object
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
@@ -415,7 +414,7 @@ class Query
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $value string value to be replaced in where statement
      * @param string $joinCondition ON or USING
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function rightJoin($table, $clause, $joinCondition = null) {
         if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
@@ -442,9 +441,10 @@ class Query
     /**
      * where()
      * Sets where object
-     * @param string $where where statement, example: ("fieldname = ?")
-     * @param string $value string value to be replaced in where statement
-     * @return object ngfw\Query()
+     *
+     * @param string      $where where statement, example: ("fieldname = ?")
+     * @param bool|string $value string value to be replaced in where statement
+     * @return object Query()
      */
     public function where($where, $value = false) {
         $where = $this->escapeField($where);

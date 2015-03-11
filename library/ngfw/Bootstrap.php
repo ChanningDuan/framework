@@ -24,9 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Header;
-use ngfw\Route;
-use ngfw\Exception;
 
 /**
  * Bootstrap
@@ -55,7 +52,7 @@ class Bootstrap
     /**
      * $_controllerObject
      * Holds controller instance
-     * @var onject
+     * @var object
      */
     protected $_controllerObject;
 

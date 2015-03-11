@@ -4,27 +4,26 @@
  * ngfw
  * ---
  * copyright (c) 2015, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace ngfw;
-use ngfw\Query;
 
 /**
  * Pagination
@@ -73,7 +72,7 @@ class Pagination {
     /**
      * $itemsPerPage
      * Holds number of iterm per page, default value 10
-     * @var int 
+     * @var int
      */
     protected $itemsPerPage = 10;
 
@@ -94,70 +93,70 @@ class Pagination {
     /**
      * $totalCount
      * Holds number of total row count
-     * @var type 
+     * @var int
      */
     protected $totalCount;
 
     /**
      * $orderByField
      * Holds order field
-     * @var string 
+     * @var string
      */
     protected $orderByField;
 
     /**
      * $defaultOrder
      * Holds orderby, Default is DESC
-     * @var type 
+     * @var string
      */
     protected $defaultOrder = "DESC";
 
     /**
      * $defaultPageNumberName
      * Holds Default Page Number Name, Default value 'pagenumber'
-     * @var type 
+     * @var int
      */
     protected $defaultPageNumberName = "pagenumber";
 
     /**
      * $defaultPaginationSegmentName
      * Holds Default Pagination Segment Name, Default value 'name'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentName = "name";
 
     /**
      * $defaultPaginationSegmentStatus
      * Holds default pagination segment status, Default value 'status'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentStatus = "status";
 
     /**
      * $defaultPaginationSegmentNameFirst
      * Holds default pagination segment name for first page, default value 'First'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameFirst = "First";
 
     /**
      * $defaultPaginationSegmentNamePrevious
      * Holds default pagination segment name for Previous page, default value 'Previous'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNamePrevious = "Previous";
 
     /**
      * $defaultPaginationSegmentNameNext
      * Holds default pagination segment name for Next page, default value 'Next'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameNext = "Next";
 
     /**
      * $defaultPaginationSegmentNameLast
      * Holds default pagination segment name for Last page, default value 'Last'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameLast = "Last";
 
@@ -186,7 +185,7 @@ class Pagination {
 
     /**
      * setSelect()
-     * Sets Select 
+     * Sets Select
      * @param string|array $select
      * @return \ngfw\Pagination
      */
@@ -241,7 +240,7 @@ class Pagination {
 
     /**
      * setOrderBy()
-     * Set order by 
+     * Set order by
      * @param string $field
      * @return \ngfw\Pagination
      */
@@ -286,7 +285,7 @@ class Pagination {
         if ($limitFrom >= $this->totalCount):
             $limitFrom = 0;
         endif;
-        $this->query->limit($limitFrom . ", " . $this->itemsPerPage);        
+        $this->query->limit($limitFrom . ", " . $this->itemsPerPage);
         return $this->db->fetchAll($this->query->__toString());
     }
 
@@ -299,7 +298,7 @@ class Pagination {
      * @return array
      */
     public function getPagination($range = 5, $nextAndPreviousButtons = true, $additionalButtons = true) {
-        $this->calculateTotal();        
+        $this->calculateTotal();
         if ($additionalButtons):
             $paginator[] = array($this->defaultPageNumberName => 1,
                 $this->defaultPaginationSegmentName => $this->defaultPaginationSegmentNameFirst,
@@ -354,8 +353,8 @@ class Pagination {
 
     /**
      * calculateTotal()
-     * Calculate totlas
-     * @return type
+     * Calculate totals
+     * @return int
      */
     private function calculateTotal() {
         if (!$this->totalPages):

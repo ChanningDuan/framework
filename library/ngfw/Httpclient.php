@@ -4,22 +4,22 @@
  * ngfw
  * ---
  * copyright (c) 2015, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
@@ -71,7 +71,7 @@ class Httpclient {
 
     /**
      * $postDataArray
-     * @var type 
+     * @var array
      */
     protected $postDataArray;
 
@@ -118,6 +118,8 @@ class Httpclient {
      * addRequestHeader
      * Adds a header to the request
      * header_str is a fully qualified header, like "Content-type: text/plain"
+     *
+     * @param $header_str
      */
     public function addRequestHeader($header_str) {
       $this->requestHeadersArray[] = $header_str;
@@ -127,7 +129,7 @@ class Httpclient {
      * setUri()
      * Sets URI object
      * @param string $uri
-     * @return object \ngfw\Httpclient
+     * @return object Httpclient
      */
     public function setUri($uri = null) {
         $this->uri = str_replace("&amp;", "&", trim($uri));
@@ -138,7 +140,7 @@ class Httpclient {
      * setMaxredirects()
      * sets Max Redirects object, default 0
      * @param int $maxredirects
-     * @return object \ngfw\Httpclient
+     * @return object Httpclient
      */
     public function setMaxredirects($maxredirects = 0) {
         $this->maxredirects = $maxredirects;
@@ -195,7 +197,7 @@ class Httpclient {
      * Removes Created cookie file
      * @return  void
      */
-    private function cleanUpCookie() {        
+    private function cleanUpCookie() {
         if(isset($this->cookie)):
             unlink($this->cookie);
         endif;
@@ -204,7 +206,7 @@ class Httpclient {
     /**
      * request()
      * Requests uri via Curl, if 301 or 302 found, follows the link
-     * @todo add other mothods
+     * @todo add other methods
      * @return array
      */
     public function request() {
