@@ -27,19 +27,17 @@ namespace ngfw;
 
 /**
  * Mail
- *
- * @todo CLASS in not stable
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Mail {
 
     /**
-     * newline
+     * NEWLINE
      */
-    const newline = "\r\n";
+    const NEWLINE = "\r\n";
 
     /**
      * $isSMTP
@@ -181,7 +179,7 @@ class Mail {
      * setCharset()
      * Sets Charset, Default Value = UTF-8
      * @param string $charset
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setCharset($charset) {
         if (isset($charset)):
@@ -195,7 +193,7 @@ class Mail {
      * isSMTP()
      * Indicates if Email should go out through SMTP or regular MAIL function
      * @param bool $boolean
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function isSMTP($boolean) {
         if (is_bool($boolean)):
@@ -208,7 +206,7 @@ class Mail {
      * isHtml()
      * Indicates if Email is HTML format, Default Email is set to text
      * @param bool $boolean
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function isHtml($boolean) {
         if (is_bool($boolean)):
@@ -222,7 +220,7 @@ class Mail {
      * setUsername()
      * Sets username for SMTP connection
      * @param string $username
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setUsername($username) {
         $this->username = $username;
@@ -233,7 +231,7 @@ class Mail {
      * setPassword()
      * Sets password for SMTP connection
      * @param string $password
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setPassword($password) {
         $this->password = $password;
@@ -244,7 +242,7 @@ class Mail {
      * setServer()
      * Sets SMTP server hostname
      * @param string $server
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setServer($server) {
         $this->server = $server;
@@ -255,7 +253,7 @@ class Mail {
      * setPort()
      * Sets SMTP port
      * @param int $port
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setPort($port) {
         $this->port = $port;
@@ -267,10 +265,10 @@ class Mail {
      * Sets HTML header, if Header with same key was already set, it will be overwritten.
      * @param string $key
      * @param string $value
-     * @return Mail
+     * @return object Mail()
      */
     public function setHeader($key, $value) {
-        $this->header[$key] = $value;
+        $this->headers[$key] = $value;
         return $this;
     }
 
@@ -279,7 +277,7 @@ class Mail {
      * Sets TO address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setTo($address, $name = "") {
         $this->to[] = array($address, $name);
@@ -291,7 +289,7 @@ class Mail {
      * Sets CC address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setCc($address, $name = "") {
         $this->cc[] = array($address, $name);
@@ -303,7 +301,7 @@ class Mail {
      * Sets FROM address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setFrom($address, $name = "") {
         $this->from = array($address, $name);
@@ -315,7 +313,7 @@ class Mail {
      * Sets ReplyTo, Name not required
      * @param string $address
      * @param string $name
-     * @return Mail
+     * @return object Mail()
      */
     public function setReplyTo($address, $name = "") {
         $this->replyTo = array($address, $name);
@@ -325,7 +323,7 @@ class Mail {
     /**
      * Sets Email subject
      * @param string $subject
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setSubject($subject) {
         if (isset($subject)):
@@ -338,7 +336,7 @@ class Mail {
      * setHtml()
      * Sets Email HTML Body
      * @param string $html
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setHtml($html) {
         if (isset($html)):
@@ -351,7 +349,7 @@ class Mail {
      * setText()
      * Sets Email TEXT body
      * @param string $text
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setText($text) {
         if (isset($text)):
@@ -382,7 +380,7 @@ class Mail {
      * @return string
      */
     private function smtpCmd($command) {
-        fputs($this->smtp, $command . self::newline);
+        fputs($this->smtp, $command . self::NEWLINE);
         return $this->getResponse();
     }
 
@@ -393,7 +391,7 @@ class Mail {
      */
     private function getResponse() {
         $response = '';
-        while (($line = fgets($this->smtp, 515)) != false):
+        while (($line = fgets($this->smtp, 515)) !== false):
             $response .= trim($line) . "\n";
             if (substr($line, 3, 1) == ' '):
                 break;
@@ -404,14 +402,14 @@ class Mail {
 
     /**
      * formatAddress()
-     * Formats email Addess and returns as string
+     * Formats email Address and returns as string
      * @param string $address
      * @return string
      */
     private function formatAddress($address) {
-        if (isset($address[0]) and !isset($address[1])):
+        if (isset($address[0]) && !isset($address[1])):
             return $address[0];
-        elseif (isset($address[0]) and isset($address[1])):
+        elseif (isset($address[0]) && isset($address[1])):
             return '"' . $address[1] . '" <' . $address[0] . ">";
         endif;
     }
@@ -426,7 +424,7 @@ class Mail {
         foreach ($address as $key => $addr) :
             $address[$key] = $this->formatAddress($addr);
         endforeach;
-        return implode(', ' . self::newline . "\t", $address);
+        return implode(', ' . self::NEWLINE . "\t", $address);
     }
 
     /**
@@ -436,14 +434,14 @@ class Mail {
      */
     private function compileBody() {
         if ($this->isHTML):
-            return "--" . $this->boundary . self::newline .
-                    "Content-Type: text/plain; charset=" . $this->charset . "" . self::newline .
-                    "Content-Transfer-Encoding: base64" . self::newline . self::newline .
-                    base64_encode($this->text) . self::newline .
-                    "--" . $this->boundary . self::newline .
-                    "Content-Type: text/html; charset=" . $this->charset . "" . self::newline .
-                    "Content-Transfer-Encoding: base64" . self::newline . self::newline .
-                    base64_encode($this->html) . self::newline .
+            return "--" . $this->boundary . self::NEWLINE .
+                    "Content-Type: text/plain; charset=" . $this->charset . "" . self::NEWLINE .
+                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+                    base64_encode($this->text) . self::NEWLINE .
+                    "--" . $this->boundary . self::NEWLINE .
+                    "Content-Type: text/html; charset=" . $this->charset . "" . self::NEWLINE .
+                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+                    base64_encode($this->html) . self::NEWLINE .
                     "--" . $this->boundary . "--";
         else:
             return $this->text;
@@ -482,7 +480,7 @@ class Mail {
         $headers = '';
         foreach ($this->headers as $key => $val):
             if ($key != "To"):
-                $headers .= $key . ': ' . $val . self::newline;
+                $headers .= $key . ': ' . $val . self::NEWLINE;
             endif;
         endforeach;
         return mail($this->headers['To'], $this->subject, $this->body, $headers);
@@ -501,7 +499,7 @@ class Mail {
         $this->setStreamTimeout();
         $this->getResponse();
         $this->smtpCmd("EHLO {$this->localhost}");
-        if (isset($this->username) and isset($this->password)):
+        if (isset($this->username) && isset($this->password)):
             $this->smtpCmd("AUTH LOGIN");
             $this->smtpCmd(base64_encode($this->username));
             $this->smtpCmd(base64_encode($this->password));
@@ -521,9 +519,9 @@ class Mail {
         $this->headers['Date'] = date('r');
         $headers = '';
         foreach ($this->headers as $key => $val):
-            $headers .= $key . ': ' . $val . self::newline;
+            $headers .= $key . ': ' . $val . self::NEWLINE;
         endforeach;
-        $result = $this->smtpCmd($headers . self::newline . $this->body . self::newline);
+        $result = $this->smtpCmd($headers . self::NEWLINE . $this->body . self::NEWLINE);
         $this->smtpCmd("QUIT");
         fclose($this->smtp);
         return substr($result, 0, 3) == "250";

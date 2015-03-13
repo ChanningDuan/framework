@@ -29,7 +29,7 @@ namespace ngfw;
  * App
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class App {
@@ -51,7 +51,6 @@ class App {
         $output = preg_replace('/ (float|int)\((\-?[\d\.]+)\)/', " <span style='color: #888'>($1)</span> <b style='color: brown'>$2</b>", $output);
         $output = preg_replace('/array\((\d+)\) {\s+}\n/', "<span style='color: #888'>(array)</span> <b style='color: brown'>[]</b>", $output);
         $output = preg_replace('/ string\((\d+)\) \"(.*)\"/', " <span style='color: #888'>(string)</span> <b style='color: brown'>'$2'</b>", $output);
-        //$str = preg_replace('/\[\"(.+)\"\] => /', "<span style='color: #888'>['$1']</span> &rarr; ", $str);
         $output = preg_replace('/object\((\S+)\)#(\d+) \((\d+)\) {/', "<span style='color: #888'>(object)</span> <b style='color: #0C9136'>$1[$3]</b> {", $output);
         $output = str_replace("bool(false)", "<span style='color:#888'>(boolean) </span><span style='color: red'>false</span>", $output);
         $output = str_replace("bool(true)", "<span style='color:#888'>(boolean) </span><span style='color: green'>true</span>", $output);

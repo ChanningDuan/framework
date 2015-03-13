@@ -29,7 +29,7 @@ namespace ngfw;
  * Configuration
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Configuration {
@@ -43,7 +43,7 @@ class Configuration {
      * @throws \ngfw\Exception
      */
     public static function loadConfigFile($filename) {
-        if (!isset($filename) or !is_string($filename)):
+        if (!isset($filename) || !is_string($filename)):
             throw new Exception("Filename is Required For Configuration");
         endif;
         $ini = parse_ini_file($filename);

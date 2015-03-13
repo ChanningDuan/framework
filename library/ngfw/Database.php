@@ -57,14 +57,11 @@ class Database extends \PDO
     /**
      * __construct
      * sets options and Connections to Database
-     * sets options and Connections to Database
-     *
      * @param array $options
-     * @param bool  $autoConnect
      */
     public function __construct($options = null, $autoConnect = true) {
         $this->setOptions($options);
-        if ($autoConnect and isset($this->options) and !empty($this->options)):
+        if ($autoConnect && isset($this->options) && !empty($this->options)):
             $this->connect($this->options);
         endif;
     }
@@ -74,7 +71,7 @@ class Database extends \PDO
      * @param array $options database connection settings
      */
     private function setOptions($options) {
-        if (isset($options) or !empty($options)):
+        if (isset($options) || !empty($options)):
             $this->options = $options;
         endif;
     }
@@ -94,7 +91,7 @@ class Database extends \PDO
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         }
         catch(\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo 'Connection failed: ' . $e->getMessage();
             endif;
         }
@@ -106,7 +103,7 @@ class Database extends \PDO
      * @return string
      */
     private function createdsn() {
-        if (!isset($this->options) or empty($this->options)):
+        if (!isset($this->options) || empty($this->options)):
             return false;
         endif;
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
@@ -120,19 +117,19 @@ class Database extends \PDO
      * @return mixed
      */
     public function fetchAll($query, $data = null) {
-        return $this->query($query);
+        return $this->query($query, $data);
     }
 
     /**
      * fetchRow
-     * Retuns single row from database and return result as array
+     * Returns single row from database and return result as array
      * @param string $query
      * @param array $data
      * @return mixed
      */
     public function fetchRow($query, $data = null) {
         $this->fetchmode = "row";
-        $result = $this->query($query);
+        $result = $this->query($query, $data);
         $this->fetchmode = "all";
         return $result;
     }
@@ -140,13 +137,10 @@ class Database extends \PDO
     /**
      * run()
      * Executes Query
-     *
      * @param string $query
-     * @param array  $data
-     * @return array|bool|int
+     * @param array $data
      * @throws Exception
-     * @internal param string $sql
-     * @access   public
+     * @return mixed
      */
     public function query($query, $data = null) {
         try {
@@ -174,7 +168,7 @@ class Database extends \PDO
                     endforeach;
                 endif;
             else:
-                $pdostmt = $this->prepare($sql);
+                $pdostmt = $this->prepare($query);
             endif;
             if ($pdostmt->execute($data) !== false):
                 if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)):
@@ -191,7 +185,7 @@ class Database extends \PDO
             endif;
         }
         catch(\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo $e->getMessage();
             endif;
             return false;
@@ -200,9 +194,8 @@ class Database extends \PDO
 
     /**
      * escape, quote() method alias
-     *
-     * @param  string    $value
-     * @param int|object $parameter_type
+     * @param  string $value
+     * @param  integer $parameter_type
      * @return string
      */
     public function escape($value, $parameter_type = \PDO::PARAM_STR) {
@@ -211,9 +204,8 @@ class Database extends \PDO
 
     /**
      * quote via parent class
-     *
-     * @param  string    $value
-     * @param int|object $parameter_type
+     * @param  string $value
+     * @param  integer $parameter_type
      * @return string
      */
     public function quote($value, $parameter_type = \PDO::PARAM_STR) {
@@ -234,7 +226,6 @@ class Database extends \PDO
 
     /**
      * ping
-     * Pings Database
      * Pings Database
      * @return boolean
      */

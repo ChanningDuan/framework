@@ -29,7 +29,7 @@ namespace ngfw;
  * Pagination
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Pagination {
@@ -43,7 +43,7 @@ class Pagination {
 
     /**
      * $db
-     * Holds Datanase connection
+     * Holds Database connection
      * @var object
      */
     protected $db;
@@ -71,7 +71,7 @@ class Pagination {
 
     /**
      * $itemsPerPage
-     * Holds number of iterm per page, default value 10
+     * Holds number of items per page count, default value 10
      * @var int
      */
     protected $itemsPerPage = 10;
@@ -106,7 +106,7 @@ class Pagination {
 
     /**
      * $defaultOrder
-     * Holds orderby, Default is DESC
+     * Holds default row Order, Default is DESC
      * @var string
      */
     protected $defaultOrder = "DESC";
@@ -114,7 +114,7 @@ class Pagination {
     /**
      * $defaultPageNumberName
      * Holds Default Page Number Name, Default value 'pagenumber'
-     * @var int
+     * @var string
      */
     protected $defaultPageNumberName = "pagenumber";
 
@@ -176,7 +176,7 @@ class Pagination {
      * setAdapter()
      * Sets Database Adapter
      * @param object $db
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setAdapter($db) {
         $this->db = $db;
@@ -187,7 +187,7 @@ class Pagination {
      * setSelect()
      * Sets Select
      * @param string|array $select
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setSelect($select) {
         $this->select = $select;
@@ -198,7 +198,7 @@ class Pagination {
      * setTable()
      * Sets Database Table
      * @param string $table
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setTable($table) {
         $this->table = $table;
@@ -209,7 +209,7 @@ class Pagination {
      * setItemsPerPage()
      * Set number of items per page
      * @param int $int
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setItemsPerPage($int) {
         $this->itemsPerPage = $int;
@@ -220,7 +220,7 @@ class Pagination {
      * setCurrentPage()
      * Set current page
      * @param int $page
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setCurrentPage($page) {
         $this->currentPage = $page;
@@ -231,7 +231,7 @@ class Pagination {
      * setWhereClause()
      * Set where clause
      * @param string $where
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setWhereClause($where) {
         $this->where = $where;
@@ -242,7 +242,7 @@ class Pagination {
      * setOrderBy()
      * Set order by
      * @param string $field
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setOrderBy($field) {
         $this->orderByField = $field;
@@ -253,7 +253,7 @@ class Pagination {
      * setOrderClause()
      * Set order clause
      * @param string $clause
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setOrderClause($clause) {
         $this->defaultOrder = $clause;
@@ -286,7 +286,7 @@ class Pagination {
             $limitFrom = 0;
         endif;
         $this->query->limit($limitFrom . ", " . $this->itemsPerPage);
-        return $this->db->fetchAll($this->query->__toString());
+        return $this->db->fetchAll($this->query->getQuery());
     }
 
     /**
@@ -312,7 +312,7 @@ class Pagination {
             );
         endif;
         for ($i = 1; $i <= $this->totalPages; $i++):
-            if ($i >= ($this->currentPage - $range) AND $i <= ($this->currentPage + $range)):
+            if ($i >= ($this->currentPage - $range) && $i <= ($this->currentPage + $range)):
                 $paginator[] = array($this->defaultPageNumberName => $i,
                     $this->defaultPaginationSegmentName => $i,
                     $this->defaultPaginationSegmentStatus => ($this->currentPage == $i ? false : true)
@@ -353,7 +353,7 @@ class Pagination {
 
     /**
      * calculateTotal()
-     * Calculate totals
+     * Calculate total
      * @return int
      */
     private function calculateTotal() {
@@ -364,7 +364,7 @@ class Pagination {
             if (isset($this->where)):
                 $this->query->where($this->where);
             endif;
-            $result = $this->db->fetchRow($this->query->__toString());
+            $result = $this->db->fetchRow($this->query->getQuery());
             $this->totalCount = $result['total'];
             $this->totalPages = ceil($this->totalCount / $this->itemsPerPage);
         endif;

@@ -29,7 +29,7 @@ namespace ngfw;
  * Header
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Header
@@ -45,7 +45,7 @@ class Header
      */
     public static function responseCode($code = null) {
         if (!function_exists('http_response_code')):
-            if (isset($code) and is_numeric($code)):
+            if (isset($code) && is_numeric($code)):
                 switch ($code) {
                     case 100:
                         $text = 'Continue';
@@ -206,13 +206,13 @@ class Header
                 return $code;
             else:
                 $code = Registry::get('http_response_code');
-                if (!isset($code) or empty($code)):
+                if (!isset($code) || empty($code)):
                     $code = 200;
                 endif;
             endif;
             return $code;
         else:
-            if (!isset($code) OR !is_numeric($code)):
+            if (!isset($code) || !is_numeric($code)):
                 $code = null;
             endif;
             return http_response_code($code);
@@ -224,12 +224,12 @@ class Header
      * Redirect to URL & Returns a REDIRECT (302) status code to the browser unless the 201 or a 3xx status code has already been set.
      *
      * @param string $url
-     * @param int    $http_response_code http response code
+     * @param int $http_response_code http response code
      * @return mixed
      * @internal param bool $exit exit after redirect or continue executing the code
      */
     public static function redirect($url = '/', $http_response_code) {
-        if (isset($http_response_code) and is_numeric($http_response_code)):
+        if (isset($http_response_code) && is_numeric($http_response_code)):
             self::set("Location: " . $url, true, $http_response_code);
         else:
             self::set("Location: " . $url);
@@ -242,8 +242,8 @@ class Header
      * Send a raw HTTP header
      *
      * @param string $string Header to set
-     * @param bool   $replace
-     * @param null   $http_response_code
+     * @param bool $replace Overwrite current header?
+     * @param string $http_response_code http_response_code to set
      */
     public static function set($string = "", $replace = true, $http_response_code = null) {
         header($string, $replace, $http_response_code);
@@ -252,9 +252,7 @@ class Header
     /**
      * Powered By
      * Set new output source
-     *
-     * @param $string
-     * @internal param string $source X-Powered-By source
+     * @param string $string X-Powered-By source
      */
     public static function poweredBy($string) {
         self::set('X-Powered-By: ' . $string);

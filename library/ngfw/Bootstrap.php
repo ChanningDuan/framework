@@ -29,7 +29,7 @@ namespace ngfw;
  * Bootstrap
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Bootstrap
@@ -58,9 +58,8 @@ class Bootstrap
 
     /**
      * __construct()
-     * Instantiates new Autoloader and all methods
+     * Instantiates new auto loader and all methods
      * @see initMethods()
-     * @return void
      */
     public function __construct() {
         $this->initMethods();
@@ -73,7 +72,7 @@ class Bootstrap
      */
     private function initMethods() {
         foreach (get_class_methods($this) as $method):
-            if (substr($method, 0, 1) == "_" and substr($method, 0, 2) !== "__"):
+            if (substr($method, 0, 1) == "_" && substr($method, 0, 2) !== "__"):
                 call_user_func(array($this, $method));
             endif;
         endforeach;

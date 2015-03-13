@@ -28,7 +28,7 @@ namespace ngfw;
 /**
  * Httpclient
  * @package ngfw
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Httpclient {
@@ -89,16 +89,16 @@ class Httpclient {
      * @param int $timeout
      */
     public function __construct($uri = null, $maxredirects = null, $timeout = null) {
-        if (isset($uri) and !empty($uri)):
+        if (isset($uri) && !empty($uri)):
             $this->setUri($uri);
         endif;
-        if (isset($maxredirects) and !empty($maxredirects)):
+        if (isset($maxredirects) && !empty($maxredirects)):
             $this->setMaxredirects($maxredirects);
         endif;
-        if (isset($timeout) and !empty($timeout)):
+        if (isset($timeout) && !empty($timeout)):
             $this->setTimeout($timeout);
         endif;
-        if (isset($_SERVER['HTTP_USER_AGENT']) and !empty($_SERVER['HTTP_USER_AGENT'])):
+        if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])):
             $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         endif;
     }
@@ -107,7 +107,7 @@ class Httpclient {
      * setUserAgent
      * Sets User Agent
      * @param string $userAgent
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setUserAgent($userAgent) {
         $this->userAgent = $userAgent;
@@ -129,7 +129,7 @@ class Httpclient {
      * setUri()
      * Sets URI object
      * @param string $uri
-     * @return object Httpclient
+     * @return object Httpclient()
      */
     public function setUri($uri = null) {
         $this->uri = str_replace("&amp;", "&", trim($uri));
@@ -140,7 +140,7 @@ class Httpclient {
      * setMaxredirects()
      * sets Max Redirects object, default 0
      * @param int $maxredirects
-     * @return object Httpclient
+     * @return object Httpclient()
      */
     public function setMaxredirects($maxredirects = 0) {
         $this->maxredirects = $maxredirects;
@@ -151,7 +151,7 @@ class Httpclient {
      * setTimeout()
      * Sets timeout object
      * @param int $timeout
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setTimeout($timeout = 30) {
         $this->timeout = $timeout;
@@ -162,10 +162,10 @@ class Httpclient {
      * post()
      * sets post object
      * @param array $array
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function post($array) {
-        if (isset($array) and is_array($array)):
+        if (isset($array) && is_array($array)):
             $fields = "";
             foreach ($array as $key => $value):
                 $fields.= $key . '=' . $value . '&';
@@ -206,7 +206,6 @@ class Httpclient {
     /**
      * request()
      * Requests uri via Curl, if 301 or 302 found, follows the link
-     * @todo add other methods
      * @return array
      */
     public function request() {
@@ -215,7 +214,7 @@ class Httpclient {
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $this->uri);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
-        if (isset($this->postData) and !empty($this->postData)):
+        if (isset($this->postData) && !empty($this->postData)):
             curl_setopt($ch, CURLOPT_POST, count($this->postDataArray));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
         endif;
@@ -243,8 +242,7 @@ class Httpclient {
                 endif;
             endforeach;
         endif;
-        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) OR
-                preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)) :
+        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) || preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)) :
             $this->uri = $value[1];
             return $this->request();
         else:

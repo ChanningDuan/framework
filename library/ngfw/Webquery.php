@@ -28,7 +28,7 @@ namespace ngfw;
  * Webquery
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Webquery {
@@ -70,9 +70,14 @@ class Webquery {
     protected $dom;
 
     /**
+     * $content
+     * @var string
+     */
+    protected $content;
+
+    /**
      * __construct()
      * Sets Httpclient and DOMDocument objects
-     * @return void
      */
     public function __construct() {
         $this->httpclient = new Httpclient();
@@ -83,7 +88,7 @@ class Webquery {
      * select()
      * Sets select object
      * @param string $select
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function select($select = "*") {
         $this->select = $select;
@@ -95,10 +100,10 @@ class Webquery {
      * passes uri param to Httpclient::setUri()
      * @see Httpclient::setUri()
      * @param string $uri
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function from($uri = null) {
-        if (isset($uri) and !empty($uri)):
+        if (isset($uri) && !empty($uri)):
             $this->httpclient->setUri($uri);
         endif;
         return $this;
@@ -109,7 +114,7 @@ class Webquery {
      * Sets where object
      * @param string $where
      * @param string $value
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function where($where = null, $value = null) {
         if (is_array($this->where)):
@@ -130,7 +135,7 @@ class Webquery {
         $content = $this->httpclient->request();
         $this->content = $content['content'];
         @$this->dom->loadHTML('<?xml encoding="UTF-8">' . $this->content);
-        if (isset($this->select) and $this->select != "*"):
+        if (isset($this->select) && $this->select != "*"):
             $xpath = new \DOMXpath($this->dom);
             $nodes = $xpath->query("//" . $this->select);
             $html = '';
@@ -148,7 +153,7 @@ class Webquery {
                 endforeach;
             endforeach;
         endif;
-        if (!isset($this->where) and empty($result)):
+        if (!isset($this->where) && empty($result)):
             $result[] = $this->removeHeaders($this->dom->saveHTML());
         endif;
         return $result;

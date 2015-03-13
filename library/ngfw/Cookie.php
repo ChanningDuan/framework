@@ -29,7 +29,7 @@ namespace ngfw;
  * Cookie
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Cookie {
@@ -85,7 +85,7 @@ class Cookie {
 
     /**
      * $httponly
-     * When True the cookie will be made accessible only throuth the HTTP protocol
+     * When True the cookie will be made accessible only through the HTTP protocol
      * @var bool
      */
     protected $httponly = false;
@@ -227,7 +227,7 @@ class Cookie {
 
     /**
      * setHttponly
-     * set httponly object     *
+     * set httponly object
      * @param bool $httponly
      * @return void
      */

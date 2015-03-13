@@ -29,7 +29,7 @@ namespace ngfw;
  * Uri
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Uri
@@ -80,8 +80,7 @@ class Uri
 
     /**
      * __construct
-     * Sets reuqestedPath and rootPath, ROOT must be defined
-     * @return void
+     * Sets reuqestedPath, query_string and rootPath objects, if PUBLIC_PATH is not defined, rootPath will fallback to $_SERVER["DOCUMENT_ROOT"]
      */
     public function __construct() {
         $this->requestedPath = $_SERVER['REQUEST_URI'];
@@ -112,9 +111,9 @@ class Uri
      * @return string
      */
     public static function baseUrl() {
-        if (!isset(self::init()->baseURL) OR empty(self::init()->baseURL)):
+        if (!isset(self::init()->baseURL) || empty(self::init()->baseURL)):
             $subdirectories = null;
-            if (isset(self::init()->subdirectories) and is_array(self::init()->subdirectories) and !empty(self::init()->subdirectories)):
+            if (isset(self::init()->subdirectories) && is_array(self::init()->subdirectories) && !empty(self::init()->subdirectories)):
                 $subdirectories = implode("/", self::init()->subdirectories) . "/";
             endif;
             if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""):
@@ -147,7 +146,7 @@ class Uri
 
     /**
      * getPath()
-     * if is set requestedPath object reutns, otherwise false is returned
+     * return requestedPath object if set, otherwise false is returned
      * @return mixed
      */
     public function getPath() {
@@ -160,7 +159,7 @@ class Uri
     /**
      * getPathArray()
      * Returns path as array
-     * e.g.:  /category/music/page/123 will be trnaslated to array("category" => "music", "page" => "123")
+     * e.g.:  /category/music/page/123 will be translated to array("category" => "music", "page" => "123")
      * @see pathToArray()
      * @return mixed
      */
@@ -178,7 +177,8 @@ class Uri
         $pathChunks = $this->getPathChunks();
         if ($pathChunks):
             $result = array();
-            for ($i = 0; $i < sizeof($pathChunks); $i+= 2):
+            $sizeOfPathChunks = sizeof($pathChunks);
+            for ($i = 0; $i < $sizeOfPathChunks; $i+= 2):
                 $result[preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i]) ] = isset($pathChunks[$i + 1]) ? preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i + 1]) : false;
             endfor;
             return $result;

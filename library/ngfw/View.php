@@ -29,7 +29,7 @@ namespace ngfw;
  * View
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class View
@@ -37,14 +37,14 @@ class View
 
     /**
      * $controller
-     * Holds Conroller name
+     * Holds controller name
      * @var string
      */
     protected $controller;
 
     /**
      * $action
-     * View file filename without extenstion
+     * View file filename without extension
      * @var string
      */
     protected $action;
@@ -186,12 +186,12 @@ class View
      * @throws \ngfw\Exception If View or layout file is enable but does not exists
      */
     public function loadLayout() {
-        if ($this->render and !$this->setViewPath()):
+        if ($this->render && !$this->setViewPath()):
             throw new Exception(sprintf('View file "%s" does not exist.', $this->viewFilePath));
         endif;
         if ($this->layout):
             if($this->setLayoutPath()):
-                include ($this->layoutFilePath);
+                include_once ($this->layoutFilePath);
             else:
                 throw new Exception(sprintf('Layout file "%s" does not exist.', $this->layoutFilePath));
             endif;
@@ -206,7 +206,7 @@ class View
      */
     public function render() {
         if ($this->render):
-            include ($this->viewFilePath);
+            include_once ($this->viewFilePath);
         endif;
     }
 }

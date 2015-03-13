@@ -29,10 +29,11 @@ namespace ngfw;
  * Authentication
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
-class Authentication {
+class Authentication
+{
 
     /**
      * $dbAdapter
@@ -130,7 +131,7 @@ class Authentication {
             return false;
         endif;
         $this->table = $table;
-        $this->sessionName = $this->sessionName.$this->table;
+        $this->sessionName = $this->sessionName . $this->table;
         return $this;
     }
 
@@ -200,14 +201,9 @@ class Authentication {
         if ($auth):
             return true;
         endif;
-        if (isset($this->dbAdapter)
-                AND isset($this->table)
-                AND isset($this->identityColumn)
-                AND isset($this->identity)
-                AND isset($this->credentialColumn)
-                AND isset($this->credential)):
+        if (isset($this->dbAdapter) && isset($this->table) && isset($this->identityColumn) && isset($this->identity) && isset($this->credentialColumn) && isset($this->credential)):
             $user = $this->checkUserInDB();
-            if (isset($user) and is_array($user)):
+            if (isset($user) && is_array($user)):
                 $this->setSessionIdentity($user);
                 return true;
             endif;
@@ -221,10 +217,9 @@ class Authentication {
      * @return array|false
      */
     private function checkUserInDB() {
-        return $this->dbAdapter->fetchRow("SELECT * FROM `" . $this->table . "`
-                    WHERE `" . $this->identityColumn . "` = '" . $this->identity . "'
-                    AND `" . $this->credentialColumn . "` = '" . $this->credential . "'
-                    LIMIT 1");
+        $query = new Query();
+        $query->select()->from($this->table)->where($this->identityColumn . " = ?", $this->identity)->andWhere($this->credentialColumn . " = ?", $this->credential)->limit(1);
+        return $this->dbAdapter->fetchRow($query);
     }
 
     /**
@@ -257,5 +252,4 @@ class Authentication {
     public function clearIdentity() {
         Session::set($this->sessionName, NULL);
     }
-
 }
