@@ -104,7 +104,7 @@ class Webquery {
      * @return object Webquery()
      */
     public function from($uri = null) {
-        if (isset($uri) and !empty($uri)):
+        if (isset($uri) && !empty($uri)):
             $this->httpclient->setUri($uri);
         endif;
         return $this;
@@ -136,7 +136,7 @@ class Webquery {
         $content = $this->httpclient->request();
         $this->content = $content['content'];
         @$this->dom->loadHTML('<?xml encoding="UTF-8">' . $this->content);
-        if (isset($this->select) and $this->select != "*"):
+        if (isset($this->select) && $this->select != "*"):
             $xpath = new \DOMXpath($this->dom);
             $nodes = $xpath->query("//" . $this->select);
             $html = '';
@@ -154,7 +154,7 @@ class Webquery {
                 endforeach;
             endforeach;
         endif;
-        if (!isset($this->where) and empty($result)):
+        if (!isset($this->where) && empty($result)):
             $result[] = $this->removeHeaders($this->dom->saveHTML());
         endif;
         return $result;

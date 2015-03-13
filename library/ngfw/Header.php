@@ -45,7 +45,7 @@ class Header
      */
     public static function responseCode($code = null) {
         if (!function_exists('http_response_code')):
-            if (isset($code) and is_numeric($code)):
+            if (isset($code) && is_numeric($code)):
                 switch ($code) {
                     case 100:
                         $text = 'Continue';
@@ -206,13 +206,13 @@ class Header
                 return $code;
             else:
                 $code = Registry::get('http_response_code');
-                if (!isset($code) or empty($code)):
+                if (!isset($code) || empty($code)):
                     $code = 200;
                 endif;
             endif;
             return $code;
         else:
-            if (!isset($code) OR !is_numeric($code)):
+            if (!isset($code) || !is_numeric($code)):
                 $code = null;
             endif;
             return http_response_code($code);
@@ -227,7 +227,7 @@ class Header
      * @return mixed
      */
     public static function redirect($url = '/', $http_response_code) {
-        if (isset($http_response_code) and is_numeric($http_response_code)):
+        if (isset($http_response_code) && is_numeric($http_response_code)):
             self::set("Location: " . $url, true, $http_response_code);
         else:
             self::set("Location: " . $url);

@@ -201,7 +201,7 @@ class Authentication
         if ($auth):
             return true;
         endif;
-        if (isset($this->dbAdapter) AND isset($this->table) AND isset($this->identityColumn) AND isset($this->identity) AND isset($this->credentialColumn) AND isset($this->credential)):
+        if (isset($this->dbAdapter) && isset($this->table) && isset($this->identityColumn) && isset($this->identity) && isset($this->credentialColumn) && isset($this->credential)):
             $user = $this->checkUserInDB();
             if (isset($user) and is_array($user)):
                 $this->setSessionIdentity($user);

@@ -186,12 +186,12 @@ class View
      * @throws \ngfw\Exception If View or layout file is enable but does not exists
      */
     public function loadLayout() {
-        if ($this->render and !$this->setViewPath()):
+        if ($this->render && !$this->setViewPath()):
             throw new Exception(sprintf('View file "%s" does not exist.', $this->viewFilePath));
         endif;
         if ($this->layout):
             if($this->setLayoutPath()):
-                include ($this->layoutFilePath);
+                include_once ($this->layoutFilePath);
             else:
                 throw new Exception(sprintf('Layout file "%s" does not exist.', $this->layoutFilePath));
             endif;
@@ -206,7 +206,7 @@ class View
      */
     public function render() {
         if ($this->render):
-            include ($this->viewFilePath);
+            include_once ($this->viewFilePath);
         endif;
     }
 }

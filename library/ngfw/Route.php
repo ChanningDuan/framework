@@ -109,7 +109,7 @@ class Route {
      * @return void
      */
     private function setController($controller) {
-        if (isset($controller) AND !empty($controller)):
+        if (isset($controller) && !empty($controller)):
             self::init()->controller = ucfirst(strtolower($controller));
         else:
             self::init()->controller = self::init()->defaultController;
@@ -123,7 +123,7 @@ class Route {
      * @return void
      */
     private function setAction($action) {
-        if (isset($action) AND !empty($action)):
+        if (isset($action) && !empty($action)):
             self::init()->action = ucfirst(strtolower($action));
         else:
             self::init()->action = self::init()->defaultAction;
@@ -148,7 +148,7 @@ class Route {
      * @return boolean
      */
     public static function addRoute($route) {
-        if (is_array($route) and isset($route['route'])):
+        if (is_array($route) && isset($route['route'])):
             self::init()->routes[] = $route;
             return true;
         elseif (is_array($route)):
@@ -170,12 +170,12 @@ class Route {
     private static function determineRoute() {
         if (!isset(self::init()->routeSelected)):
             $routes = self::init()->routes;
-            if (isset($routes) and is_array($routes)):
+            if (isset($routes) && is_array($routes)):
                 $pathArray = Uri::init()->getPathChunks();
                 foreach ($routes as $route):
                     if (!isset(self::init()->routeSelected)):
                         $routeArray = explode('/', trim($route['route'], '/'));
-                        if (is_array($pathArray) and !empty($routeArray[0]) and count($routeArray) == count($pathArray)):
+                        if (is_array($pathArray) && !empty($routeArray[0]) && count($routeArray) == count($pathArray)):
                             if (isset($route['defaults']['controller'])):
                                 self::init()->setController($route['defaults']['controller']);
                                 self::init()->routeSelected = true;
@@ -249,7 +249,7 @@ class Route {
         $uri = new Uri();
         if (!self::init()->request):
             $path = $uri->getPathArray();
-            if (is_array($path) and !empty($path)):
+            if (is_array($path) && !empty($path)):
                 foreach (array_slice($path, 1) as $key => $value):
                     self::init()->setRequest($key, $value);
                 endforeach;

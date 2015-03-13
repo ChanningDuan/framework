@@ -63,7 +63,7 @@ class Database extends \PDO
      */
     public function __construct($options = null, $autoConnect = true) {
         $this->setOptions($options);
-        if ($autoConnect and isset($this->options) and !empty($this->options)):
+        if ($autoConnect && isset($this->options) && !empty($this->options)):
             $this->connect($this->options);
         endif;
     }
@@ -73,7 +73,7 @@ class Database extends \PDO
      * @param array $options database connection settings
      */
     private function setOptions($options) {
-        if (isset($options) or !empty($options)):
+        if (isset($options) || !empty($options)):
             $this->options = $options;
         endif;
     }
@@ -92,7 +92,7 @@ class Database extends \PDO
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         }
         catch(\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo 'Connection failed: ' . $e->getMessage();
             endif;
         }
@@ -104,7 +104,7 @@ class Database extends \PDO
      * @return string
      */
     private function createdsn() {
-        if (!isset($this->options) or empty($this->options)):
+        if (!isset($this->options) || empty($this->options)):
             return false;
         endif;
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
@@ -186,7 +186,7 @@ class Database extends \PDO
             endif;
         }
         catch(\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') and DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo $e->getMessage();
             endif;
             return false;

@@ -111,9 +111,9 @@ class Uri
      * @return string
      */
     public static function baseUrl() {
-        if (!isset(self::init()->baseURL) OR empty(self::init()->baseURL)):
+        if (!isset(self::init()->baseURL) || empty(self::init()->baseURL)):
             $subdirectories = null;
-            if (isset(self::init()->subdirectories) and is_array(self::init()->subdirectories) and !empty(self::init()->subdirectories)):
+            if (isset(self::init()->subdirectories) && is_array(self::init()->subdirectories) && !empty(self::init()->subdirectories)):
                 $subdirectories = implode("/", self::init()->subdirectories) . "/";
             endif;
             if (!isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""):
@@ -177,7 +177,8 @@ class Uri
         $pathChunks = $this->getPathChunks();
         if ($pathChunks):
             $result = array();
-            for ($i = 0; $i < sizeof($pathChunks); $i+= 2):
+            $sizeOfPathChunks = sizeof($pathChunks);
+            for ($i = 0; $i < $sizeOfPathChunks; $i+= 2):
                 $result[preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i]) ] = isset($pathChunks[$i + 1]) ? preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i + 1]) : false;
             endfor;
             return $result;

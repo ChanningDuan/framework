@@ -407,9 +407,9 @@ class Mail {
      * @return string
      */
     private function formatAddress($address) {
-        if (isset($address[0]) and !isset($address[1])):
+        if (isset($address[0]) && !isset($address[1])):
             return $address[0];
-        elseif (isset($address[0]) and isset($address[1])):
+        elseif (isset($address[0]) && isset($address[1])):
             return '"' . $address[1] . '" <' . $address[0] . ">";
         endif;
     }
@@ -499,7 +499,7 @@ class Mail {
         $this->setStreamTimeout();
         $this->getResponse();
         $this->smtpCmd("EHLO {$this->localhost}");
-        if (isset($this->username) and isset($this->password)):
+        if (isset($this->username) && isset($this->password)):
             $this->smtpCmd("AUTH LOGIN");
             $this->smtpCmd(base64_encode($this->username));
             $this->smtpCmd(base64_encode($this->password));

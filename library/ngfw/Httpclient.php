@@ -89,16 +89,16 @@ class Httpclient {
      * @param int $timeout
      */
     public function __construct($uri = null, $maxredirects = null, $timeout = null) {
-        if (isset($uri) and !empty($uri)):
+        if (isset($uri) && !empty($uri)):
             $this->setUri($uri);
         endif;
-        if (isset($maxredirects) and !empty($maxredirects)):
+        if (isset($maxredirects) && !empty($maxredirects)):
             $this->setMaxredirects($maxredirects);
         endif;
-        if (isset($timeout) and !empty($timeout)):
+        if (isset($timeout) && !empty($timeout)):
             $this->setTimeout($timeout);
         endif;
-        if (isset($_SERVER['HTTP_USER_AGENT']) and !empty($_SERVER['HTTP_USER_AGENT'])):
+        if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])):
             $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         endif;
     }
@@ -163,7 +163,7 @@ class Httpclient {
      * @return object Httpclient()
      */
     public function post($array) {
-        if (isset($array) and is_array($array)):
+        if (isset($array) && is_array($array)):
             $fields = "";
             foreach ($array as $key => $value):
                 $fields.= $key . '=' . $value . '&';
@@ -212,7 +212,7 @@ class Httpclient {
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $this->uri);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
-        if (isset($this->postData) and !empty($this->postData)):
+        if (isset($this->postData) && !empty($this->postData)):
             curl_setopt($ch, CURLOPT_POST, count($this->postDataArray));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
         endif;

@@ -234,7 +234,7 @@ class Query
         if (!isset($this->table)):
             throw new Exception("Table name is required for insert method to build query");
         endif;
-        if (!isset($data) or !is_array($data)):
+        if (!isset($data) || !is_array($data)):
             throw new Exception("Insert Values are required to build query");
         endif;
         $this->query = "INSERT INTO " . $this->escapeField($this->table) . " ";
@@ -257,7 +257,7 @@ class Query
         if (!isset($this->table)):
             throw new Exception("Table name is required for update method to build query");
         endif;
-        if (!isset($data) or !is_array($data)):
+        if (!isset($data) || !is_array($data)):
             throw new Exception("Update Values are required to build query");
         endif;
         $this->query = "UPDATE " . $this->escapeField($this->table) . " SET ";
@@ -323,7 +323,7 @@ class Query
      * @return object Query()
      */
     public function join($table, $clause, $joinCondition = null) {
-        if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if (!empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
             $this->joinCondition = strtoupper($joinCondition);
         endif;
         $k = (count($this->join) > 0) ? count($this->join) + 1 : 0;
@@ -353,7 +353,7 @@ class Query
      * @return object Query()
      */
     public function innerJoin($table, $clause, $joinCondition = null) {
-        if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if (!empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
             $this->joinCondition = strtoupper($joinCondition);
         endif;
         $k = (count($this->innerJoin) > 0) ? count($this->innerJoin) + 1 : 0;
@@ -383,7 +383,7 @@ class Query
      * @return object Query()
      */
     public function leftJoin($table, $clause, $joinCondition = null) {
-        if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if (!empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
             $this->joinCondition = strtoupper($joinCondition);
         endif;
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
@@ -413,7 +413,7 @@ class Query
      * @return object Query()
      */
     public function rightJoin($table, $clause, $joinCondition = null) {
-        if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if (!empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
             $this->joinCondition = strtoupper($joinCondition);
         endif;
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
@@ -446,7 +446,7 @@ class Query
         if ($value):
             $key = $this->buildBindAndFieldObjects($value);
         endif;
-        if (isset($key) and !empty($key)):
+        if (isset($key) && !empty($key)):
             $this->where = str_replace("?", ":" . $key, $where);
         else:
             $this->where = $this->escapeValue($where);
@@ -467,7 +467,7 @@ class Query
         if ($value):
             $key = $this->buildBindAndFieldObjects($value);
         endif;
-        if (isset($key) and !empty($key)):
+        if (isset($key) && !empty($key)):
             $this->andWhere[] = str_replace("?", ":" . $key, $where);
         else:
             $this->andWhere[] = $this->escapeValue($where);
@@ -488,7 +488,7 @@ class Query
         if ($value):
             $key = $this->buildBindAndFieldObjects($value);
         endif;
-        if (isset($key) and !empty($key)):
+        if (isset($key) && !empty($key)):
             $this->orWhere[] = str_replace("?", ":" . $key, $where);
         else:
             $this->orWhere[] = $this->escapeValue($where);
@@ -509,7 +509,7 @@ class Query
         if ($value):
             $key = $this->buildBindAndFieldObjects($value);
         endif;
-        if (isset($key) and !empty($key)):
+        if (isset($key) && !empty($key)):
             $this->having = str_replace("?", ":" . $key, $condition);
         else:
             $this->having = $this->escapeValue($condition);
@@ -594,7 +594,7 @@ class Query
      */
     private function buildBindAndFieldObjects($value, $key = null) {
         $generatedKey = $this->generateKey();
-        if (isset($key) and !empty($key)):
+        if (isset($key) && !empty($key)):
             $this->fields[$generatedKey] = $this->escapeField($key);
         endif;
         $isFunction = strpos($value, "(");
@@ -724,7 +724,7 @@ class Query
     public function __toString() {
         $keys = array();
         $values = array();
-        if (isset($this->bind) and is_array($this->bind)):
+        if (isset($this->bind) && is_array($this->bind)):
             foreach ($this->bind as $k => $v):
                 $values[] = "'" . $this->escapeValue($v) . "'";
                 $keys[] = '/:' . $k . '/';
