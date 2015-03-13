@@ -35,9 +35,9 @@ namespace ngfw;
 class Mail {
     
     /**
-     * newline     
+     * NEWLINE     
      */
-    const newline = "\r\n";
+    const NEWLINE = "\r\n";
 
     /**
      * $isSMTP
@@ -380,7 +380,7 @@ class Mail {
      * @return string
      */
     private function smtpCmd($command) {
-        fputs($this->smtp, $command . self::newline);
+        fputs($this->smtp, $command . self::NEWLINE);
         return $this->getResponse();
     }
 
@@ -391,7 +391,7 @@ class Mail {
      */
     private function getResponse() {
         $response = '';
-        while (($line = fgets($this->smtp, 515)) != false):
+        while (($line = fgets($this->smtp, 515)) !== false):
             $response .= trim($line) . "\n";
             if (substr($line, 3, 1) == ' '):
                 break;
@@ -424,7 +424,7 @@ class Mail {
         foreach ($address as $key => $addr) :
             $address[$key] = $this->formatAddress($addr);
         endforeach;
-        return implode(', ' . self::newline . "\t", $address);
+        return implode(', ' . self::NEWLINE . "\t", $address);
     }
 
     /**
@@ -434,14 +434,14 @@ class Mail {
      */
     private function compileBody() {
         if ($this->isHTML):
-            return "--" . $this->boundary . self::newline .
-                    "Content-Type: text/plain; charset=" . $this->charset . "" . self::newline .
-                    "Content-Transfer-Encoding: base64" . self::newline . self::newline .
-                    base64_encode($this->text) . self::newline .
-                    "--" . $this->boundary . self::newline .
-                    "Content-Type: text/html; charset=" . $this->charset . "" . self::newline .
-                    "Content-Transfer-Encoding: base64" . self::newline . self::newline .
-                    base64_encode($this->html) . self::newline .
+            return "--" . $this->boundary . self::NEWLINE .
+                    "Content-Type: text/plain; charset=" . $this->charset . "" . self::NEWLINE .
+                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+                    base64_encode($this->text) . self::NEWLINE .
+                    "--" . $this->boundary . self::NEWLINE .
+                    "Content-Type: text/html; charset=" . $this->charset . "" . self::NEWLINE .
+                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+                    base64_encode($this->html) . self::NEWLINE .
                     "--" . $this->boundary . "--";
         else:
             return $this->text;
@@ -480,7 +480,7 @@ class Mail {
         $headers = '';
         foreach ($this->headers as $key => $val):
             if ($key != "To"):
-                $headers .= $key . ': ' . $val . self::newline;
+                $headers .= $key . ': ' . $val . self::NEWLINE;
             endif;
         endforeach;
         return mail($this->headers['To'], $this->subject, $this->body, $headers);
@@ -519,9 +519,9 @@ class Mail {
         $this->headers['Date'] = date('r');
         $headers = '';
         foreach ($this->headers as $key => $val):
-            $headers .= $key . ': ' . $val . self::newline;
+            $headers .= $key . ': ' . $val . self::NEWLINE;
         endforeach;
-        $result = $this->smtpCmd($headers . self::newline . $this->body . self::newline);
+        $result = $this->smtpCmd($headers . self::NEWLINE . $this->body . self::NEWLINE);
         $this->smtpCmd("QUIT");
         fclose($this->smtp);
         return substr($result, 0, 3) == "250";

@@ -84,13 +84,6 @@ class Query
     private $table;
     
     /**
-     * $updateData
-     * Holds update data
-     * @var array
-     */
-    private $updateData;
-    
-    /**
      * $deleteTable
      * Holds boolean value if delete query is requested or not
      * @var boolean
@@ -622,9 +615,9 @@ class Query
     private function implodeBindValues(array $array) {
         $string = "";
         foreach ($array as $key => $value):
-            if ($value == false):
+            if ($value === false):
                 if (strpos($key, $this->glueForFunctionsSuffix) !== false):
-                    list($prefix, $function) = explode($this->glueForFunctionsSuffix, $key);
+                    $function = end(explode($this->glueForFunctionsSuffix, $key));
                     $string.= $function . ", ";
                 endif;
             elseif ($value == NULL):
@@ -644,7 +637,7 @@ class Query
         array_map(function ($v, $k) {
             
             // unset functions from $this->bind
-            if ($v == false):
+            if ($v === false):
                 if (strpos($k, $this->glueForFunctionsSuffix) !== false):
                     unset($this->bind[$k]);
                 endif;
