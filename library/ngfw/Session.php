@@ -48,7 +48,7 @@ class Session {
      */
     public static function init() {
         if (self::$instance === null):
-            if (!headers_sent() and !isset($_SESSION)):
+            if (!headers_sent() && !isset($_SESSION)):
                 session_start();
             endif;
             self::$instance == new Session();

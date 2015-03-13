@@ -240,8 +240,7 @@ class Httpclient {
                 endif;
             endforeach;
         endif;
-        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) OR
-                preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)) :
+        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) || preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)) :
             $this->uri = $value[1];
             return $this->request();
         else:

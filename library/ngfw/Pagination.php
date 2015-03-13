@@ -312,7 +312,7 @@ class Pagination {
             );
         endif;
         for ($i = 1; $i <= $this->totalPages; $i++):
-            if ($i >= ($this->currentPage - $range) AND $i <= ($this->currentPage + $range)):
+            if ($i >= ($this->currentPage - $range) && $i <= ($this->currentPage + $range)):
                 $paginator[] = array($this->defaultPageNumberName => $i,
                     $this->defaultPaginationSegmentName => $i,
                     $this->defaultPaginationSegmentStatus => ($this->currentPage == $i ? false : true)

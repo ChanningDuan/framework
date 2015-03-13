@@ -43,7 +43,7 @@ class Configuration {
      * @throws \ngfw\Exception
      */
     public static function loadConfigFile($filename) {
-        if (!isset($filename) or !is_string($filename)):
+        if (!isset($filename) || !is_string($filename)):
             throw new Exception("Filename is Required For Configuration");
         endif;
         $ini = parse_ini_file($filename);

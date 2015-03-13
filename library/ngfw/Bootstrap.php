@@ -72,7 +72,7 @@ class Bootstrap
      */
     private function initMethods() {
         foreach (get_class_methods($this) as $method):
-            if (substr($method, 0, 1) == "_" and substr($method, 0, 2) !== "__"):
+            if (substr($method, 0, 1) == "_" && substr($method, 0, 2) !== "__"):
                 call_user_func(array($this, $method));
             endif;
         endforeach;
