@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Query;
 
 /**
  * Pagination
@@ -44,7 +43,7 @@ class Pagination {
 
     /**
      * $db
-     * Holds Datanase connection
+     * Holds Database connection
      * @var object
      */
     protected $db;
@@ -72,7 +71,7 @@ class Pagination {
 
     /**
      * $itemsPerPage
-     * Holds number of iterm per page, default value 10
+     * Holds number of items per page count, default value 10
      * @var int 
      */
     protected $itemsPerPage = 10;
@@ -94,7 +93,7 @@ class Pagination {
     /**
      * $totalCount
      * Holds number of total row count
-     * @var type 
+     * @var int
      */
     protected $totalCount;
 
@@ -107,57 +106,57 @@ class Pagination {
 
     /**
      * $defaultOrder
-     * Holds orderby, Default is DESC
-     * @var type 
+     * Holds default row Order, Default is DESC
+     * @var string
      */
     protected $defaultOrder = "DESC";
 
     /**
      * $defaultPageNumberName
      * Holds Default Page Number Name, Default value 'pagenumber'
-     * @var type 
+     * @var string
      */
     protected $defaultPageNumberName = "pagenumber";
 
     /**
      * $defaultPaginationSegmentName
      * Holds Default Pagination Segment Name, Default value 'name'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentName = "name";
 
     /**
      * $defaultPaginationSegmentStatus
      * Holds default pagination segment status, Default value 'status'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentStatus = "status";
 
     /**
      * $defaultPaginationSegmentNameFirst
      * Holds default pagination segment name for first page, default value 'First'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameFirst = "First";
 
     /**
      * $defaultPaginationSegmentNamePrevious
      * Holds default pagination segment name for Previous page, default value 'Previous'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNamePrevious = "Previous";
 
     /**
      * $defaultPaginationSegmentNameNext
      * Holds default pagination segment name for Next page, default value 'Next'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameNext = "Next";
 
     /**
      * $defaultPaginationSegmentNameLast
      * Holds default pagination segment name for Last page, default value 'Last'
-     * @var type 
+     * @var string
      */
     protected $defaultPaginationSegmentNameLast = "Last";
 
@@ -177,7 +176,7 @@ class Pagination {
      * setAdapter()
      * Sets Database Adapter
      * @param object $db
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setAdapter($db) {
         $this->db = $db;
@@ -188,7 +187,7 @@ class Pagination {
      * setSelect()
      * Sets Select 
      * @param string|array $select
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setSelect($select) {
         $this->select = $select;
@@ -199,7 +198,7 @@ class Pagination {
      * setTable()
      * Sets Database Table
      * @param string $table
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setTable($table) {
         $this->table = $table;
@@ -210,7 +209,7 @@ class Pagination {
      * setItemsPerPage()
      * Set number of items per page
      * @param int $int
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setItemsPerPage($int) {
         $this->itemsPerPage = $int;
@@ -221,7 +220,7 @@ class Pagination {
      * setCurrentPage()
      * Set current page
      * @param int $page
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setCurrentPage($page) {
         $this->currentPage = $page;
@@ -232,7 +231,7 @@ class Pagination {
      * setWhereClause()
      * Set where clause
      * @param string $where
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setWhereClause($where) {
         $this->where = $where;
@@ -243,7 +242,7 @@ class Pagination {
      * setOrderBy()
      * Set order by 
      * @param string $field
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setOrderBy($field) {
         $this->orderByField = $field;
@@ -254,7 +253,7 @@ class Pagination {
      * setOrderClause()
      * Set order clause
      * @param string $clause
-     * @return \ngfw\Pagination
+     * @return object Pagination()
      */
     public function setOrderClause($clause) {
         $this->defaultOrder = $clause;
@@ -287,7 +286,7 @@ class Pagination {
             $limitFrom = 0;
         endif;
         $this->query->limit($limitFrom . ", " . $this->itemsPerPage);        
-        return $this->db->fetchAll($this->query->__toString());
+        return $this->db->fetchAll($this->query->getQuery());
     }
 
     /**
@@ -354,8 +353,8 @@ class Pagination {
 
     /**
      * calculateTotal()
-     * Calculate totlas
-     * @return type
+     * Calculate total
+     * @return int
      */
     private function calculateTotal() {
         if (!$this->totalPages):
@@ -365,7 +364,7 @@ class Pagination {
             if (isset($this->where)):
                 $this->query->where($this->where);
             endif;
-            $result = $this->db->fetchRow($this->query->__toString());
+            $result = $this->db->fetchRow($this->query->getQuery());
             $this->totalCount = $result['total'];
             $this->totalPages = ceil($this->totalCount / $this->itemsPerPage);
         endif;

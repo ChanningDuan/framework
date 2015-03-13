@@ -24,9 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Header;
-use ngfw\Route;
-use ngfw\Exception;
 
 /**
  * Bootstrap
@@ -55,15 +52,14 @@ class Bootstrap
     /**
      * $_controllerObject
      * Holds controller instance 
-     * @var onject
+     * @var object
      */
     protected $_controllerObject;
     
     /**
      * __construct()
-     * Instantiates new Autoloader and all methods
+     * Instantiates new auto loader and all methods
      * @see initMethods()
-     * @return void
      */
     public function __construct() {
         $this->initMethods();

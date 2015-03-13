@@ -4,27 +4,26 @@
  * ngfw
  * ---
  * copyright (c) 2015, Nick Gejadze
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy 
- * of this software and associated documentation files (the "Software"), 
- * to deal in the Software without restriction, including without limitation 
- * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- * and/or sell copies of the Software, and to permit persons to whom the 
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included 
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
- * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
- * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, 
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ * PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 namespace ngfw;
-use ngfw\Session;
 
 /**
  * Authentication
@@ -33,50 +32,51 @@ use ngfw\Session;
  * @version 1.2.2
  * @copyright (c) 2015, Nick Gejadze
  */
-class Authentication {
-
+class Authentication
+{
+    
     /**
      * $dbAdapter
      * @var object
      */
     protected $dbAdapter;
-
+    
     /**
      * @table
      * @var string
      */
     protected $table;
-
+    
     /**
      * $identityColumn
      * @var string
      */
     protected $identityColumn;
-
+    
     /**
      * $identity
      * @var string
      */
     protected $identity;
-
+    
     /**
      * $credentialColumn
      * @var string
      */
     protected $credentialColumn;
-
+    
     /**
      * $credential
      * @var string
      */
     protected $credential;
-
+    
     /**
      * $sessionName
      * @var string
      */
     protected $sessionName = "NG_AUTH";
-
+    
     /**
      * __construct()
      * Sets dbAdapter, Table Identity Column and Credential Column if passed
@@ -105,7 +105,7 @@ class Authentication {
         endif;
         return $this;
     }
-
+    
     /**
      * setDBAdapter()
      * if isset $dbAdapter sets dbAdapter object otherwise returns false
@@ -119,7 +119,7 @@ class Authentication {
         $this->dbAdapter = $dbAdapter;
         return $this;
     }
-
+    
     /**
      * setDBTable()
      * if isset $table sets Table object otherwise returns false
@@ -131,10 +131,10 @@ class Authentication {
             return false;
         endif;
         $this->table = $table;
-        $this->sessionName = $this->sessionName.$this->table;
+        $this->sessionName = $this->sessionName . $this->table;
         return $this;
     }
-
+    
     /**
      * setIdentityColumn()
      * if isset $identityColumn sets identityColumn object otherwise returns false
@@ -148,7 +148,7 @@ class Authentication {
         $this->identityColumn = $identityColumn;
         return $this;
     }
-
+    
     /**
      * setIdentity()
      * if isset $identity sets identity object otherwise returns false
@@ -162,7 +162,7 @@ class Authentication {
         $this->identity = $identity;
         return $this;
     }
-
+    
     /**
      * setCredentialColumn()
      * sets credential column object
@@ -176,7 +176,7 @@ class Authentication {
         $this->credentialColumn = $credentialColumn;
         return $this;
     }
-
+    
     /**
      * setCredential
      * sets credential object
@@ -190,7 +190,7 @@ class Authentication {
         $this->credential = $credential;
         return $this;
     }
-
+    
     /**
      * isValid()
      * Checks if user is authenticated
@@ -201,33 +201,27 @@ class Authentication {
         if ($auth):
             return true;
         endif;
-        if (isset($this->dbAdapter)
-                AND isset($this->table)
-                AND isset($this->identityColumn)
-                AND isset($this->identity)
-                AND isset($this->credentialColumn)
-                AND isset($this->credential)):
-            $user = $this->checkUserInDB();        
+        if (isset($this->dbAdapter) AND isset($this->table) AND isset($this->identityColumn) AND isset($this->identity) AND isset($this->credentialColumn) AND isset($this->credential)):
+            $user = $this->checkUserInDB();
             if (isset($user) and is_array($user)):
                 $this->setSessionIdentity($user);
                 return true;
-            endif;            
-        endif;               
+            endif;
+        endif;
         return false;
     }
-
+    
     /**
      * checkUserInDB()
      * Builds select query to check user in DB and returns result as an array
      * @return array|false
      */
     private function checkUserInDB() {
-        return $this->dbAdapter->fetchRow("SELECT * FROM `" . $this->table . "`
-                    WHERE `" . $this->identityColumn . "` = '" . $this->identity . "'
-                    AND `" . $this->credentialColumn . "` = '" . $this->credential . "'
-                    LIMIT 1");
+        $query = new Query();
+        $query->select()->from($this->table)->where($this->identityColumn . " = ?", $this->identity)->andWhere($this->credentialColumn . " = ?", $this->credential)->limit(1);
+        return $this->dbAdapter->fetchRow($query);
     }
-
+    
     /**
      * setSessionIdentity
      * sets identity in the session
@@ -236,7 +230,7 @@ class Authentication {
     private function setSessionIdentity($identity) {
         Session::set($this->sessionName, serialize($identity));
     }
-
+    
     /**
      * getIdentity()
      * checks if user is authenticated and return user data from session
@@ -249,7 +243,7 @@ class Authentication {
         endif;
         return false;
     }
-
+    
     /**
      * clearIdentity()
      * sets auth session to null
@@ -258,5 +252,4 @@ class Authentication {
     public function clearIdentity() {
         Session::set($this->sessionName, NULL);
     }
-
 }

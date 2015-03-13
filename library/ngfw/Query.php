@@ -24,11 +24,8 @@
  */
 
 namespace ngfw;
-use ngfw\Exception;
-
 /**
  * Query
- * @todo  add missing methods
  * @package ngfw
  * @subpackage library
  * @version 1.2.3
@@ -196,7 +193,7 @@ class Query
     
     /**
      * Generate uniq id
-     * @return string uniqid
+     * @return string
      */
     private function generateKey() {
         return uniqid();
@@ -206,7 +203,7 @@ class Query
      * select()
      * Starts select statement
      * @param string $select Default '*' , The array of strings to select from database
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function select($select = "*") {
         $this->select = $select;
@@ -229,7 +226,7 @@ class Query
      * Builds insert statement
      * @param string $table Table name you want to insert into
      * @param array $data Array of strings, example array("fieldname" => "value")
-     * @return object ngfw\Query()
+     * @return object Query()
      * @throws Exception
      */
     public function insert($table, $data) {
@@ -252,8 +249,8 @@ class Query
      * Builds update statement
      * @param string $table Table name you want to update
      * @param array $data Array of strings that needs to be updated, example array("fieldname" => "value");
-     * @return object ngfw\Query()
      * @throws Exception
+     * @return object Query()
      */
     public function update($table, $data) {
         $this->table = $table;
@@ -281,7 +278,7 @@ class Query
     /**
      * delete()
      * Starts delete statement
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function delete() {
         $this->deleteTable = true;
@@ -295,8 +292,8 @@ class Query
      * from()
      * Sets from object
      * @param mixed $from Table name as a string or Array of strings, example: array("table1 a", "table2 b", "table3 c")
-     * @return object ngfw\Query()
      * @throws Exception
+     * @return object Query()
      */
     public function from($from) {
         if (!isset($from)):
@@ -323,7 +320,7 @@ class Query
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $joinCondition ON or USING
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function join($table, $clause, $joinCondition = null) {
         if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
@@ -353,7 +350,7 @@ class Query
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
      * @param string $joinCondition ON or USING
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function innerJoin($table, $clause, $joinCondition = null) {
         if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
@@ -378,13 +375,12 @@ class Query
     }
     
     /**
-     * leftKoin()
+     * leftJoin()
      * Sets left join object
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
-     * @param string $value string value to be replaced in where statement
-     * @param string $joinCondition ON or USING
-     * @return object ngfw\Query()
+     * @param string $joinCondition ON or USING, default null
+     * @return object Query()
      */
     public function leftJoin($table, $clause, $joinCondition = null) {
         if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
@@ -413,9 +409,8 @@ class Query
      * Sets right join object
      * @param string $table Table name as a string
      * @param string $clause Clause as a string, example "a.fieldname = b.fieldname"
-     * @param string $value string value to be replaced in where statement
-     * @param string $joinCondition ON or USING
-     * @return object ngfw\Query()
+     * @param string $joinCondition ON or USING, default null
+     * @return object Query()
      */
     public function rightJoin($table, $clause, $joinCondition = null) {
         if (!empty($joinCondition) and in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
@@ -443,8 +438,8 @@ class Query
      * where()
      * Sets where object
      * @param string $where where statement, example: ("fieldname = ?")
-     * @param string $value string value to be replaced in where statement
-     * @return object ngfw\Query()
+     * @param mixed $value string value to be replaced in where statement
+     * @return object Query()
      */
     public function where($where, $value = false) {
         $where = $this->escapeField($where);
@@ -464,10 +459,10 @@ class Query
      * andWhere()
      * Sets and where object
      * @param string $where where statement, example: ("fieldname = ?")
-     * @param string $value string value to be replaced in where statement
-     * @return object ngfw\Query()
+     * @param mixed $value string value to be replaced in where statement
+     * @return object Query()
      */
-    public function andWhere($where, $value = null) {
+    public function andWhere($where, $value = false) {
         $where = $this->escapeField($where);
         if ($value):
             $key = $this->buildBindAndFieldObjects($value);
@@ -486,7 +481,7 @@ class Query
      * Sets or where object
      * @param string $where where statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in where statement
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function orWhere($where, $value = null) {
         $where = $this->escapeField($where);
@@ -507,7 +502,7 @@ class Query
      * Set having object
      * @param string $condition having statement, example: ("fieldname = ?")
      * @param string $value string value to be replaced in having statement
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function having($condition, $value = null) {
         $condition = $this->escapeField($condition);
@@ -531,7 +526,7 @@ class Query
      * group()
      * Sets groupBy object
      * @param string $field Name of field to group by
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function group($field) {
         $this->groupBy = $field;
@@ -549,7 +544,7 @@ class Query
      * Sets orderBy Object
      * @param string $field field name to order by, example "Fieldname" or "RAND(" . date("Ymd") . ")"
      * @param string $clause order clause, example: "DESC" or "ASC"
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function order($field, $clause = null) {
         if (strpos($field, "(") === false):
@@ -568,7 +563,7 @@ class Query
      * limit()
      * Sets limit object
      * @param int $int Must be numeric
-     * @return object ngfw\Query()
+     * @return object Query()
      */
     public function limit($int) {
         $this->limit = $int;
@@ -642,7 +637,7 @@ class Query
     }
     
     /**
-     * Remove all keyes from $this->bind where value is false
+     * Remove all keys from $this->bind where value is false
      * @return void
      */
     private function cleanFunctionsFromBind() {

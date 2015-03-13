@@ -71,7 +71,7 @@ class Httpclient {
 
     /**
      * $postDataArray
-     * @var type 
+     * @var array
      */
     protected $postDataArray;
 
@@ -107,7 +107,7 @@ class Httpclient {
      * setUserAgent
      * Sets User Agent
      * @param string $userAgent
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setUserAgent($userAgent) {
         $this->userAgent = $userAgent;
@@ -127,7 +127,7 @@ class Httpclient {
      * setUri()
      * Sets URI object
      * @param string $uri
-     * @return object \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setUri($uri = null) {
         $this->uri = str_replace("&amp;", "&", trim($uri));
@@ -138,7 +138,7 @@ class Httpclient {
      * setMaxredirects()
      * sets Max Redirects object, default 0
      * @param int $maxredirects
-     * @return object \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setMaxredirects($maxredirects = 0) {
         $this->maxredirects = $maxredirects;
@@ -149,7 +149,7 @@ class Httpclient {
      * setTimeout()
      * Sets timeout object
      * @param int $timeout
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function setTimeout($timeout = 30) {
         $this->timeout = $timeout;
@@ -160,7 +160,7 @@ class Httpclient {
      * post()
      * sets post object
      * @param array $array
-     * @return \ngfw\Httpclient
+     * @return object Httpclient()
      */
     public function post($array) {
         if (isset($array) and is_array($array)):
@@ -204,7 +204,6 @@ class Httpclient {
     /**
      * request()
      * Requests uri via Curl, if 301 or 302 found, follows the link
-     * @todo add other mothods
      * @return array
      */
     public function request() {

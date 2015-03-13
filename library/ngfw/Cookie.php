@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Exception;
 
 /**
  * Cookie
@@ -86,8 +85,8 @@ class Cookie {
 
     /**
      * $httponly
-     * When True the cookie will be made accessible only throuth the HTTP protocol
-     * @var boot
+     * When True the cookie will be made accessible only through the HTTP protocol
+     * @var bool
      */
     protected $httponly = false;
 
@@ -228,8 +227,8 @@ class Cookie {
 
     /**
      * setHttponly
-     * set httponly object     * 
-     * @param type $httponly
+     * set httponly object
+     * @param bool $httponly
      * @return void
      */
     public function setHttponly($httponly) {

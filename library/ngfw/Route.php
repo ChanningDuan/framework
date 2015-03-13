@@ -24,8 +24,7 @@
  */
 
 namespace ngfw;
-use ngfw\Header;
-use ngfw\Uri;
+
 /**
  * Route
  * @package ngfw
@@ -273,9 +272,8 @@ class Route {
      * If headers is not sent add status header and redirects
      * @param string $url
      * @param int $status
-     * @return boolean
      */
-    public static function redirect($url = '/', $status = '302') {
+    public static function redirect($url = '/', $status = 302) {
         Header::redirect($url, $status);        
     }
 

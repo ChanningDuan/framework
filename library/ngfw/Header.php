@@ -24,7 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Registry;
 
 /**
  * Header
@@ -225,7 +224,6 @@ class Header
      * Redirect to URL & Returns a REDIRECT (302) status code to the browser unless the 201 or a 3xx status code has already been set.
      * @param string $url
      * @param int $http_response_code http response code
-     * @param bool $exit exit after redirect or continue executing the code
      * @return mixed
      */
     public static function redirect($url = '/', $http_response_code) {
@@ -241,6 +239,8 @@ class Header
      * Set Header
      * Send a raw HTTP header
      * @param string $string Header to set
+     * @param bool $replace Overwrite current header?
+     * @param string $http_response_code http_response_code to set
      */
     public static function set($string = "", $replace = true, $http_response_code = null) {
         header($string, $replace, $http_response_code);
@@ -249,7 +249,7 @@ class Header
     /**
      * Powered By
      * Set new output source
-     * @param string $source X-Powered-By source
+     * @param string $string X-Powered-By source
      */
     public static function poweredBy($string) {
         self::set('X-Powered-By: ' . $string);

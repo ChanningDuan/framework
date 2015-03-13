@@ -27,7 +27,6 @@ namespace ngfw;
 
 /**
  * Mail
- * @todo CLASS in not stable 
  * @package ngfw
  * @subpackage library
  * @version 1.2.2
@@ -90,7 +89,7 @@ class Mail {
 
     /**
      * $responseTimeout
-     * @var type 
+     * @var int
      */
     protected $responseTimeout = 8;
 
@@ -132,7 +131,7 @@ class Mail {
 
     /**
      * $body
-     * @var type 
+     * @var string
      */
     protected $body;
 
@@ -169,7 +168,6 @@ class Mail {
     /**
      * __construct()
      * Sets Default Headers
-     * @return void
      */
     public function __construct() {
         $this->headers['MIME-Version'] = "1.0";
@@ -181,7 +179,7 @@ class Mail {
      * setCharset()
      * Sets Charset, Default Value = UTF-8
      * @param string $charset
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setCharset($charset) {
         if (isset($charset)):
@@ -195,7 +193,7 @@ class Mail {
      * isSMTP()
      * Indicates if Email should go out through SMTP or regular MAIL function
      * @param bool $boolean
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function isSMTP($boolean) {
         if (is_bool($boolean)):
@@ -208,7 +206,7 @@ class Mail {
      * isHtml()
      * Indicates if Email is HTML format, Default Email is set to text
      * @param bool $boolean
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function isHtml($boolean) {
         if (is_bool($boolean)):
@@ -222,7 +220,7 @@ class Mail {
      * setUsername()
      * Sets username for SMTP connection
      * @param string $username
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setUsername($username) {
         $this->username = $username;
@@ -233,7 +231,7 @@ class Mail {
      * setPassword()
      * Sets password for SMTP connection
      * @param string $password
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setPassword($password) {
         $this->password = $password;
@@ -244,7 +242,7 @@ class Mail {
      * setServer()
      * Sets SMTP server hostname
      * @param string $server
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setServer($server) {
         $this->server = $server;
@@ -255,7 +253,7 @@ class Mail {
      * setPort()
      * Sets SMTP port
      * @param int $port
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setPort($port) {
         $this->port = $port;
@@ -267,7 +265,7 @@ class Mail {
      * Sets HTML header, if Header with same key was already set, it will be overwritten.
      * @param string $key
      * @param string $value
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setHeader($key, $value) {
         $this->header[$key] = $value;
@@ -279,7 +277,7 @@ class Mail {
      * Sets TO address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setTo($address, $name = "") {
         $this->to[] = array($address, $name);
@@ -291,7 +289,7 @@ class Mail {
      * Sets CC address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setCc($address, $name = "") {
         $this->cc[] = array($address, $name);
@@ -303,7 +301,7 @@ class Mail {
      * Sets FROM address, name not required
      * @param string $address
      * @param string $name
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setFrom($address, $name = "") {
         $this->from = array($address, $name);
@@ -313,9 +311,9 @@ class Mail {
     /**
      * setReplyTo()
      * Sets ReplyTo, Name not required
-     * @param type $address
-     * @param type $name
-     * @return \ngfw\Mail
+     * @param string $address
+     * @param string $name
+     * @return object Mail()
      */
     public function setReplyTo($address, $name = "") {
         $this->replyTo = array($address, $name);
@@ -325,7 +323,7 @@ class Mail {
     /**
      * Sets Email subject
      * @param string $subject
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setSubject($subject) {
         if (isset($subject)):
@@ -338,7 +336,7 @@ class Mail {
      * setHtml()
      * Sets Email HTML Body
      * @param string $html
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setHtml($html) {
         if (isset($html)):
@@ -351,7 +349,7 @@ class Mail {
      * setText()
      * Sets Email TEXT body
      * @param string $text
-     * @return \ngfw\Mail
+     * @return object Mail()
      */
     public function setText($text) {
         if (isset($text)):
@@ -378,7 +376,7 @@ class Mail {
      * smtpCmd()
      * Sends SMTP Command and Returns Response
      * @see getResponse()
-     * @param stirng $command
+     * @param string $command
      * @return string
      */
     private function smtpCmd($command) {
@@ -404,7 +402,7 @@ class Mail {
 
     /**
      * formatAddress()
-     * Formats email Addess and returns as string
+     * Formats email Address and returns as string
      * @param string $address
      * @return string
      */

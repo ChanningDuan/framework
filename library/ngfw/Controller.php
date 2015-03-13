@@ -24,8 +24,7 @@
  */
 
 namespace ngfw;
-use ngfw\Route;
-use ngfw\View;
+
 /**
  * Controller
  * @package ngfw
@@ -47,7 +46,6 @@ class Controller {
      * check if init() method is declared and runs
      * @see \ngfw\Route
      * @see \ngfw\View
-     * @return void
      */
     public function __construct() {
         $className = Route::getController();
@@ -61,8 +59,8 @@ class Controller {
     /**
      * setViewObject()
      * Sets View object
-     * @param type $name
-     * @param type $value
+     * @param string $name
+     * @param string $value
      * @return void
      */
     public function setViewObject($name, $value) {

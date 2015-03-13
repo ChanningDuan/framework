@@ -24,8 +24,6 @@
  */
 
 namespace ngfw;
-use ngfw\Exception;
-use ngfw\Header;
 
 /**
  * View
@@ -39,14 +37,14 @@ class View
     
     /**
      * $controller
-     * Holds Conroller name
+     * Holds controller name
      * @var string
      */
     protected $controller;
     
     /**
      * $action
-     * View file filename without extenstion
+     * View file filename without extension
      * @var string
      */
     protected $action;

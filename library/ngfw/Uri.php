@@ -80,8 +80,7 @@ class Uri
     
     /**
      * __construct
-     * Sets reuqestedPath and rootPath, ROOT must be defined
-     * @return void
+     * Sets reuqestedPath, query_string and rootPath objects, if PUBLIC_PATH is not defined, rootPath will fallback to $_SERVER["DOCUMENT_ROOT"]
      */
     public function __construct() {
         $this->requestedPath = $_SERVER['REQUEST_URI'];
@@ -147,7 +146,7 @@ class Uri
     
     /**
      * getPath()
-     * if is set requestedPath object reutns, otherwise false is returned
+     * return requestedPath object if set, otherwise false is returned
      * @return mixed
      */
     public function getPath() {
@@ -160,7 +159,7 @@ class Uri
     /**
      * getPathArray()
      * Returns path as array
-     * e.g.:  /category/music/page/123 will be trnaslated to array("category" => "music", "page" => "123")
+     * e.g.:  /category/music/page/123 will be translated to array("category" => "music", "page" => "123")
      * @see pathToArray()
      * @return mixed
      */

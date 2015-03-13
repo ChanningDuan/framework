@@ -24,7 +24,7 @@
  */
 
 namespace ngfw;
-use ngfw\Httpclient;
+
 /**
  * Webquery
  * @package ngfw
@@ -71,9 +71,14 @@ class Webquery {
     protected $dom;
 
     /**
+     * $content
+     * @var string
+     */
+    protected $content;
+
+    /**
      * __construct()
      * Sets Httpclient and DOMDocument objects
-     * @return void
      */
     public function __construct() {
         $this->httpclient = new Httpclient();
@@ -84,7 +89,7 @@ class Webquery {
      * select()
      * Sets select object
      * @param string $select
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function select($select = "*") {
         $this->select = $select;
@@ -96,7 +101,7 @@ class Webquery {
      * passes uri param to Httpclient::setUri()
      * @see Httpclient::setUri()
      * @param string $uri
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function from($uri = null) {
         if (isset($uri) and !empty($uri)):
@@ -110,7 +115,7 @@ class Webquery {
      * Sets where object
      * @param string $where
      * @param string $value
-     * @return \ngfw\Webquery
+     * @return object Webquery()
      */
     public function where($where = null, $value = null) {
         if (is_array($this->where)):
