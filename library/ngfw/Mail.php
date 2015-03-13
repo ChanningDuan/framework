@@ -27,9 +27,10 @@ namespace ngfw;
 
 /**
  * Mail
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ *
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Mail {
@@ -169,7 +170,8 @@ class Mail {
      * __construct()
      * Sets Default Headers
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->headers['MIME-Version'] = "1.0";
         $this->headers['X-Engine'] = "ngfw";
         $this->setContentType();
@@ -178,192 +180,239 @@ class Mail {
     /**
      * setCharset()
      * Sets Charset, Default Value = UTF-8
+     *
      * @param string $charset
      * @return object Mail()
      */
-    public function setCharset($charset) {
+    public function setCharset($charset)
+    {
         if (isset($charset)):
             $this->charset = $charset;
         endif;
         $this->setContentType();
+
         return $this;
     }
 
     /**
      * isSMTP()
      * Indicates if Email should go out through SMTP or regular MAIL function
+     *
      * @param bool $boolean
      * @return object Mail()
      */
-    public function isSMTP($boolean) {
+    public function isSMTP($boolean)
+    {
         if (is_bool($boolean)):
             $this->isSMTP = $boolean;
         endif;
+
         return $this;
     }
 
     /**
      * isHtml()
      * Indicates if Email is HTML format, Default Email is set to text
+     *
      * @param bool $boolean
      * @return object Mail()
      */
-    public function isHtml($boolean) {
+    public function isHtml($boolean)
+    {
         if (is_bool($boolean)):
             $this->isHTML = $boolean;
             $this->setContentType();
         endif;
+
         return $this;
     }
 
     /**
      * setUsername()
      * Sets username for SMTP connection
+     *
      * @param string $username
      * @return object Mail()
      */
-    public function setUsername($username) {
+    public function setUsername($username)
+    {
         $this->username = $username;
+
         return $this;
     }
 
     /**
      * setPassword()
      * Sets password for SMTP connection
+     *
      * @param string $password
      * @return object Mail()
      */
-    public function setPassword($password) {
+    public function setPassword($password)
+    {
         $this->password = $password;
+
         return $this;
     }
 
     /**
      * setServer()
      * Sets SMTP server hostname
+     *
      * @param string $server
      * @return object Mail()
      */
-    public function setServer($server) {
+    public function setServer($server)
+    {
         $this->server = $server;
+
         return $this;
     }
 
     /**
      * setPort()
      * Sets SMTP port
+     *
      * @param int $port
      * @return object Mail()
      */
-    public function setPort($port) {
+    public function setPort($port)
+    {
         $this->port = $port;
+
         return $this;
     }
 
     /**
      * setHeader()
      * Sets HTML header, if Header with same key was already set, it will be overwritten.
+     *
      * @param string $key
      * @param string $value
      * @return object Mail()
      */
-    public function setHeader($key, $value) {
+    public function setHeader($key, $value)
+    {
         $this->headers[$key] = $value;
+
         return $this;
     }
 
     /**
      * setTo()
      * Sets TO address, name not required
+     *
      * @param string $address
      * @param string $name
      * @return object Mail()
      */
-    public function setTo($address, $name = "") {
+    public function setTo($address, $name = "")
+    {
         $this->to[] = array($address, $name);
+
         return $this;
     }
 
     /**
      * setCc()
      * Sets CC address, name not required
+     *
      * @param string $address
      * @param string $name
      * @return object Mail()
      */
-    public function setCc($address, $name = "") {
+    public function setCc($address, $name = "")
+    {
         $this->cc[] = array($address, $name);
+
         return $this;
     }
 
     /**
      * setFrom()
      * Sets FROM address, name not required
+     *
      * @param string $address
      * @param string $name
      * @return object Mail()
      */
-    public function setFrom($address, $name = "") {
+    public function setFrom($address, $name = "")
+    {
         $this->from = array($address, $name);
+
         return $this;
     }
 
     /**
      * setReplyTo()
      * Sets ReplyTo, Name not required
+     *
      * @param string $address
      * @param string $name
      * @return object Mail()
      */
-    public function setReplyTo($address, $name = "") {
+    public function setReplyTo($address, $name = "")
+    {
         $this->replyTo = array($address, $name);
+
         return $this;
     }
 
     /**
      * Sets Email subject
+     *
      * @param string $subject
      * @return object Mail()
      */
-    public function setSubject($subject) {
+    public function setSubject($subject)
+    {
         if (isset($subject)):
             $this->subject = $subject;
         endif;
+
         return $this;
     }
 
     /**
      * setHtml()
      * Sets Email HTML Body
+     *
      * @param string $html
      * @return object Mail()
      */
-    public function setHtml($html) {
+    public function setHtml($html)
+    {
         if (isset($html)):
             $this->html = $html;
         endif;
+
         return $this;
     }
 
     /**
      * setText()
      * Sets Email TEXT body
+     *
      * @param string $text
      * @return object Mail()
      */
-    public function setText($text) {
+    public function setText($text)
+    {
         if (isset($text)):
             $this->text = $text;
         endif;
+
         return $this;
     }
 
     /**
      * setContentType()
      * Sets Email Content Type Header
+     *
      * @return void
      */
-    private function setContentType() {
+    private function setContentType()
+    {
         if ($this->isHTML):
             $this->boundary = md5(date('U'));
             $this->headers['Content-type'] = "multipart/alternative; boundary=$this->boundary";
@@ -375,21 +424,26 @@ class Mail {
     /**
      * smtpCmd()
      * Sends SMTP Command and Returns Response
+     *
      * @see getResponse()
      * @param string $command
      * @return string
      */
-    private function smtpCmd($command) {
+    private function smtpCmd($command)
+    {
         fputs($this->smtp, $command . self::NEWLINE);
+
         return $this->getResponse();
     }
 
     /**
      * getResponse()
      * Gets response from SMTP Socket and returns as String
+     *
      * @return string
      */
-    private function getResponse() {
+    private function getResponse()
+    {
         $response = '';
         while (($line = fgets($this->smtp, 515)) !== false):
             $response .= trim($line) . "\n";
@@ -397,17 +451,20 @@ class Mail {
                 break;
             endif;
         endwhile;
+
         return trim($response);
     }
 
     /**
      * formatAddress()
      * Formats email Address and returns as string
+     *
      * @param string $address
      * @return string
      */
-    private function formatAddress($address) {
-        if (isset($address[0]) && !isset($address[1])):
+    private function formatAddress($address)
+    {
+        if (isset($address[0]) && ! isset($address[1])):
             return $address[0];
         elseif (isset($address[0]) && isset($address[1])):
             return '"' . $address[1] . '" <' . $address[0] . ">";
@@ -417,32 +474,37 @@ class Mail {
     /**
      * formatAddressArray()
      * Formats emails array as a string
+     *
      * @param array $address
      * @return string
      */
-    private function formatAddressArray($address) {
+    private function formatAddressArray($address)
+    {
         foreach ($address as $key => $addr) :
             $address[$key] = $this->formatAddress($addr);
         endforeach;
+
         return implode(', ' . self::NEWLINE . "\t", $address);
     }
 
     /**
      * comileBody()
      * Builds email body
+     *
      * @return string
      */
-    private function compileBody() {
+    private function compileBody()
+    {
         if ($this->isHTML):
             return "--" . $this->boundary . self::NEWLINE .
-                    "Content-Type: text/plain; charset=" . $this->charset . "" . self::NEWLINE .
-                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
-                    base64_encode($this->text) . self::NEWLINE .
-                    "--" . $this->boundary . self::NEWLINE .
-                    "Content-Type: text/html; charset=" . $this->charset . "" . self::NEWLINE .
-                    "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
-                    base64_encode($this->html) . self::NEWLINE .
-                    "--" . $this->boundary . "--";
+            "Content-Type: text/plain; charset=" . $this->charset . "" . self::NEWLINE .
+            "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+            base64_encode($this->text) . self::NEWLINE .
+            "--" . $this->boundary . self::NEWLINE .
+            "Content-Type: text/html; charset=" . $this->charset . "" . self::NEWLINE .
+            "Content-Transfer-Encoding: base64" . self::NEWLINE . self::NEWLINE .
+            base64_encode($this->html) . self::NEWLINE .
+            "--" . $this->boundary . "--";
         else:
             return $this->text;
         endif;
@@ -451,9 +513,11 @@ class Mail {
     /**
      * send()
      * Builds Email body and sends via SMTP or Mail
+     *
      * @return bool
      */
-    public function send() {
+    public function send()
+    {
         $this->body = $this->compileBody();
         if ($this->isSMTP):
             return $this->sendViaSmtp();
@@ -465,14 +529,16 @@ class Mail {
     /**
      * sendViaMail()
      * Send Email via MAIL function
+     *
      * @return bool
      */
-    private function sendViaMail() {
+    private function sendViaMail()
+    {
         $this->headers['From'] = $this->formatAddress($this->from);
 
         $this->headers['To'] = $this->formatAddressArray($this->to);
         $this->headers['Reply-To'] = $this->formatAddress($this->replyTo);
-        if (!empty($this->cc)):
+        if ( ! empty($this->cc)):
             $this->headers['Cc'] = $this->formatAddressArray($this->cc);
         endif;
         $this->headers['Subject'] = $this->subject;
@@ -483,15 +549,18 @@ class Mail {
                 $headers .= $key . ': ' . $val . self::NEWLINE;
             endif;
         endforeach;
+
         return mail($this->headers['To'], $this->subject, $this->body, $headers);
     }
 
     /**
      * sendViaSmtp()
      * Send Email via SMTP server
+     *
      * @return boolean
      */
-    private function sendViaSmtp() {
+    private function sendViaSmtp()
+    {
         $this->smtp = fsockopen($this->server, $this->port, $errno, $errstr, $this->connectTimeout);
         if (empty($this->smtp)):
             return false;
@@ -512,7 +581,7 @@ class Mail {
         $this->headers['From'] = $this->formatAddress($this->from);
         $this->headers['To'] = $this->formatAddressArray($this->to);
         $this->headers['Reply-To'] = $this->formatAddress($this->replyTo);
-        if (!empty($this->cc)):
+        if ( ! empty($this->cc)):
             $this->headers['Cc'] = $this->formatAddressArray($this->cc);
         endif;
         $this->headers['Subject'] = $this->subject;
@@ -524,15 +593,18 @@ class Mail {
         $result = $this->smtpCmd($headers . self::NEWLINE . $this->body . self::NEWLINE);
         $this->smtpCmd("QUIT");
         fclose($this->smtp);
+
         return substr($result, 0, 3) == "250";
     }
 
     /**
      * setStreamTimeout()
      * Sets stream_set_time with $resposeTimeout
+     *
      * @return void
      */
-    private function setStreamTimeout() {
+    private function setStreamTimeout()
+    {
         stream_set_timeout($this->smtp, $this->responseTimeout);
     }
 

@@ -27,9 +27,10 @@ namespace ngfw;
 
 /**
  * Configuration
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ *
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Configuration {
@@ -37,17 +38,20 @@ class Configuration {
     /**
      * loadConfigFile()
      * Opens *.ini file and parses into array
+     *
      * @see convertINIToArray()
      * @param string $filename
      * @return array
      * @throws \ngfw\Exception
      */
-    public static function loadConfigFile($filename) {
-        if (!isset($filename) || !is_string($filename)):
+    public static function loadConfigFile($filename)
+    {
+        if ( ! isset($filename) || ! is_string($filename)):
             throw new Exception("Filename is Required For Configuration");
         endif;
         $ini = parse_ini_file($filename);
         $ini_array = self::convertINIToArray($ini);
+
         return $ini_array;
     }
 
@@ -69,10 +73,12 @@ class Configuration {
      *        ["controller"] => "Index"
      *        ["action"] => "Index"
      * }}}}
+     *
      * @param array $ini_arr
      * @return array
      */
-    private static function convertINIToArray($ini_arr) {
+    private static function convertINIToArray($ini_arr)
+    {
         $ini = array();
         foreach ($ini_arr as $key => $value) {
             $p = &$ini;
@@ -82,6 +88,7 @@ class Configuration {
             $p = $value;
         }
         unset($p);
+
         return $ini;
     }
 

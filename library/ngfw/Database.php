@@ -27,12 +27,12 @@ namespace ngfw;
 
 /**
  * Database
+ *
  * @package ngfw
  * @version 1.2.3
- * @author Nick Gejadze
+ * @author  Nick Gejadze
  */
-class Database extends \PDO
-{
+class Database extends \PDO {
 
     /**
      * Default CHARSET
@@ -42,6 +42,7 @@ class Database extends \PDO
     /**
      * Default Fetch Mode
      * available values : all | row
+     *
      * @var string
      */
     private $fetchmode = "all";
@@ -50,6 +51,7 @@ class Database extends \PDO
      * $options
      * Database Parameters
      * Database Parameters
+     *
      * @var array
      */
     private $options;
@@ -57,21 +59,25 @@ class Database extends \PDO
     /**
      * __construct
      * sets options and Connections to Database
+     *
      * @param array $options
      */
-    public function __construct($options = null, $autoConnect = true) {
+    public function __construct($options = null, $autoConnect = true)
+    {
         $this->setOptions($options);
-        if ($autoConnect && isset($this->options) && !empty($this->options)):
+        if ($autoConnect && isset($this->options) && ! empty($this->options)):
             $this->connect($this->options);
         endif;
     }
 
     /**
      * Set options object
+     *
      * @param array $options database connection settings
      */
-    private function setOptions($options) {
-        if (isset($options) || !empty($options)):
+    private function setOptions($options)
+    {
+        if (isset($options) || ! empty($options)):
             $this->options = $options;
         endif;
     }
@@ -80,17 +86,18 @@ class Database extends \PDO
      * connect
      * Connects to database
      * Connects to database
+     *
      * @access private
      * @param array $options
      */
-    private function connect($options) {
+    private function connect($options)
+    {
         $this->setOptions($options);
         $dsn = $this->createdsn();
-        $attrs = !isset($this->options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $this->options['charset']);
+        $attrs = ! isset($this->options['charset']) ? array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . self::CHARSET) : array(\PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES " . $this->options['charset']);
         try {
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
-        }
-        catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo 'Connection failed: ' . $e->getMessage();
             endif;
@@ -100,55 +107,65 @@ class Database extends \PDO
     /**
      * createdsn
      * Creates Data Source Name
+     *
      * @return string
      */
-    private function createdsn() {
-        if (!isset($this->options) || empty($this->options)):
+    private function createdsn()
+    {
+        if ( ! isset($this->options) || empty($this->options)):
             return false;
         endif;
+
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
     }
 
     /**
      * fetchAll
      * Fetches database and returns result as array
+     *
      * @param string $query
-     * @param array $data
+     * @param array  $data
      * @return mixed
      */
-    public function fetchAll($query, $data = null) {
+    public function fetchAll($query, $data = null)
+    {
         return $this->query($query, $data);
     }
 
     /**
      * fetchRow
      * Returns single row from database and return result as array
+     *
      * @param string $query
-     * @param array $data
+     * @param array  $data
      * @return mixed
      */
-    public function fetchRow($query, $data = null) {
+    public function fetchRow($query, $data = null)
+    {
         $this->fetchmode = "row";
         $result = $this->query($query, $data);
         $this->fetchmode = "all";
+
         return $result;
     }
 
     /**
      * run()
      * Executes Query
+     *
      * @param string $query
-     * @param array $data
+     * @param array  $data
      * @throws Exception
      * @return mixed
      */
-    public function query($query, $data = null) {
+    public function query($query, $data = null)
+    {
         try {
             if ($query instanceof Query):
                 $pdostmt = $this->prepare(trim($query->query));
-                if(isset($query->bind) && is_array($query->bind)):
+                if (isset($query->bind) && is_array($query->bind)):
                     foreach ($query->bind as $k => $bind):
-                        switch(gettype($bind)):
+                        switch (gettype($bind)):
                             case "boolean":
                                 $data_type = \PDO::PARAM_BOOL;
                                 break;
@@ -156,7 +173,7 @@ class Database extends \PDO
                             case "double":
                                 $data_type = \PDO::PARAM_INT;
                                 break;
-                            case NULL:
+                            case null:
                                 $data_type = \PDO::PARAM_NULL;
                                 break;
                             case "string":
@@ -172,9 +189,9 @@ class Database extends \PDO
             endif;
             if ($pdostmt->execute($data) !== false):
                 if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)):
-                    if($this->fetchmode == "all"):
+                    if ($this->fetchmode == "all"):
                         return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
-                    elseif($this->fetchmode == "row"):
+                    elseif ($this->fetchmode == "row"):
                         return $pdostmt->fetch(\PDO::FETCH_ASSOC);
                     else:
                         throw new Exception("Fetch mode is unidentified");
@@ -183,59 +200,68 @@ class Database extends \PDO
                     return $pdostmt->rowCount();
                 endif;
             endif;
-        }
-        catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
                 echo $e->getMessage();
             endif;
+
             return false;
         }
     }
 
     /**
      * escape, quote() method alias
-     * @param  string $value
+     *
+     * @param  string  $value
      * @param  integer $parameter_type
      * @return string
      */
-    public function escape($value, $parameter_type = \PDO::PARAM_STR) {
+    public function escape($value, $parameter_type = \PDO::PARAM_STR)
+    {
         return $this->quote($value, $parameter_type);
     }
 
     /**
      * quote via parent class
-     * @param  string $value
+     *
+     * @param  string  $value
      * @param  integer $parameter_type
      * @return string
      */
-    public function quote($value, $parameter_type = \PDO::PARAM_STR) {
+    public function quote($value, $parameter_type = \PDO::PARAM_STR)
+    {
         if (is_null($value)) {
             return "NULL";
         }
-        return substr(parent::quote($value, $parameter_type), 1, -1);
+
+        return substr(parent::quote($value, $parameter_type), 1, - 1);
     }
 
     /**
      * Get last insert id
+     *
      * @param  string $name
      * @return mixed
      */
-    public function lastInsertId($name = null) {
+    public function lastInsertId($name = null)
+    {
         return parent::lastInsertId($name);
     }
 
     /**
      * ping
      * Pings Database
+     *
      * @return boolean
      */
-    public function ping() {
+    public function ping()
+    {
         try {
             $this->query('SELECT 1');
-        }
-        catch(\PDOException $e) {
+        } catch (\PDOException $e) {
             $this->connect($this->options);
         }
+
         return true;
     }
 }

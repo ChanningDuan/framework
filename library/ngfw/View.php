@@ -27,17 +27,18 @@ namespace ngfw;
 
 /**
  * View
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ *
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
-class View
-{
+class View {
 
     /**
      * $controller
      * Holds controller name
+     *
      * @var string
      */
     protected $controller;
@@ -45,6 +46,7 @@ class View
     /**
      * $action
      * View file filename without extension
+     *
      * @var string
      */
     protected $action;
@@ -52,6 +54,7 @@ class View
     /**
      * $layout
      * Enable or disable layout
+     *
      * @var boolean
      */
     protected $layout = true;
@@ -59,6 +62,7 @@ class View
     /**
      * $render
      * Enable or disable view (View Component)
+     *
      * @var boolean
      */
     protected $render = true;
@@ -66,6 +70,7 @@ class View
     /**
      * $layoutFile
      * Layout file filename without extension
+     *
      * @var string
      */
     protected $layoutFilename = 'Layout';
@@ -73,6 +78,7 @@ class View
     /**
      * $template
      * Template directory, Must be under '~Application' Directory and should contain Layout and View Directories
+     *
      * @var mixed
      */
     protected $template = null;
@@ -80,6 +86,7 @@ class View
     /**
      * $extension
      * View and Layout files extension
+     *
      * @var string
      */
     protected $extension = ".phtml";
@@ -87,6 +94,7 @@ class View
     /**
      * $layoutFilePath
      * Full path of layout file
+     *
      * @var string
      */
     protected $layoutFilePath;
@@ -94,6 +102,7 @@ class View
     /**
      * $viewFilePath
      * Full path of view file
+     *
      * @var string
      */
     protected $viewFilePath;
@@ -102,10 +111,12 @@ class View
     /**
      * __construct
      * Sets controller and action object
+     *
      * @param string $controller
      * @param string $action
      */
-    public function __construct($controller, $action) {
+    public function __construct($controller, $action)
+    {
         $this->controller = $controller;
         $this->action = strtolower($action);
     }
@@ -113,85 +124,103 @@ class View
     /**
      * enableLayout
      * Sets layout object
+     *
      * @param boolean $bool
      */
-    public function enableLayout($bool = true) {
+    public function enableLayout($bool = true)
+    {
         $this->layout = $bool;
     }
 
     /**
      * enableView
      * Sets render object
+     *
      * @param boolean $bool
      */
-    public function enableView($bool = true) {
+    public function enableView($bool = true)
+    {
         $this->render = $bool;
     }
 
     /**
      * setLayoutFile
      * sets layout filename object
+     *
      * @param string $filename
      */
-    public function setLayoutFile($filename) {
+    public function setLayoutFile($filename)
+    {
         $this->layoutFilename = $filename;
     }
 
     /**
      * setFileExtension
      * override default file extension
+     *
      * @param string $extension file extension
      */
-    public function setFileExtension($extension){
+    public function setFileExtension($extension)
+    {
         $this->extension = $extension;
     }
 
     /**
      * set
      * Set object to be used from view
+     *
      * @param string $name
      * @param string $value
      */
-    public function set($name, $value) {
+    public function set($name, $value)
+    {
         $this->{$name} = $value;
     }
 
     /**
      * Check if Layout file exists
+     *
      * @return bool
      */
-    public function setLayoutPath(){
-        $this->layoutFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (!empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFilename . $this->extension;
+    public function setLayoutPath()
+    {
+        $this->layoutFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (! empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFilename . $this->extension;
         if (file_exists($this->layoutFilePath)):
             return true;
         endif;
+
         return false;
     }
 
     /**
      * Check if View file exists
+     *
      * @return bool
      */
-    public function setViewPath(){
-        $this->viewFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (!empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . $this->extension;
+    public function setViewPath()
+    {
+        $this->viewFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (! empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . $this->extension;
         if (file_exists($this->viewFilePath)):
             return true;
         endif;
+
         return false;
     }
 
     /**
      * loadLayout
      * Includes layout file
+     *
      * @throws \ngfw\Exception If View or layout file is enable but does not exists
      */
-    public function loadLayout() {
-        if ($this->render && !$this->setViewPath()):
+    public function loadLayout()
+    {
+        if ($this->render && ! $this->setViewPath()):
             throw new Exception(sprintf('View file "%s" does not exist.', $this->viewFilePath));
         endif;
         if ($this->layout):
-            if($this->setLayoutPath()):
-                include_once ($this->layoutFilePath);
+            if ($this->setLayoutPath()):
+                include_once($this->layoutFilePath);
             else:
                 throw new Exception(sprintf('Layout file "%s" does not exist.', $this->layoutFilePath));
             endif;
@@ -204,9 +233,10 @@ class View
      * render
      * Check is render is enabled and includes view file
      */
-    public function render() {
+    public function render()
+    {
         if ($this->render):
-            include_once ($this->viewFilePath);
+            include_once($this->viewFilePath);
         endif;
     }
 }

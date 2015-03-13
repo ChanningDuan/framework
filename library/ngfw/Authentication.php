@@ -27,13 +27,13 @@ namespace ngfw;
 
 /**
  * Authentication
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ *
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
-class Authentication
-{
+class Authentication {
 
     /**
      * $dbAdapter
@@ -80,6 +80,7 @@ class Authentication
     /**
      * __construct()
      * Sets dbAdapter, Table Identity Column and Credential Column if passed
+     *
      * @param object $dbAdapter
      * @param string $table
      * @param string $identityColumn
@@ -90,7 +91,8 @@ class Authentication
      * @see setCredentialColumn()
      * @return \ngfw\Authentication
      */
-    public function __construct($dbAdapter = null, $table = null, $identityColumn = null, $credentialColumn = null) {
+    public function __construct($dbAdapter = null, $table = null, $identityColumn = null, $credentialColumn = null)
+    {
         if (isset($dbAdapter)):
             $this->setDBAdapter($dbAdapter);
         endif;
@@ -103,100 +105,121 @@ class Authentication
         if (isset($credentialColumn)):
             $this->setCredentialColumn($credentialColumn);
         endif;
+
         return $this;
     }
 
     /**
      * setDBAdapter()
      * if isset $dbAdapter sets dbAdapter object otherwise returns false
+     *
      * @param object $dbAdapter
      * @return boolean|\ngfw\Authentication
      */
-    public function setDBAdapter($dbAdapter) {
-        if (!isset($dbAdapter)):
+    public function setDBAdapter($dbAdapter)
+    {
+        if ( ! isset($dbAdapter)):
             return false;
         endif;
         $this->dbAdapter = $dbAdapter;
+
         return $this;
     }
 
     /**
      * setDBTable()
      * if isset $table sets Table object otherwise returns false
+     *
      * @param string $table
      * @return boolean|\ngfw\Authentication
      */
-    public function setDBTable($table) {
-        if (!isset($table)):
+    public function setDBTable($table)
+    {
+        if ( ! isset($table)):
             return false;
         endif;
         $this->table = $table;
         $this->sessionName = $this->sessionName . $this->table;
+
         return $this;
     }
 
     /**
      * setIdentityColumn()
      * if isset $identityColumn sets identityColumn object otherwise returns false
+     *
      * @param string $identityColumn
      * @return boolean|\ngfw\Authentication
      */
-    public function setIdentityColumn($identityColumn) {
-        if (!isset($identityColumn)):
+    public function setIdentityColumn($identityColumn)
+    {
+        if ( ! isset($identityColumn)):
             return false;
         endif;
         $this->identityColumn = $identityColumn;
+
         return $this;
     }
 
     /**
      * setIdentity()
      * if isset $identity sets identity object otherwise returns false
+     *
      * @param string $identity
      * @return boolean|\ngfw\Authentication
      */
-    public function setIdentity($identity) {
-        if (!isset($identity)):
+    public function setIdentity($identity)
+    {
+        if ( ! isset($identity)):
             return false;
         endif;
         $this->identity = $identity;
+
         return $this;
     }
 
     /**
      * setCredentialColumn()
      * sets credential column object
+     *
      * @param string $credentialColumn
      * @return boolean|\ngfw\Authentication
      */
-    public function setCredentialColumn($credentialColumn) {
-        if (!isset($credentialColumn)):
+    public function setCredentialColumn($credentialColumn)
+    {
+        if ( ! isset($credentialColumn)):
             return false;
         endif;
         $this->credentialColumn = $credentialColumn;
+
         return $this;
     }
 
     /**
      * setCredential
      * sets credential object
+     *
      * @param string $credential
      * @return boolean|\ngfw\Authentication
      */
-    public function setCredential($credential) {
-        if (!isset($credential)):
+    public function setCredential($credential)
+    {
+        if ( ! isset($credential)):
             return false;
         endif;
         $this->credential = $credential;
+
         return $this;
     }
 
     /**
      * isValid()
      * Checks if user is authenticated
+     *
      * @return boolean
      */
-    public function isValid() {
+    public function isValid()
+    {
         $auth = Session::get($this->sessionName);
         if ($auth):
             return true;
@@ -205,51 +228,63 @@ class Authentication
             $user = $this->checkUserInDB();
             if (isset($user) && is_array($user)):
                 $this->setSessionIdentity($user);
+
                 return true;
             endif;
         endif;
+
         return false;
     }
 
     /**
      * checkUserInDB()
      * Builds select query to check user in DB and returns result as an array
+     *
      * @return array|false
      */
-    private function checkUserInDB() {
+    private function checkUserInDB()
+    {
         $query = new Query();
         $query->select()->from($this->table)->where($this->identityColumn . " = ?", $this->identity)->andWhere($this->credentialColumn . " = ?", $this->credential)->limit(1);
+
         return $this->dbAdapter->fetchRow($query);
     }
 
     /**
      * setSessionIdentity
      * sets identity in the session
+     *
      * @param array $identity
      */
-    private function setSessionIdentity($identity) {
+    private function setSessionIdentity($identity)
+    {
         Session::set($this->sessionName, serialize($identity));
     }
 
     /**
      * getIdentity()
      * checks if user is authenticated and return user data from session
+     *
      * @see isValid()
      * @return array|boolean
      */
-    public function getIdentity() {
+    public function getIdentity()
+    {
         if ($this->isValid()):
             return unserialize(Session::get($this->sessionName));
         endif;
+
         return false;
     }
 
     /**
      * clearIdentity()
      * sets auth session to null
+     *
      * @return void
      */
-    public function clearIdentity() {
-        Session::set($this->sessionName, NULL);
+    public function clearIdentity()
+    {
+        Session::set($this->sessionName, null);
     }
 }

@@ -27,17 +27,18 @@ namespace ngfw;
 
 /**
  * Bootstrap
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ *
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
-class Bootstrap
-{
+class Bootstrap {
 
     /**
      * $_controllerLoaded
      * Holds path to template directory
+     *
      * @var mixed
      */
     protected $_viewTemplate = false;
@@ -45,6 +46,7 @@ class Bootstrap
     /**
      * $_controllerLoaded
      * Holds boolean value of controller loaded status
+     *
      * @var boolean
      */
     protected $_controllerLoaded = false;
@@ -52,6 +54,7 @@ class Bootstrap
     /**
      * $_controllerObject
      * Holds controller instance
+     *
      * @var object
      */
     protected $_controllerObject;
@@ -59,18 +62,22 @@ class Bootstrap
     /**
      * __construct()
      * Instantiates new auto loader and all methods
+     *
      * @see initMethods()
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->initMethods();
     }
 
     /**
      * initMethods()
      * Calls Every Class method with starts with "_" OR "__"
+     *
      * @return void
      */
-    private function initMethods() {
+    private function initMethods()
+    {
         foreach (get_class_methods($this) as $method):
             if (substr($method, 0, 1) == "_" && substr($method, 0, 2) !== "__"):
                 call_user_func(array($this, $method));
@@ -81,21 +88,25 @@ class Bootstrap
 
     /**
      * Set Template path object
+     *
      * @param string $templatePath
      */
-    protected function setTemplate($templatePath) {
+    protected function setTemplate($templatePath)
+    {
         $this->_viewTemplate = $templatePath;
     }
 
     /**
      * _loadController()
      * Loads application controller
+     *
      * @see \ngfw\Route
      * @throws \ngfw\Exception
      * @return void
      */
-    private function loadController() {
-        if (!$this->_controllerLoaded):
+    private function loadController()
+    {
+        if ( ! $this->_controllerLoaded):
             $controllerTitle = Route::getController() . "Controller";
             if (class_exists($controllerTitle)):
                 $this->_controllerObject = new $controllerTitle;
