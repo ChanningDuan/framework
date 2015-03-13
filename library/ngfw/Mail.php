@@ -469,6 +469,8 @@ class Mail {
         elseif (isset($address[0]) && isset($address[1])):
             return '"' . $address[1] . '" <' . $address[0] . ">";
         endif;
+
+        return '';
     }
 
     /**
