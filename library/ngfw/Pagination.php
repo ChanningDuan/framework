@@ -28,6 +28,7 @@ namespace ngfw;
 /**
  * Pagination
  *
+ * @property Query query
  * @package       ngfw
  * @subpackage    library
  * @version       1.2.3
