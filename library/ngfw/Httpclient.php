@@ -28,7 +28,7 @@ namespace ngfw;
 /**
  * Httpclient
  * @package ngfw
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class Httpclient {

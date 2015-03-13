@@ -24,6 +24,7 @@
  */
 
 namespace ngfw;
+
 /**
  * Query
  * @package ngfw

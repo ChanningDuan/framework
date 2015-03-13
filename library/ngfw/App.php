@@ -29,7 +29,7 @@ namespace ngfw;
  * App
  * @package ngfw
  * @subpackage library
- * @version 1.2.2
+ * @version 1.2.3
  * @copyright (c) 2015, Nick Gejadze
  */
 class App {
