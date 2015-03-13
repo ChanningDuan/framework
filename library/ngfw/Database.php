@@ -61,6 +61,7 @@ class Database extends \PDO {
      * sets options and Connections to Database
      *
      * @param array $options
+     * @param bool  $autoConnect
      */
     public function __construct($options = null, $autoConnect = true)
     {
@@ -207,6 +208,8 @@ class Database extends \PDO {
 
             return false;
         }
+
+        return false;
     }
 
     /**
