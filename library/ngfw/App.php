@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class App {
@@ -69,11 +69,11 @@ class App {
      */
     public static function isAjax()
     {
-        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'):
+        if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'){
             return true;
-        else:
+        }else{
             return false;
-        endif;
+        }
     }
 
 }

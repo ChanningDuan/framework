@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Query {
@@ -225,17 +225,17 @@ class Query {
     public function select($select = "*")
     {
         $this->select = $select;
-        if (isset($this->select)):
-            if (is_array($this->select)):
-                foreach ($this->select as $key => $value):
+        if (isset($this->select)){
+            if (is_array($this->select)){
+                foreach ($this->select as $key => $value){
                     $this->select[$key] = $this->escapeField($value);
-                endforeach;
+                }
                 $this->select = implode(", ", $this->select);
-            else:
+            }else{
                 $this->select = ($this->select !== "*") ? $this->escapeField($this->select) : $this->select;
-            endif;
+            }
             $this->query = "SELECT " . $this->select . " ";
-        endif;
+        }
 
         return $this;
     }
@@ -252,12 +252,12 @@ class Query {
     public function insert($table, $data)
     {
         $this->table = $this->escapeField($table);
-        if ( ! isset($this->table)):
+        if ( ! isset($this->table)){
             throw new Exception("Table name is required for insert method to build query");
-        endif;
-        if ( ! isset($data) || ! is_array($data)):
+        }
+        if ( ! isset($data) || ! is_array($data)){
             throw new Exception("Insert Values are required to build query");
-        endif;
+        }
         $this->query = "INSERT INTO " . $this->escapeField($this->table) . " ";
         $this->buildBindAndFieldObjectsFromArray($data);
         $this->query .= "(" . implode(", ", $this->fields) . ") VALUES (" . $this->implodeBindValues($this->bind) . ") ";
@@ -278,22 +278,22 @@ class Query {
     public function update($table, $data)
     {
         $this->table = $table;
-        if ( ! isset($this->table)):
+        if ( ! isset($this->table)){
             throw new Exception("Table name is required for update method to build query");
-        endif;
-        if ( ! isset($data) || ! is_array($data)):
+        }
+        if ( ! isset($data) || ! is_array($data)){
             throw new Exception("Update Values are required to build query");
-        endif;
+        }
         $this->query = "UPDATE " . $this->escapeField($this->table) . " SET ";
         $this->buildBindAndFieldObjectsFromArray($data);
         $multipleIterator = new \MultipleIterator();
         $multipleIterator->attachIterator(new \ArrayIterator($this->fields));
         $multipleIterator->attachIterator(new \ArrayIterator($this->bind));
         $multipleIterator->attachIterator(new \ArrayIterator(array_keys($this->bind)));
-        foreach ($multipleIterator as $data):
+        foreach ($multipleIterator as $data){
             list($field, $bindValues, $bindKeys) = $data;
             $this->query .= $this->escapeField($field) . " = " . $this->implodeBindValues(array($bindKeys => $bindValues)) . ", ";
-        endforeach;
+        }
         $this->query = substr($this->query, 0, - 2) . " ";
         $this->cleanFunctionsFromBind();
 
@@ -309,9 +309,9 @@ class Query {
     public function delete()
     {
         $this->deleteTable = true;
-        if (isset($this->deleteTable)):
+        if (isset($this->deleteTable)){
             $this->query = "DELETE ";
-        endif;
+        }
 
         return $this;
     }
@@ -326,21 +326,21 @@ class Query {
      */
     public function from($from)
     {
-        if ( ! isset($from)):
+        if ( ! isset($from)){
             throw new Exception("FROM is Required to build query");
-        endif;
+        }
         $this->from = $from;
-        if (isset($this->from)):
-            if (is_array($this->from)):
-                foreach ($this->from as $key => $value):
+        if (isset($this->from)){
+            if (is_array($this->from)){
+                foreach ($this->from as $key => $value){
                     $this->from[$key] = $this->escapeField($value);
-                endforeach;
+                }
                 $this->from = implode(", ", $this->from);
-            else:
+            }else{
                 $this->from = $this->escapeField($this->from);
-            endif;
+            }
             $this->query .= "FROM " . $this->from . " ";
-        endif;
+        }
 
         return $this;
     }
@@ -356,23 +356,23 @@ class Query {
      */
     public function join($table, $clause, $joinCondition = null)
     {
-        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)){
             $this->joinCondition = strtoupper($joinCondition);
-        endif;
+        }
         $k = (count($this->join) > 0) ? count($this->join) + 1 : 0;
         $this->join[$k]['table'] = $this->escapeField($table);
-        if ($this->joinCondition == "USING"):
-            if (is_array($clause)):
-                foreach ($clause as $i => $v):
+        if ($this->joinCondition == "USING"){
+            if (is_array($clause)){
+                foreach ($clause as $i => $v){
                     $clause[$i] = $this->escapeField($v);
-                endforeach;
+                }
                 $this->join[$k]['clause'] = "(" . implode(", ", $clause) . ")";
-            else:
+            }else{
                 $this->join[$k]['clause'] = "(" . $this->escapeField($clause) . ")";
-            endif;
-        else:
+            }
+        }else{
             $this->join[$k]['clause'] = $this->escapeField($clause);
-        endif;
+        }
         $this->query .= "JOIN " . $this->join[$k]['table'] . " " . $this->joinCondition . " " . $this->join[$k]['clause'] . " ";
 
         return $this;
@@ -389,23 +389,23 @@ class Query {
      */
     public function innerJoin($table, $clause, $joinCondition = null)
     {
-        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)){
             $this->joinCondition = strtoupper($joinCondition);
-        endif;
+        }
         $k = (count($this->innerJoin) > 0) ? count($this->innerJoin) + 1 : 0;
         $this->innerJoin[$k]['table'] = $this->escapeField($table);
-        if ($this->joinCondition == "USING"):
-            if (is_array($clause)):
-                foreach ($clause as $i => $v):
+        if ($this->joinCondition == "USING"){
+            if (is_array($clause)){
+                foreach ($clause as $i => $v){
                     $clause[$i] = $this->escapeField($v);
-                endforeach;
+                }
                 $this->innerJoin[$k]['clause'] = "(" . implode(", ", $clause) . ")";
-            else:
+            }else{
                 $this->innerJoin[$k]['clause'] = "(" . $this->escapeField($clause) . ")";
-            endif;
-        else:
+            }
+        }else{
             $this->innerJoin[$k]['clause'] = $this->escapeField($clause);
-        endif;
+        }
         $this->query .= "INNER JOIN " . $this->innerJoin[$k]['table'] . " " . $this->joinCondition . " " . $this->innerJoin[$k]['clause'] . " ";
 
         return $this;
@@ -422,23 +422,23 @@ class Query {
      */
     public function leftJoin($table, $clause, $joinCondition = null)
     {
-        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)){
             $this->joinCondition = strtoupper($joinCondition);
-        endif;
+        }
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
         $this->leftJoin[$k]['table'] = $this->escapeField($table);
-        if ($this->joinCondition == "USING"):
-            if (is_array($clause)):
-                foreach ($clause as $i => $v):
+        if ($this->joinCondition == "USING"){
+            if (is_array($clause)){
+                foreach ($clause as $i => $v){
                     $clause[$i] = $this->escapeField($v);
-                endforeach;
+                }
                 $this->leftJoin[$k]['clause'] = "(" . implode(", ", $clause) . ")";
-            else:
+            }else{
                 $this->leftJoin[$k]['clause'] = "(" . $this->escapeField($clause) . ")";
-            endif;
-        else:
+            }
+        }else{
             $this->leftJoin[$k]['clause'] = $this->escapeField($clause);
-        endif;
+        }
         $this->query .= "LEFT JOIN " . $this->leftJoin[$k]['table'] . " " . $this->joinCondition . " " . $this->leftJoin[$k]['clause'] . " ";
 
         return $this;
@@ -455,23 +455,23 @@ class Query {
      */
     public function rightJoin($table, $clause, $joinCondition = null)
     {
-        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)):
+        if ( ! empty($joinCondition) && in_array(strtoupper($joinCondition), $this->availableJoinConditions)){
             $this->joinCondition = strtoupper($joinCondition);
-        endif;
+        }
         $k = (count($this->leftJoin) > 0) ? count($this->leftJoin) + 1 : 0;
         $this->rightJoin[$k]['table'] = $this->escapeField($table);
-        if ($this->joinCondition == "USING"):
-            if (is_array($clause)):
-                foreach ($clause as $i => $v):
+        if ($this->joinCondition == "USING"){
+            if (is_array($clause)){
+                foreach ($clause as $i => $v){
                     $clause[$i] = $this->escapeField($v);
-                endforeach;
+                }
                 $this->rightJoin[$k]['clause'] = "(" . implode(", ", $clause) . ")";
-            else:
+            }else{
                 $this->rightJoin[$k]['clause'] = "(" . $this->escapeField($clause) . ")";
-            endif;
-        else:
+            }
+        }else{
             $this->rightJoin[$k]['clause'] = $this->escapeField($clause);
-        endif;
+        }
         $this->query .= "RIGHT JOIN " . $this->rightJoin[$k]['table'] . " " . $this->joinCondition . " " . $this->rightJoin[$k]['clause'] . " ";
 
         return $this;
@@ -488,14 +488,14 @@ class Query {
     public function where($where, $value = false)
     {
         $where = $this->escapeField($where);
-        if ($value):
+        if ($value){
             $key = $this->buildBindAndFieldObjects($value);
-        endif;
-        if (isset($key) && ! empty($key)):
+        }
+        if (isset($key) && ! empty($key)){
             $this->where = str_replace("?", ":" . $key, $where);
-        else:
+        }else{
             $this->where = $this->escapeValue($where);
-        endif;
+        }
         $this->query .= "WHERE " . $this->where . " ";
 
         return $this;
@@ -512,14 +512,14 @@ class Query {
     public function andWhere($where, $value = false)
     {
         $where = $this->escapeField($where);
-        if ($value):
+        if ($value){
             $key = $this->buildBindAndFieldObjects($value);
-        endif;
-        if (isset($key) && ! empty($key)):
+        }
+        if (isset($key) && ! empty($key)){
             $this->andWhere[] = str_replace("?", ":" . $key, $where);
-        else:
+        }else{
             $this->andWhere[] = $this->escapeValue($where);
-        endif;
+        }
         $this->query .= "AND " . end($this->andWhere) . " ";
 
         return $this;
@@ -536,14 +536,14 @@ class Query {
     public function orWhere($where, $value = null)
     {
         $where = $this->escapeField($where);
-        if ($value):
+        if ($value){
             $key = $this->buildBindAndFieldObjects($value);
-        endif;
-        if (isset($key) && ! empty($key)):
+        }
+        if (isset($key) && ! empty($key)){
             $this->orWhere[] = str_replace("?", ":" . $key, $where);
-        else:
+        }else{
             $this->orWhere[] = $this->escapeValue($where);
-        endif;
+        }
         $this->query .= "OR " . end($this->orWhere) . " ";
 
         return $this;
@@ -560,20 +560,20 @@ class Query {
     public function having($condition, $value = null)
     {
         $condition = $this->escapeField($condition);
-        if ($value):
+        if ($value){
             $key = $this->buildBindAndFieldObjects($value);
-        endif;
-        if (isset($key) && ! empty($key)):
+        }
+        if (isset($key) && ! empty($key)){
             $this->having = str_replace("?", ":" . $key, $condition);
-        else:
+        }else{
             $this->having = $this->escapeValue($condition);
-        endif;
-        if (count($this->having) > 1):
+        }
+        if (count($this->having) > 1){
             $this->query .= "AND " . $this->having . " ";
-        else:
+        }else{
             $this->query .= "HAVING " . $this->having . " ";
-        endif;
-
+        }
+        
         return $this;
     }
 
@@ -587,12 +587,12 @@ class Query {
     public function group($field)
     {
         $this->groupBy = $field;
-        if (isset($this->groupBy)):
-            if (is_array($this->groupBy)):
+        if (isset($this->groupBy)){
+            if (is_array($this->groupBy)){
                 $this->groupBy = implode("`, `", $this->groupBy);
-            endif;
+            }
             $this->query .= "GROUP BY `" . $this->groupBy . "` ";
-        endif;
+        }
 
         return $this;
     }
@@ -607,15 +607,15 @@ class Query {
      */
     public function order($field, $clause = null)
     {
-        if (strpos($field, "(") === false):
+        if (strpos($field, "(") === false){
             $field = $this->escapeField($field);
-        endif;
+        }
         $this->orderBy[] = $field . " " . $clause;
-        if (count($this->orderBy) > 1):
+        if (count($this->orderBy) > 1){
             $this->query = trim($this->query) . ", " . end($this->orderBy) . " ";
-        else:
+        }else{
             $this->query .= "ORDER BY " . end($this->orderBy) . " ";
-        endif;
+        }
 
         return $this;
     }
@@ -630,9 +630,9 @@ class Query {
     public function limit($int)
     {
         $this->limit = $int;
-        if (isset($this->limit)):
+        if (isset($this->limit)){
             $this->query .= "LIMIT " . $this->escapeValue($this->limit);
-        endif;
+        }
 
         return $this;
     }
@@ -646,9 +646,9 @@ class Query {
     private function buildBindAndFieldObjectsFromArray(array $data)
     {
         $keys = array();
-        foreach ($data as $k => $v):
+        foreach ($data as $k => $v){
             $keys[] = $this->buildBindAndFieldObjects($v, $k);
-        endforeach;
+        }
 
         return $keys;
     }
@@ -663,23 +663,23 @@ class Query {
     private function buildBindAndFieldObjects($value, $key = null)
     {
         $generatedKey = $this->generateKey();
-        if (isset($key) && ! empty($key)):
+        if (isset($key) && ! empty($key)){
             $this->fields[$generatedKey] = $this->escapeField($key);
-        endif;
+        }
         $isFunction = strpos($value, "(");
-        if ($isFunction !== false && $isFunction > 0):
+        if ($isFunction !== false && $isFunction > 0){
             $functionNameArray = explode("(", $value);
             $functionName = $functionNameArray[0];
-            if (in_array($functionName, $this->mysqlFunctions)):
+            if (in_array($functionName, $this->mysqlFunctions)){
                 $this->bind[$generatedKey . $this->glueForFunctionsSuffix . $value] = false;
-            else:
+            }else{
                 $this->bind[$generatedKey] = $this->escapeValue($value);
-            endif;
-        elseif ($value == null):
+            }
+        }elseif ($value == null){
             $this->bind[$generatedKey . $this->glueForFunctionsSuffix . "NULL"] = null;
-        else:
+        }else{
             $this->bind[$generatedKey] = $this->escapeValue($value);
-        endif;
+        }
 
         return $generatedKey;
     }
@@ -693,18 +693,18 @@ class Query {
     private function implodeBindValues(array $array)
     {
         $string = "";
-        foreach ($array as $key => $value):
-            if ($value === false):
-                if (strpos($key, $this->glueForFunctionsSuffix) !== false):
+        foreach ($array as $key => $value){
+            if ($value === false){
+                if (strpos($key, $this->glueForFunctionsSuffix) !== false){
                     $function = end(explode($this->glueForFunctionsSuffix, $key));
                     $string .= $function . ", ";
-                endif;
-            elseif ($value == null):
+                }
+            }elseif ($value == null){
                 $string .= "NULL, ";
-            else:
+            }else{
                 $string .= ":" . $key . ", ";
-            endif;
-        endforeach;
+            }
+        }
 
         return substr($string, 0, - 2);
     }
@@ -719,11 +719,11 @@ class Query {
         array_map(function ($v, $k) {
 
             // unset functions from $this->bind
-            if ($v === false):
-                if (strpos($k, $this->glueForFunctionsSuffix) !== false):
+            if ($v === false){
+                if (strpos($k, $this->glueForFunctionsSuffix) !== false){
                     unset($this->bind[$k]);
-                endif;
-            endif;
+                }
+            }
         }, $this->bind, array_keys($this->bind));
     }
 
@@ -736,22 +736,22 @@ class Query {
      */
     private function escapeField($str)
     {
-        if (strpos($str, '`') === false):
-            if (strpos($str, ".") === false):
-                if (strpos($str, " ") === false):
+        if (strpos($str, '`') === false){
+            if (strpos($str, ".") === false){
+                if (strpos($str, " ") === false){
                     $str = "`" . $str . "`";
-                else:
+                }else{
                     $strD = explode(" ", $str, 2);
                     $str = "`" . $strD[0] . "` " . $strD[1];
-                endif;
-            else:
+                }
+            }else{
                 $str = preg_replace_callback('/[a-zA-Z0-9]+[.][a-zA-Z0-9]+/', function ($matches) {
                     $strD = explode(".", $matches[0]);
 
                     return "`" . $strD[0] . "`.`" . $strD[1] . "`";
                 }, $str);
-            endif;
-        endif;
+            }
+        }
 
         return $str;
     }
@@ -765,22 +765,22 @@ class Query {
      */
     private function escapeValue($value)
     {
-        if (is_array($value)):
-            foreach ($value as $key => $val):
+        if (is_array($value)){
+            foreach ($value as $key => $val){
                 $value[$key] = $this->escapeValue($val);
-            endforeach;
+            }
 
             return $value;
-        else:
-            if ( ! is_numeric($value)):
+        }else{
+            if ( ! is_numeric($value)){
                 $search = array("\\", "\0", "\n", "\r", "\x1a", "'", '"', ";");
                 $replace = array("\\\\", "\\0", "\\n", "\\r", "\Z", "\'", '\"', "");
 
                 return str_replace($search, $replace, $value);
-            else:
+            }else{
                 return $value;
-            endif;
-        endif;
+            }
+        }
     }
 
     /**
@@ -794,11 +794,11 @@ class Query {
      */
     public function getQuery($compileQuery = false)
     {
-        if ($compileQuery):
+        if ($compileQuery){
             return $this->__toString();
-        else:
+        }else{
             return $this;
-        endif;
+        }
     }
 
     /**
@@ -811,15 +811,15 @@ class Query {
     {
         $keys = array();
         $values = array();
-        if (isset($this->bind) && is_array($this->bind)):
-            foreach ($this->bind as $k => $v):
+        if (isset($this->bind) && is_array($this->bind)){
+            foreach ($this->bind as $k => $v){
                 $values[] = "'" . $this->escapeValue($v) . "'";
                 $keys[] = '/:' . $k . '/';
-            endforeach;
-        endif;
-        if (isset($keys) && ! empty($keys) && isset($values) && ! empty($values)):
+            }
+        }
+        if (isset($keys) && ! empty($keys) && isset($values) && ! empty($values)){
             $query = preg_replace($keys, $values, $this->query, 1);
-        endif;
+        }
 
         return trim(isset($query) ? $query : $this->query);
     }

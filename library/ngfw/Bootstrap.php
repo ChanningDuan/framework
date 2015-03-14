@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Bootstrap {
@@ -78,11 +78,11 @@ class Bootstrap {
      */
     private function initMethods()
     {
-        foreach (get_class_methods($this) as $method):
-            if (substr($method, 0, 1) == "_" && substr($method, 0, 2) !== "__"):
+        foreach (get_class_methods($this) as $method){
+            if (substr($method, 0, 1) == "_" && substr($method, 0, 2) !== "__"){
                 call_user_func(array($this, $method));
-            endif;
-        endforeach;
+            }
+        }
         $this->loadController();
     }
 
@@ -106,24 +106,24 @@ class Bootstrap {
      */
     private function loadController()
     {
-        if ( ! $this->_controllerLoaded):
+        if ( ! $this->_controllerLoaded){
             $controllerTitle = Route::getController() . "Controller";
-            if (class_exists($controllerTitle)):
+            if (class_exists($controllerTitle)){
                 $this->_controllerObject = new $controllerTitle;
-            else:
+            }else{
                 throw new Exception(sprintf('The requested Controller "%s" does not exist.', $controllerTitle));
-            endif;
-            if ($this->_viewTemplate):
+            }
+            if ($this->_viewTemplate){
                 $this->_controllerObject->setViewObject("template", $this->_viewTemplate);
-            endif;
+            }
             $this->_controllerLoaded = true;
             $method = Route::getAction() . "Action";
-            if (is_callable(array($this->_controllerObject, $method))):
+            if (is_callable(array($this->_controllerObject, $method))){
                 call_user_func(array($this->_controllerObject, $method));
                 $this->_controllerObject->startRander();
-            else:
+            }else{
                 throw new Exception(sprintf('The requested method "%s" does not exist in %s.', $method, $controllerTitle));
-            endif;
-        endif;
+            }
+        }
     }
 }

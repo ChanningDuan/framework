@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Authentication {
@@ -93,18 +93,18 @@ class Authentication {
      */
     public function __construct($dbAdapter = null, $table = null, $identityColumn = null, $credentialColumn = null)
     {
-        if (isset($dbAdapter)):
+        if (isset($dbAdapter)){
             $this->setDBAdapter($dbAdapter);
-        endif;
-        if (isset($table)):
+        }
+        if (isset($table)){
             $this->setDBTable($table);
-        endif;
-        if (isset($identityColumn)):
+        }
+        if (isset($identityColumn)){
             $this->setIdentityColumn($identityColumn);
-        endif;
-        if (isset($credentialColumn)):
+        }
+        if (isset($credentialColumn)){
             $this->setCredentialColumn($credentialColumn);
-        endif;
+        }
 
         return $this;
     }
@@ -118,9 +118,9 @@ class Authentication {
      */
     public function setDBAdapter($dbAdapter)
     {
-        if ( ! isset($dbAdapter)):
+        if ( ! isset($dbAdapter)){
             return false;
-        endif;
+        }
         $this->dbAdapter = $dbAdapter;
 
         return $this;
@@ -135,9 +135,9 @@ class Authentication {
      */
     public function setDBTable($table)
     {
-        if ( ! isset($table)):
+        if ( ! isset($table)){
             return false;
-        endif;
+        }
         $this->table = $table;
         $this->sessionName = $this->sessionName . $this->table;
 
@@ -153,9 +153,9 @@ class Authentication {
      */
     public function setIdentityColumn($identityColumn)
     {
-        if ( ! isset($identityColumn)):
+        if ( ! isset($identityColumn)){
             return false;
-        endif;
+        }
         $this->identityColumn = $identityColumn;
 
         return $this;
@@ -170,9 +170,9 @@ class Authentication {
      */
     public function setIdentity($identity)
     {
-        if ( ! isset($identity)):
+        if ( ! isset($identity)){
             return false;
-        endif;
+        }
         $this->identity = $identity;
 
         return $this;
@@ -187,9 +187,9 @@ class Authentication {
      */
     public function setCredentialColumn($credentialColumn)
     {
-        if ( ! isset($credentialColumn)):
+        if ( ! isset($credentialColumn)){
             return false;
-        endif;
+        }
         $this->credentialColumn = $credentialColumn;
 
         return $this;
@@ -204,9 +204,9 @@ class Authentication {
      */
     public function setCredential($credential)
     {
-        if ( ! isset($credential)):
+        if ( ! isset($credential)){
             return false;
-        endif;
+        }
         $this->credential = $credential;
 
         return $this;
@@ -221,17 +221,17 @@ class Authentication {
     public function isValid()
     {
         $auth = Session::get($this->sessionName);
-        if ($auth):
+        if ($auth){
             return true;
-        endif;
-        if (isset($this->dbAdapter) && isset($this->table) && isset($this->identityColumn) && isset($this->identity) && isset($this->credentialColumn) && isset($this->credential)):
+        }
+        if (isset($this->dbAdapter) && isset($this->table) && isset($this->identityColumn) && isset($this->identity) && isset($this->credentialColumn) && isset($this->credential)){
             $user = $this->checkUserInDB();
-            if (isset($user) && is_array($user)):
+            if (isset($user) && is_array($user)){
                 $this->setSessionIdentity($user);
 
                 return true;
-            endif;
-        endif;
+            }
+        }
 
         return false;
     }
@@ -270,9 +270,9 @@ class Authentication {
      */
     public function getIdentity()
     {
-        if ($this->isValid()):
+        if ($this->isValid()){
             return unserialize(Session::get($this->sessionName));
-        endif;
+        }
 
         return false;
     }

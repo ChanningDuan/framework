@@ -44,8 +44,8 @@ class Header
      * @return int response code
      */
     public static function responseCode($code = null) {
-        if (!function_exists('http_response_code')):
-            if (isset($code) && is_numeric($code)):
+        if (!function_exists('http_response_code')){
+            if (isset($code) && is_numeric($code)){
                 switch ($code) {
                     case 100:
                         $text = 'Continue';
@@ -204,19 +204,20 @@ class Header
                 self::set($protocol . ' ' . $code . ' ' . $text);
                 Registry::set('http_response_code', $code);
                 return $code;
-            else:
+            }else{
                 $code = Registry::get('http_response_code');
-                if (!isset($code) || empty($code)):
+                if (!isset($code) || empty($code)){
                     $code = 200;
-                endif;
-            endif;
+                }
+            }
+
             return $code;
-        else:
-            if (!isset($code) || !is_numeric($code)):
+        }else{
+            if (!isset($code) || !is_numeric($code)){
                 $code = null;
-            endif;
+            }
             return http_response_code($code);
-        endif;
+        }
     }
 
     /**
@@ -229,11 +230,11 @@ class Header
      * @internal param bool $exit exit after redirect or continue executing the code
      */
     public static function redirect($url = '/', $http_response_code) {
-        if (isset($http_response_code) && is_numeric($http_response_code)):
+        if (isset($http_response_code) && is_numeric($http_response_code)){
             self::set("Location: " . $url, true, $http_response_code);
-        else:
+        }else{
             self::set("Location: " . $url);
-        endif;
+        }
         exit();
     }
 

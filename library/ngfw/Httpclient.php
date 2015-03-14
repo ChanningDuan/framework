@@ -89,18 +89,18 @@ class Httpclient {
      * @param int $timeout
      */
     public function __construct($uri = null, $maxredirects = null, $timeout = null) {
-        if (isset($uri) && !empty($uri)):
+        if (isset($uri) && !empty($uri)){
             $this->setUri($uri);
-        endif;
-        if (isset($maxredirects) && !empty($maxredirects)):
+        }
+        if (isset($maxredirects) && !empty($maxredirects)){
             $this->setMaxredirects($maxredirects);
-        endif;
-        if (isset($timeout) && !empty($timeout)):
+        }
+        if (isset($timeout) && !empty($timeout)){
             $this->setTimeout($timeout);
-        endif;
-        if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])):
+        }
+        if (isset($_SERVER['HTTP_USER_AGENT']) && !empty($_SERVER['HTTP_USER_AGENT'])){
             $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
-        endif;
+        }
     }
 
     /**
@@ -165,14 +165,14 @@ class Httpclient {
      * @return object Httpclient()
      */
     public function post($array) {
-        if (isset($array) && is_array($array)):
+        if (isset($array) && is_array($array)){
             $fields = "";
-            foreach ($array as $key => $value):
+            foreach ($array as $key => $value){
                 $fields.= $key . '=' . $value . '&';
-            endforeach;
+            }
             $this->postData = rtrim($fields, '&');
             $this->postDataArray = $array;
-        endif;
+        }
         return $this;
     }
 
@@ -182,12 +182,12 @@ class Httpclient {
      * @return void
      */
     private function setupCookie() {
-        if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES")):
-            if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP")):
+        if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES")){
+            if (!is_dir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP")){
                 @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP", 0777);
-            endif;
+            }
             @mkdir($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", 0777);
-        endif;
+        }
         $this->cookie = tempnam($_SERVER["DOCUMENT_ROOT"] . DIRECTORY_SEPARATOR . "TMP" . DIRECTORY_SEPARATOR . "COOKIES", "CURLCOOKIE");
     }
 
@@ -198,9 +198,9 @@ class Httpclient {
      * @return  void
      */
     private function cleanUpCookie() {
-        if(isset($this->cookie)):
+        if(isset($this->cookie)){
             unlink($this->cookie);
-        endif;
+        }
     }
 
     /**
@@ -214,10 +214,10 @@ class Httpclient {
         curl_setopt($ch, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($ch, CURLOPT_URL, $this->uri);
         curl_setopt($ch, CURLOPT_COOKIEJAR, $this->cookie);
-        if (isset($this->postData) && !empty($this->postData)):
+        if (isset($this->postData) && !empty($this->postData)){
             curl_setopt($ch, CURLOPT_POST, count($this->postDataArray));
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->postData);
-        endif;
+        }
         if(count($this->requestHeadersArray) > 0 ) {
                curl_setopt($ch, CURLOPT_HTTPHEADER, $this->requestHeadersArray);
         }
@@ -233,20 +233,20 @@ class Httpclient {
         curl_close($ch);
         unset($ch);
         $this->cleanUpCookie();
-        if ($response['info']['http_code'] == 301 || $response['info']['http_code'] == 302):
+        if ($response['info']['http_code'] == 301 || $response['info']['http_code'] == 302){
             $headers = get_headers($response['info']['url']);
-            foreach ($headers as $value) :
-                if (substr(strtolower($value), 0, 9) == "location:"):
+            foreach ($headers as $value){
+                if (substr(strtolower($value), 0, 9) == "location:"){
                     $this->uri = trim(substr($value, 9, strlen($value)));
                     return $this->request();
-                endif;
-            endforeach;
-        endif;
-        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) || preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)) :
+                }
+            }
+        }
+        if (preg_match("/window\.location\.replace\('(.*)'\)/i", $response['content'], $value) || preg_match("/window\.location\=\"(.*)\"/i", $response['content'], $value)){
             $this->uri = $value[1];
             return $this->request();
-        else:
+        }else{
             return $response;
-        endif;
+        }
     }
 }

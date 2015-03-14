@@ -45,9 +45,9 @@ class Registry extends \ArrayObject {
      * @return object Class instance
      */
     public static function init() {
-        if (self::$instance === null):
+        if (self::$instance === null){
             self::$instance = new Registry;
-        endif;
+        }
         return self::$instance;
     }
 
@@ -67,9 +67,9 @@ class Registry extends \ArrayObject {
      * @return mixed The value at the specified index or FALSE.
      */
     public static function get($index) {
-        if (self::init()->checkIndex($index)):
+        if (self::init()->checkIndex($index)){
             return self::init()->offsetGet($index);
-        endif;
+        }
         return false;
     }
 
@@ -79,9 +79,9 @@ class Registry extends \ArrayObject {
      * @return boolean TRUE is returned if key is found, otherwise false
      */
     public static function checkIndex($index) {
-        if (self::init()->offsetExists($index)):
+        if (self::init()->offsetExists($index)){
             return true;
-        endif;
+        }
         return false;
     }
 
