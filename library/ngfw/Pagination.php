@@ -31,7 +31,7 @@ namespace ngfw;
  * @property Query query
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Pagination {
@@ -188,9 +188,9 @@ class Pagination {
      */
     public static function init()
     {
-        if (self::$instance === null):
+        if (self::$instance === null){
             self::$instance = new Pagination;
-        endif;
+        }
 
         return self::$instance;
     }
@@ -317,23 +317,23 @@ class Pagination {
     {
         $this->calculateTotal();
         $this->query = new Query;
-        if ( ! isset($this->select)):
+        if ( ! isset($this->select)){
             $this->select = "*";
-        endif;
+        }
         $this->query->select($this->select)->from($this->table);
-        if (isset($this->where)):
+        if (isset($this->where)){
             $this->query->where($this->where);
-        endif;
-        if ( ! isset($this->orderByField)):
+        }
+        if ( ! isset($this->orderByField)){
             $this->determineAutoIncrement();
-        endif;
-        if (isset($this->orderByField)):
+        }
+        if (isset($this->orderByField)){
             $this->query->order($this->orderByField, $this->defaultOrder);
-        endif;
+        }
         $limitFrom = (($this->currentPage - 1) * $this->itemsPerPage);
-        if ($limitFrom >= $this->totalCount):
+        if ($limitFrom >= $this->totalCount){
             $limitFrom = 0;
-        endif;
+        }
         $this->query->limit($limitFrom . ", " . $this->itemsPerPage);
 
         return $this->db->fetchAll($this->query->getQuery());
@@ -351,38 +351,38 @@ class Pagination {
     public function getPagination($range = 5, $nextAndPreviousButtons = true, $additionalButtons = true)
     {
         $this->calculateTotal();
-        if ($additionalButtons):
+        if ($additionalButtons){
             $paginator[] = array($this->defaultPageNumberName          => 1,
                                  $this->defaultPaginationSegmentName   => $this->defaultPaginationSegmentNameFirst,
                                  $this->defaultPaginationSegmentStatus => ($this->currentPage > 1 ? true : false)
             );
-        endif;
-        if ($nextAndPreviousButtons):
+        }
+        if ($nextAndPreviousButtons){
             $paginator[] = array($this->defaultPageNumberName          => ($this->currentPage > 1 ? ($this->currentPage - 1) : $this->currentPage),
                                  $this->defaultPaginationSegmentName   => $this->defaultPaginationSegmentNamePrevious,
                                  $this->defaultPaginationSegmentStatus => ($this->currentPage > 1 ? true : false)
             );
-        endif;
-        for ($i = 1; $i <= $this->totalPages; $i ++):
-            if ($i >= ($this->currentPage - $range) && $i <= ($this->currentPage + $range)):
+        }
+        for ($i = 1; $i <= $this->totalPages; $i ++){
+            if ($i >= ($this->currentPage - $range) && $i <= ($this->currentPage + $range)){
                 $paginator[] = array($this->defaultPageNumberName          => $i,
                                      $this->defaultPaginationSegmentName   => $i,
                                      $this->defaultPaginationSegmentStatus => ($this->currentPage == $i ? false : true)
                 );
-            endif;
-        endfor;
-        if ($nextAndPreviousButtons):
+            }
+        }
+        if ($nextAndPreviousButtons){
             $paginator[] = array($this->defaultPageNumberName          => ($this->currentPage < $this->totalPages ? ($this->currentPage + 1) : $this->totalPages),
                                  $this->defaultPaginationSegmentName   => $this->defaultPaginationSegmentNameNext,
                                  $this->defaultPaginationSegmentStatus => ($this->currentPage < $this->totalPages ? true : false)
             );
-        endif;
-        if ($additionalButtons):
+        }
+        if ($additionalButtons){
             $paginator[] = array($this->defaultPageNumberName          => $this->totalPages,
                                  $this->defaultPaginationSegmentName   => $this->defaultPaginationSegmentNameLast,
                                  $this->defaultPaginationSegmentStatus => ($this->currentPage < $this->totalPages ? true : false)
             );
-        endif;
+        }
 
         return $paginator;
     }
@@ -395,15 +395,15 @@ class Pagination {
      */
     private function determineAutoIncrement()
     {
-        if ( ! $this->orderByField):
+        if ( ! $this->orderByField){
             $query = "DESCRIBE " . $this->table;
             $result = $this->db->query($query);
-            foreach ($result as $row):
-                if ($row['Extra'] == 'auto_increment'):
+            foreach ($result as $row){
+                if ($row['Extra'] == 'auto_increment'){
                     $this->orderByField = $row['Field'];
-                endif;
-            endforeach;
-        endif;
+                }
+            }
+        }
     }
 
     /**
@@ -414,17 +414,16 @@ class Pagination {
      */
     private function calculateTotal()
     {
-        if ( ! $this->totalPages):
+        if ( ! $this->totalPages){
             $this->query = new Query;
-            $this->query->select("COUNT(*) as total")
-                ->from($this->table);
-            if (isset($this->where)):
+            $this->query->select("COUNT(*) as total")->from($this->table);
+            if (isset($this->where)){
                 $this->query->where($this->where);
-            endif;
+            }
             $result = $this->db->fetchRow($this->query->getQuery());
             $this->totalCount = $result['total'];
             $this->totalPages = ceil($this->totalCount / $this->itemsPerPage);
-        endif;
+        }
 
         return $this->totalPages;
     }

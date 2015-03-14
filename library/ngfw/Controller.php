@@ -24,12 +24,13 @@
  */
 
 namespace ngfw;
+
 /**
  * Controller
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Controller {
@@ -54,9 +55,9 @@ class Controller {
         $className = Route::getController();
         $method = Route::getAction();
         $this->view = new View($className, $method);
-        if (method_exists($this, 'init')):
+        if (method_exists($this, 'init')){
             $this->init();
-        endif;
+        }
     }
 
     /**

@@ -29,7 +29,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Webquery {
@@ -110,9 +110,9 @@ class Webquery {
      */
     public function from($uri = null)
     {
-        if (isset($uri) && ! empty($uri)):
+        if (isset($uri) && ! empty($uri)){
             $this->httpclient->setUri($uri);
-        endif;
+        }
 
         return $this;
     }
@@ -127,9 +127,9 @@ class Webquery {
      */
     public function where($where = null, $value = null)
     {
-        if (is_array($this->where)):
+        if (is_array($this->where)){
             $this->whereKey = count($this->where) + 1;
-        endif;
+        }
         $this->where[$this->whereKey]['attr'] = $where;
         $this->where[$this->whereKey]['value'] = $value;
 
@@ -148,27 +148,27 @@ class Webquery {
         $content = $this->httpclient->request();
         $this->content = $content['content'];
         @$this->dom->loadHTML('<?xml encoding="UTF-8">' . $this->content);
-        if (isset($this->select) && $this->select != "*"):
+        if (isset($this->select) && $this->select != "*"){
             $xpath = new \DOMXpath($this->dom);
             $nodes = $xpath->query("//" . $this->select);
             $html = '';
-            foreach ($nodes as $node):
+            foreach ($nodes as $node){
                 $html .= $this->removeHeaders($this->dom->saveHTML($node));
-            endforeach;
+            }
             @$this->dom->loadHTML('<?xml encoding="UTF-8">' . $html);
-        endif;
-        if (isset($this->where)):
+        }
+        if (isset($this->where)){
             $xpath = new \DOMXpath($this->dom);
-            foreach ($this->where as $where):
+            foreach ($this->where as $where){
                 $nodes = $xpath->query("//*[contains(concat(' ', @" . $where['attr'] . ", ' '), '" . $where['value'] . "')]");
-                foreach ($nodes as $node):
+                foreach ($nodes as $node){
                     $result[] = $this->removeHeaders($this->dom->saveHTML($node));
-                endforeach;
-            endforeach;
-        endif;
-        if ( ! isset($this->where) && empty($result)):
+                }
+            }
+        }
+        if ( ! isset($this->where) && empty($result)){
             $result[] = $this->removeHeaders($this->dom->saveHTML());
-        endif;
+        }
 
         return $result;
     }

@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class View {
@@ -184,10 +184,25 @@ class View {
      */
     public function setLayoutPath()
     {
-        $this->layoutFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (! empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFilename . $this->extension;
-        if (file_exists($this->layoutFilePath)):
+        if( defined('ROOT') ){
+            $this->layoutFilePath = ROOT;
+        }else{
+            $this->layoutFilePath = $_SERVER["DOCUMENT_ROOT"];
+        }
+        $this->layoutFilePath .= DIRECTORY_SEPARATOR;
+        if( defined('APPDIR') ){
+            $this->layoutFilePath .= APPDIR;
+        }else{
+            $this->layoutFilePath .= "Application";
+        }
+        $this->layoutFilePath .= DIRECTORY_SEPARATOR;
+        if(! empty($this->template) ){
+            $this->layoutFilePath .= trim($this->template, "/") . DIRECTORY_SEPARATOR;
+        }
+        $this->layoutFilePath .= 'Layout' . DIRECTORY_SEPARATOR . $this->layoutFilename . $this->extension; 
+        if (file_exists($this->layoutFilePath)){
             return true;
-        endif;
+        }
 
         return false;
     }
@@ -199,10 +214,25 @@ class View {
      */
     public function setViewPath()
     {
-        $this->viewFilePath = (defined('ROOT') ? ROOT : $_SERVER["DOCUMENT_ROOT"]) . DIRECTORY_SEPARATOR . "Application" . (! empty($this->template) ? DIRECTORY_SEPARATOR . trim($this->template, "/") . DIRECTORY_SEPARATOR : DIRECTORY_SEPARATOR) . 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . $this->extension;
-        if (file_exists($this->viewFilePath)):
+        if( defined('ROOT') ){
+            $this->viewFilePath =  ROOT;
+        }else{
+            $this->viewFilePath = $_SERVER["DOCUMENT_ROOT"];
+        } 
+        $this->viewFilePath .= DIRECTORY_SEPARATOR;
+        if( defined('APPDIR') ){
+            $this->viewFilePath .= APPDIR;
+        }else{
+            $this->viewFilePath .= "Application";
+        }
+        $this->viewFilePath .= DIRECTORY_SEPARATOR;
+        if(! empty($this->template) ){
+            $this->viewFilePath .= trim($this->template, "/") . DIRECTORY_SEPARATOR;
+        }
+        $this->viewFilePath .= 'View' . DIRECTORY_SEPARATOR . $this->controller . DIRECTORY_SEPARATOR . ucfirst(strtolower($this->action)) . $this->extension;
+        if (file_exists($this->viewFilePath)){
             return true;
-        endif;
+        }
 
         return false;
     }
@@ -215,18 +245,18 @@ class View {
      */
     public function loadLayout()
     {
-        if ($this->render && ! $this->setViewPath()):
+        if ($this->render && ! $this->setViewPath()){
             throw new Exception(sprintf('View file "%s" does not exist.', $this->viewFilePath));
-        endif;
-        if ($this->layout):
-            if ($this->setLayoutPath()):
+        }
+        if ($this->layout){
+            if ($this->setLayoutPath()){
                 include_once($this->layoutFilePath);
-            else:
+            }else{
                 throw new Exception(sprintf('Layout file "%s" does not exist.', $this->layoutFilePath));
-            endif;
-        else:
+            }
+        }else{
             $this->render();
-        endif;
+        }
     }
 
     /**
@@ -235,8 +265,8 @@ class View {
      */
     public function render()
     {
-        if ($this->render):
+        if ($this->render){
             include_once($this->viewFilePath);
-        endif;
+        }
     }
 }

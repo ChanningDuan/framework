@@ -30,36 +30,24 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Session {
-
-    /**
-     * $instance
-     * Holds Class Instance
-     *
-     * @var object
-     */
-    protected static $instance = null;
 
     /**
      * init()
      * if $instance is not set and headers_sent() == false, starts new session and starts new \ngfw\Session and return
      * instance
      *
-     * @return object
+     * @return  void
      */
     public static function init()
     {
-        if (self::$instance === null):
-            if ( ! headers_sent() && ! isset($_SESSION)):
-                session_start();
-            endif;
-            self::$instance = new Session();
-        endif;
+        if ( ! headers_sent() && ! isset($_SESSION)){
+            session_start();
+        }
 
-        return self::$instance;
     }
 
     /**
@@ -86,9 +74,9 @@ class Session {
     public static function get($key)
     {
         self::init();
-        if (isset($_SESSION[$key])):
+        if (isset($_SESSION[$key])){
             return $_SESSION[$key];
-        endif;
+        }
 
         return false;
     }

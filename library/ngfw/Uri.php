@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Uri {
@@ -94,11 +94,11 @@ class Uri {
         $this->requestedPath = $_SERVER['REQUEST_URI'];
         $this->requestedPath = (strstr($this->requestedPath, '?') ? substr($this->requestedPath, 0, strpos($this->requestedPath, '?')) : $this->requestedPath);
         $this->query_string = $_GET;
-        if (defined('PUBLIC_PATH')):
+        if (defined('PUBLIC_PATH')){
             $this->rootPath = PUBLIC_PATH;
-        else:
+        }else{
             $this->rootPath = $_SERVER["DOCUMENT_ROOT"];
-        endif;
+        }
     }
 
     /**
@@ -109,9 +109,9 @@ class Uri {
      */
     public static function init()
     {
-        if (self::$instance === null):
+        if (self::$instance === null){
             self::$instance = new Uri;
-        endif;
+        }
 
         return self::$instance;
     }
@@ -124,17 +124,17 @@ class Uri {
      */
     public static function baseUrl()
     {
-        if ( ! isset(self::init()->baseURL) || empty(self::init()->baseURL)):
+        if ( ! isset(self::init()->baseURL) || empty(self::init()->baseURL)){
             $subdirectories = null;
-            if (isset(self::init()->subdirectories) && is_array(self::init()->subdirectories) && ! empty(self::init()->subdirectories)):
+            if (isset(self::init()->subdirectories) && is_array(self::init()->subdirectories) && ! empty(self::init()->subdirectories)){
                 $subdirectories = implode("/", self::init()->subdirectories) . "/";
-            endif;
-            if ( ! isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""):
+            }
+            if ( ! isset($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == ""){
                 self::setBaseUrl('http://' . $_SERVER['HTTP_HOST'] . "/" . $subdirectories);
-            else:
+            }else{
                 self::setBaseUrl('https://' . $_SERVER['HTTP_HOST'] . "/" . $subdirectories);
-            endif;
-        endif;
+            }
+        }
 
         return self::init()->baseURL;
     }
@@ -170,9 +170,9 @@ class Uri {
      */
     public function getPath()
     {
-        if (isset($this->requestedPath)):
+        if (isset($this->requestedPath)){
             return $this->requestedPath;
-        endif;
+        }
 
         return false;
     }
@@ -200,15 +200,15 @@ class Uri {
     public function pathToArray()
     {
         $pathChunks = $this->getPathChunks();
-        if ($pathChunks):
+        if ($pathChunks){
             $result = array();
             $sizeOfPathChunks = sizeof($pathChunks);
-            for ($i = 0; $i < $sizeOfPathChunks; $i += 2):
+            for ($i = 0; $i < $sizeOfPathChunks; $i += 2){
                 $result[preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i])] = isset($pathChunks[$i + 1]) ? preg_replace("/\\.[^.\\s]{2,4}$/", "", $pathChunks[$i + 1]) : false;
-            endfor;
+            }
 
             return $result;
-        endif;
+        }
 
         return false;
     }
@@ -222,18 +222,18 @@ class Uri {
      */
     public function getPathChunks()
     {
-        if (isset($this->requestedPath)):
+        if (isset($this->requestedPath)){
             $pathChunks = explode('/', trim($this->requestedPath, '/'));
             $rootChunks = explode('/', trim($this->rootPath, '/'));
             self::init()->subdirectories = array_intersect($pathChunks, $rootChunks);
-            foreach (self::init()->subdirectories as $key => $directory):
+            foreach (self::init()->subdirectories as $key => $directory){
                 unset($pathChunks[$key]);
-            endforeach;
+            }
             $pathChunks = array_values($pathChunks);
-            if ( ! empty($pathChunks[0])):
+            if ( ! empty($pathChunks[0])){
                 return $pathChunks;
-            endif;
-        endif;
+            }
+        }
 
         return false;
     }

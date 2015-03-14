@@ -1,9 +1,9 @@
 <?php
 use ngfw\Authentication;
 
-if (!isset($_SESSION)):
+if (!isset($_SESSION)){
 	$_SESSION = array();
-endif;
+}
 
 class AuthenticationTest extends PHPUnit_Framework_TestCase
 {

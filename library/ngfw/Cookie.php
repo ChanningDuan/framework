@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Cookie {
@@ -107,9 +107,9 @@ class Cookie {
      */
     public static function init()
     {
-        if (self::$instance === null):
+        if (self::$instance === null){
             self::$instance = new Cookie;
-        endif;
+        }
 
         return self::$instance;
     }
@@ -138,31 +138,31 @@ class Cookie {
      */
     public static function set($name, $value, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null)
     {
-        if (isset($name)):
+        if (isset($name)){
             self::init()->setName($name);
-        else:
+        }else{
             throw new Exception('Name is Required to set Cookie');
-        endif;
-        if (isset($value)):
+        }
+        if (isset($value)){
             self::init()->setValue($value);
-        else:
+        }else{
             throw new Exception('Value is Required to set Cookie');
-        endif;
-        if (isset($expire)):
+        }
+        if (isset($expire)){
             self::init()->setExpire($expire);
-        endif;
-        if (isset($path)):
+        }
+        if (isset($path)){
             self::init()->setPath($path);
-        endif;
-        if (isset($domain)):
+        }
+        if (isset($domain)){
             self::init()->setDomain($domain);
-        endif;
-        if (isset($secure)):
+        }
+        if (isset($secure)){
             self::init()->setSecure($secure);
-        endif;
-        if (isset($httponly)):
+        }
+        if (isset($httponly)){
             self::init()->setHttponly($httponly);
-        endif;
+        }
         self::init()->save();
     }
 
@@ -175,9 +175,9 @@ class Cookie {
      */
     public static function get($name)
     {
-        if (isset($_COOKIE[$name])):
+        if (isset($_COOKIE[$name])){
             return $_COOKIE[$name];
-        endif;
+        }
 
         return false;
     }
@@ -275,12 +275,12 @@ class Cookie {
      */
     public function save()
     {
-        if ( ! isset($this->name)):
+        if ( ! isset($this->name) ){
             throw new Exception('Name required to save cookie');
-        endif;
-        if ( ! isset($this->value)):
+        }
+        if ( ! isset($this->value) ){
             throw new Exception('Name required to save cookie');
-        endif;
+        }
         setcookie($this->name, $this->value, $this->expire, $this->path, $this->domain, $this->secure, $this->httponly);
     }
 

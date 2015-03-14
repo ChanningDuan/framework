@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.2.3
+ * @version       1.2.4
  * @copyright (c) 2015, Nick Gejadze
  */
 class Route {
@@ -39,7 +39,6 @@ class Route {
      * $instance
      * Holds Class Instance
      *
-     * @access protected
      * @var object
      */
     private static $instance;
@@ -48,7 +47,6 @@ class Route {
      * $controller
      * Holds controller name
      *
-     * @access protected
      * @var string
      */
     protected $controller;
@@ -57,7 +55,6 @@ class Route {
      * $action
      * Holds action name
      *
-     * @access protected
      * @var string
      */
     protected $action;
@@ -66,7 +63,6 @@ class Route {
      * $routes
      * Holds routes
      *
-     * @access protected
      * @var array
      */
     protected $routes;
@@ -75,7 +71,6 @@ class Route {
      * $routeSelected
      * identifies if route is selected
      *
-     * @access protected
      * @var bool
      */
     protected $routeSelected;
@@ -84,7 +79,6 @@ class Route {
      * $defaultController
      * Default Controller, Default value "Index"
      *
-     * @access protected
      * @var string
      */
     protected $defaultController = "Index";
@@ -93,7 +87,6 @@ class Route {
      * $defaultAction
      * Default Action, Default value "Index"
      *
-     * @access protected
      * @var string
      */
     protected $defaultAction = "Index";
@@ -114,9 +107,9 @@ class Route {
      */
     public static function init()
     {
-        if (self::$instance === null):
+        if (self::$instance === null){
             self::$instance = new Route;
-        endif;
+        }
 
         return self::$instance;
     }
@@ -130,11 +123,11 @@ class Route {
      */
     private function setController($controller)
     {
-        if (isset($controller) && ! empty($controller)):
+        if (isset($controller) && ! empty($controller)){
             self::init()->controller = ucfirst(strtolower($controller));
-        else:
+        }else{
             self::init()->controller = self::init()->defaultController;
-        endif;
+        }
     }
 
     /**
@@ -146,11 +139,11 @@ class Route {
      */
     private function setAction($action)
     {
-        if (isset($action) && ! empty($action)):
+        if (isset($action) && ! empty($action)){
             self::init()->action = ucfirst(strtolower($action));
-        else:
+        }else{
             self::init()->action = self::init()->defaultAction;
-        endif;
+        }
     }
 
     /**
@@ -175,19 +168,19 @@ class Route {
      */
     public static function addRoute($route)
     {
-        if (is_array($route) && isset($route['route'])):
+        if (is_array($route) && isset($route['route'])){
             self::init()->routes[] = $route;
 
             return true;
-        elseif (is_array($route)):
-            foreach ($route as $singleRoute):
-                if (isset($singleRoute['route'])):
+        }elseif (is_array($route)){
+            foreach ($route as $singleRoute){
+                if (isset($singleRoute['route'])){
                     self::init()->routes[] = $singleRoute;
-                endif;
-            endforeach;
+                }
+            }
 
             return true;
-        endif;
+        }
 
         return false;
     }
@@ -200,25 +193,25 @@ class Route {
      */
     private static function determineRoute()
     {
-        if ( ! isset(self::init()->routeSelected)):
+        if ( ! isset(self::init()->routeSelected)){
             $routes = self::init()->routes;
-            if (isset($routes) && is_array($routes)):
+            if (isset($routes) && is_array($routes)){
                 $pathArray = Uri::init()->getPathChunks();
-                foreach ($routes as $route):
-                    if ( ! isset(self::init()->routeSelected)):
+                foreach ($routes as $route){
+                    if ( ! isset(self::init()->routeSelected)){
                         $routeArray = explode('/', trim($route['route'], '/'));
-                        if (is_array($pathArray) && ! empty($routeArray[0]) && count($routeArray) == count($pathArray)):
-                            if (isset($route['defaults']['controller'])):
+                        if (is_array($pathArray) && ! empty($routeArray[0]) && count($routeArray) == count($pathArray)){
+                            if (isset($route['defaults']['controller'])){
                                 self::init()->setController($route['defaults']['controller']);
                                 self::init()->routeSelected = true;
-                            endif;
-                            if (isset($route['defaults']['action'])):
+                            }
+                            if (isset($route['defaults']['action'])){
                                 self::init()->setAction($route['defaults']['action']);
                                 self::init()->routeSelected = true;
-                            endif;
-                            foreach ($routeArray as $routeKey => $routeSegment):
-                                if (preg_match('/^:[\w]{1,}$/', $routeSegment)):
-                                    switch ($routeSegment):
+                            }
+                            foreach ($routeArray as $routeKey => $routeSegment){
+                                if (preg_match('/^:[\w]{1,}$/', $routeSegment)){
+                                    switch ($routeSegment){
                                         case":controller":
                                             self::init()->setController($pathArray[$routeKey]);
                                             self::init()->routeSelected = true;
@@ -230,14 +223,15 @@ class Route {
                                         default:
                                             self::init()->setRequest(substr($routeSegment, 1), $pathArray[$routeKey]);
                                             self::init()->routeSelected = true;
-                                    endswitch;
-                                endif;
-                            endforeach;
-                        endif;
-                    endif;
-                endforeach;
-            endif;
-        endif;
+                                            break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return self::init()->routeSelected;
     }
@@ -251,11 +245,11 @@ class Route {
     public static function getController()
     {
         self::determineRoute();
-        if ( ! isset(self::init()->controller)):
+        if ( ! isset(self::init()->controller)){
             $path = Uri::init()->getPathArray();
             $controller = @key($path);
             self::init()->setController($controller);
-        endif;
+        }
 
         return self::init()->controller;
     }
@@ -269,11 +263,11 @@ class Route {
     public static function getAction()
     {
         self::determineRoute();
-        if ( ! isset(self::init()->action)):
+        if ( ! isset(self::init()->action)){
             $path = Uri::init()->getPathArray();
             $action = @reset($path);
             self::init()->setAction($action);
-        endif;
+        }
 
         return self::init()->action;
     }
@@ -290,18 +284,18 @@ class Route {
         $uri = new Uri();
         if ( ! self::init()->request) {
             $path = $uri->getPathArray();
-            if (is_array($path) && ! empty($path)):
-                foreach (array_slice($path, 1) as $key => $value):
+            if (is_array($path) && ! empty($path)){
+                foreach (array_slice($path, 1) as $key => $value){
                     self::init()->setRequest($key, $value);
-                endforeach;
-            endif;
+                }
+            }
         }
         if (is_array($uri->getQueryString())) {
             $tmp = self::init()->request;
             foreach ($uri->getQueryString() as $key => $value) {
-                //dont overwrite request vars with query string
-                if ( ! isset($tmp[$key]))
+                if ( ! isset($tmp[$key])){
                     self::init()->setRequest($key, $value);
+                }
             }
         }
 

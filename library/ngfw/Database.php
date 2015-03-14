@@ -66,9 +66,9 @@ class Database extends \PDO {
     public function __construct($options = null, $autoConnect = true)
     {
         $this->setOptions($options);
-        if ($autoConnect && isset($this->options) && ! empty($this->options)):
+        if ($autoConnect && isset($this->options) && ! empty($this->options)){
             $this->connect($this->options);
-        endif;
+        }
     }
 
     /**
@@ -78,9 +78,9 @@ class Database extends \PDO {
      */
     private function setOptions($options)
     {
-        if (isset($options) || ! empty($options)):
+        if (isset($options) || ! empty($options)){
             $this->options = $options;
-        endif;
+        }
     }
 
     /**
@@ -99,9 +99,9 @@ class Database extends \PDO {
         try {
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         } catch (\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT){
                 echo 'Connection failed: ' . $e->getMessage();
-            endif;
+            }
         }
     }
 
@@ -113,9 +113,9 @@ class Database extends \PDO {
      */
     private function createdsn()
     {
-        if ( ! isset($this->options) || empty($this->options)):
+        if ( ! isset($this->options) || empty($this->options)){
             return false;
-        endif;
+        }
 
         return $this->options['dbtype'] . ':host=' . $this->options['host'] . ';port=' . $this->options['port'] . ';dbname=' . $this->options['dbname'];
     }
@@ -162,11 +162,11 @@ class Database extends \PDO {
     public function query($query, $data = null)
     {
         try {
-            if ($query instanceof Query):
+            if ($query instanceof Query){
                 $pdostmt = $this->prepare(trim($query->query));
-                if (isset($query->bind) && is_array($query->bind)):
-                    foreach ($query->bind as $k => $bind):
-                        switch (gettype($bind)):
+                if (isset($query->bind) && is_array($query->bind)){
+                    foreach ($query->bind as $k => $bind){
+                        switch (gettype($bind)){
                             case "boolean":
                                 $data_type = \PDO::PARAM_BOOL;
                                 break;
@@ -181,30 +181,30 @@ class Database extends \PDO {
                             default:
                                 $data_type = \PDO::PARAM_STR;
                                 break;
-                        endswitch;
+                        }
                         $pdostmt->bindValue(':' . $k, $bind, $data_type);
-                    endforeach;
-                endif;
-            else:
+                    }
+                }
+            }else{
                 $pdostmt = $this->prepare($query);
-            endif;
-            if ($pdostmt->execute($data) !== false):
-                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)):
-                    if ($this->fetchmode == "all"):
+            }
+            if ($pdostmt->execute($data) !== false){
+                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)){
+                    if ($this->fetchmode == "all"){
                         return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
-                    elseif ($this->fetchmode == "row"):
+                    }elseif ($this->fetchmode == "row"){
                         return $pdostmt->fetch(\PDO::FETCH_ASSOC);
-                    else:
+                    }else{
                         throw new Exception("Fetch mode is unidentified");
-                    endif;
-                elseif (preg_match("/^(" . implode("|", array("DELETE", "INSERT", "UPDATE")) . ") /i", is_string($query) ? $query : $query->query)):
+                    }
+                }elseif (preg_match("/^(" . implode("|", array("DELETE", "INSERT", "UPDATE")) . ") /i", is_string($query) ? $query : $query->query)){
                     return $pdostmt->rowCount();
-                endif;
-            endif;
+                }
+            }
         } catch (\PDOException $e) {
-            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT):
+            if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT){
                 echo $e->getMessage();
-            endif;
+            }
 
             return false;
         }
