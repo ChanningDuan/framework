@@ -165,7 +165,7 @@ class Query {
      *
      * @var array
      */
-    private $andWhere;
+    private $andWhere = array();
 
     /**
      * $orWhere
@@ -224,11 +224,15 @@ class Query {
      */
     public function select($select = "*")
     {
-        $this->select = $select;
+        if(is_string($select) && strpos($select, ",") !== false){
+            $this->select = explode(",", $select);
+        }else{
+            $this->select = $select;
+        }
         if (isset($this->select)){
             if (is_array($this->select)){
                 foreach ($this->select as $key => $value){
-                    $this->select[$key] = $this->escapeField($value);
+                    $this->select[$key] = $this->escapeField(trim($value));
                 }
                 $this->select = implode(", ", $this->select);
             }else{
@@ -488,11 +492,20 @@ class Query {
     public function where($where, $value = false)
     {
         $where = $this->escapeField($where);
+
         if ($value){
-            $key = $this->buildBindAndFieldObjects($value);
+            $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
-            $this->where = str_replace("?", ":" . $key, $where);
+            $this->where = str_replace("?", "%s", $where);
+            if(is_array($key)){
+                $keys = array_map(function($key) {
+                    return ":".$key;
+                }, $key);
+                $this->where = vsprintf($this->where, $keys);
+            }else{
+                $this->where = sprintf($this->where, ":".$key);
+            }
         }else{
             $this->where = $this->escapeValue($where);
         }
@@ -513,13 +526,22 @@ class Query {
     {
         $where = $this->escapeField($where);
         if ($value){
-            $key = $this->buildBindAndFieldObjects($value);
+            $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
-            $this->andWhere[] = str_replace("?", ":" . $key, $where);
+            $where = str_replace("?", "%s", $where);
+            if(is_array($key)){
+                $keys = array_map(function($key) {
+                    return ":".$key;
+                }, $key);
+                $where = vsprintf($where, $keys);
+            }else{
+                $where = sprintf($where, ":".$key);
+            }
         }else{
-            $this->andWhere[] = $this->escapeValue($where);
+            $where = $this->escapeValue($where);
         }
+        $this->andWhere[] = $where;
         $this->query .= "AND " . end($this->andWhere) . " ";
 
         return $this;
@@ -537,13 +559,22 @@ class Query {
     {
         $where = $this->escapeField($where);
         if ($value){
-            $key = $this->buildBindAndFieldObjects($value);
+            $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
-            $this->orWhere[] = str_replace("?", ":" . $key, $where);
+            $where = str_replace("?", "%s", $where);
+            if(is_array($key)){
+                $keys = array_map(function($key) {
+                    return ":".$key;
+                }, $key);
+                $where = vsprintf($where, $keys);
+            }else{
+                $where = sprintf($where, ":".$key);
+            }
         }else{
-            $this->orWhere[] = $this->escapeValue($where);
+            $where = $this->escapeValue($where);
         }
+        $this->orWhere[] = $where;
         $this->query .= "OR " . end($this->orWhere) . " ";
 
         return $this;

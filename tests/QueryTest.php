@@ -14,7 +14,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q = new Query();
         $this->assertEmpty($q->getQuery(true));
     }
-    
+
     public function testSelect() {
         $q = new Query();
         $q->select()->from('TEST');
@@ -32,11 +32,29 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q->select(array("field1", "field2"))->from('TEST');
         $this->assertEquals('SELECT `field1`, `field2` FROM `TEST`', $q->getQuery(true));
     }
+
+    public function testSelectFieldsAsString() {
+        $q = new Query();
+        $q->select("field1, field2")->from('TEST');
+        $this->assertEquals('SELECT `field1`, `field2` FROM `TEST`', $q->getQuery(true));
+    }
     
     public function testSelectWhere() {
         $q = new Query();
         $q->select()->from('TEST')->where('User = ?', "nick");
         $this->assertEquals('SELECT * FROM `TEST` WHERE `User` = \'nick\'', $q->getQuery(true));
+    }
+
+    public function testQueryWithWhereAndBetweenFunction() {
+        $q = new Query();
+        $userID = 13927;
+        $start_date = "2013-09-01";
+        $end_date = "2015-09-20 23:59:59.999999";
+        $q->select()
+        ->from('TEST')
+        ->where('UserID = ?', $userID)
+        ->andWhere("TransDate BETWEEN ? AND ?", array($start_date, $end_date));
+        $this->assertEquals("SELECT * FROM `TEST` WHERE `UserID` = '13927' AND `TransDate` BETWEEN '2013-09-01' AND '2015-09-20 23:59:59.999999'", $q->getQuery(true));
     }
     
     public function testSelectWhereLimit() {
