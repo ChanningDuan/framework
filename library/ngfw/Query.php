@@ -493,7 +493,7 @@ class Query {
     {
         $where = $this->escapeField($where);
 
-        if ($value){
+        if (isset($value)){
             $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
@@ -525,7 +525,7 @@ class Query {
     public function andWhere($where, $value = false)
     {
         $where = $this->escapeField($where);
-        if ($value){
+        if (isset($value)){
             $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
@@ -558,7 +558,7 @@ class Query {
     public function orWhere($where, $value = null)
     {
         $where = $this->escapeField($where);
-        if ($value){
+        if (isset($value)){
             $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
         }
         if (isset($key) && ! empty($key)){
@@ -706,7 +706,7 @@ class Query {
             }else{
                 $this->bind[$generatedKey] = $this->escapeValue($value);
             }
-        }elseif ($value == null){
+        }elseif ($value == null and $value !== ""){
             $this->bind[$generatedKey . $this->glueForFunctionsSuffix . "NULL"] = null;
         }else{
             $this->bind[$generatedKey] = $this->escapeValue($value);
@@ -776,7 +776,7 @@ class Query {
                     $str = "`" . $strD[0] . "` " . $strD[1];
                 }
             }else{
-                $str = preg_replace_callback('/[a-zA-Z0-9]+[.][a-zA-Z0-9]+/', function ($matches) {
+                $str = preg_replace_callback('/[a-zA-Z0-9_$]+[.][a-zA-Z0-9_$]+/', function ($matches) {
                     $strD = explode(".", $matches[0]);
 
                     return "`" . $strD[0] . "`.`" . $strD[1] . "`";

@@ -26,6 +26,12 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q->select("field1")->from('TEST');
         $this->assertEquals('SELECT `field1` FROM `TEST`', $q->getQuery(true));
     }
+
+    public function testSelectUnderscore(){
+        $q = new Query();
+        $q->select("v.country_id")->from('TEST');
+        $this->assertEquals('SELECT `v`.`country_id` FROM `TEST`', $q->getQuery(true));   
+    }
     
     public function testSelectFields() {
         $q = new Query();
@@ -43,6 +49,12 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q = new Query();
         $q->select()->from('TEST')->where('User = ?', "nick");
         $this->assertEquals('SELECT * FROM `TEST` WHERE `User` = \'nick\'', $q->getQuery(true));
+    }
+
+    public function testSelectWhereNot() {
+        $q = new Query();
+        $q->select()->from('TEST')->where('User <> ?', "");
+        $this->assertEquals('SELECT * FROM `TEST` WHERE `User` <> \'\'', $q->getQuery(true));
     }
 
     public function testQueryWithWhereAndBetweenFunction() {
