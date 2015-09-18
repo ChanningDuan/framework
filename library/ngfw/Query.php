@@ -492,10 +492,10 @@ class Query {
     public function where($where, $value = false)
     {
         $where = $this->escapeField($where);
-        if (isset($value) && $value === '') {
+        if ($value === '') {
             $this->where = str_replace('?', "''", $where);
         }else{
-            if (isset($value) && !empty($value)){
+            if (!empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && !empty($key)){
@@ -528,10 +528,10 @@ class Query {
     public function andWhere($where, $value = false)
     {
         $where = $this->escapeField($where);
-        if (isset($value) && $value === '') {
+        if ($value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (isset($value) && !empty($value)){
+            if (!empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
@@ -565,10 +565,10 @@ class Query {
     public function orWhere($where, $value = null)
     {
         $where = $this->escapeField($where);
-        if (isset($value) && $value === '') {
+        if ($value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (isset($value) && !empty($value)){
+            if (!empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
