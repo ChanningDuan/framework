@@ -495,10 +495,10 @@ class Query {
         if (isset($value) && $value === '') {
             $this->where = str_replace('?', "''", $where);
         }else{
-            if (isset($value)){
+            if (isset($value) && !empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
-            if (isset($key) && ! empty($key)){
+            if (isset($key) && !empty($key)){
                 $this->where = str_replace("?", "%s", $where);
                 if(is_array($key)){
                     $keys = array_map(function($key) {
@@ -531,7 +531,7 @@ class Query {
         if (isset($value) && $value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (isset($value)){
+            if (isset($value) && !empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
@@ -568,7 +568,7 @@ class Query {
         if (isset($value) && $value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (isset($value)){
+            if (isset($value) && !empty($value)){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
