@@ -4,7 +4,7 @@ use ngfw\Exception;
 
 class QueryTest extends PHPUnit_Framework_TestCase
 {
-    
+
     public function testQuery() {
         $q = new Query();
         $this->assertInstanceOf(get_class(new Query), $q->getQuery());
@@ -220,4 +220,37 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('SELECT * FROM `TEST` RIGHT JOIN `TEST2` USING (`UserID`, `Username`)', $q->getQuery(true));
     }
 
+    public function testSimpleInsert(){
+        $q = new ngfw\Query();
+        $table = "TEST";
+        $data = array(
+            "username" => "nickg",
+            "password" => "worldismine"
+        );
+        $q->insert($table, $data);
+        $this->assertEquals('INSERT INTO `TEST` (`username`, `password`) VALUES (\'nickg\', \'worldismine\')', $q->getQuery(true));   
+    }
+    
+    public function testComplexInsert(){
+        $q = new ngfw\Query();
+        $table = "TEST";
+        $data = array(
+            "username"          => "nickg",
+            "password"          => "worldismine",
+            "testEmptyValue"    => "",
+            "testNullValue"     => NULL
+        );  
+        $q->insert($table, $data);
+        $this->assertEquals('INSERT INTO `TEST` (`username`, `password`, `testEmptyValue`, `testNullValue`) VALUES (\'nickg\', \'worldismine\', \'\', NULL)', $q->getQuery(true));
+    }
+
+    public function testEscape(){
+        //SELECT * FROM `StoreProducerClips` WHERE `ProducerID` = '8983' AND `ClipTitle` = 'Avery\'s Lazy Afternoon - (Full HD 720p Version)'
+        $q = new ngfw\Query();
+        $q->select()
+          ->from("TEST")
+          ->where("userid = ?", 8983)
+          ->andWhere("favorite_book = ?", "The Hitchhiker's Guide to the Galaxy");
+        $this->assertEquals("SELECT * FROM `TEST` WHERE `userid` = '8983' AND `favorite_book` = 'The Hitchhiker\'s Guide to the Galaxy'", $q->getQuery(true));
+    }
 }

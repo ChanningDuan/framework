@@ -27,9 +27,10 @@ namespace ngfw;
 
 /**
  * Header
- * @package ngfw
- * @subpackage library
- * @version 1.2.3
+ * 
+ * @package       ngfw
+ * @subpackage    library
+ * @version       1.3.0
  * @copyright (c) 2015, Nick Gejadze
  */
 class Header
