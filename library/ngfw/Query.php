@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.3.0
+ * @version       1.3.1
  * @copyright (c) 2015, Nick Gejadze
  */
 class Query {
@@ -717,7 +717,7 @@ class Query {
             }else{
                 $this->bind[$generatedKey] = $this->escapeValue($value);
             }
-        }elseif ($value == null and $value !== ""){
+        }elseif ($value == null and $value !== "" && !is_numeric($value)){
             $this->bind[$generatedKey . $this->glueForFunctionsSuffix . "NULL"] = null;
         }else{
             $this->bind[$generatedKey] = $this->escapeValue($value);
@@ -741,7 +741,7 @@ class Query {
                     $function = end(explode($this->glueForFunctionsSuffix, $key));
                     $string .= $function . ", ";
                 }
-            }elseif ($value == null && $value !== ""){
+            }elseif ($value == null && $value !== "" && !is_numeric($value)){
                 $string .= "NULL, ";
             }else{
                 $string .= ":" . $key . ", ";
@@ -855,7 +855,11 @@ class Query {
         $values = array();
         if (isset($this->bind) && is_array($this->bind)){
             foreach ($this->bind as $k => $v){
-                $values[] = "'" . $v . "'";
+                if(!is_numeric($v)){
+                    $values[] = "'" . $v . "'";
+                }else{
+                    $values[] = $v;
+                }
                 $keys[] = '/:' . $k . '/';
             }
         }

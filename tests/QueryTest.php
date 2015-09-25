@@ -66,7 +66,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
         ->from('TEST')
         ->where('UserID = ?', $userID)
         ->andWhere("TransDate BETWEEN ? AND ?", array($start_date, $end_date));
-        $this->assertEquals("SELECT * FROM `TEST` WHERE `UserID` = '13927' AND `TransDate` BETWEEN '2013-09-01' AND '2015-09-20 23:59:59.999999'", $q->getQuery(true));
+        $this->assertEquals("SELECT * FROM `TEST` WHERE `UserID` = 13927 AND `TransDate` BETWEEN '2013-09-01' AND '2015-09-20 23:59:59.999999'", $q->getQuery(true));
     }
     
     public function testSelectWhereLimit() {
@@ -230,7 +230,7 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q->insert($table, $data);
         $this->assertEquals('INSERT INTO `TEST` (`username`, `password`) VALUES (\'nickg\', \'worldismine\')', $q->getQuery(true));   
     }
-    
+   
     public function testComplexInsert(){
         $q = new ngfw\Query();
         $table = "TEST";
@@ -238,19 +238,19 @@ class QueryTest extends PHPUnit_Framework_TestCase
             "username"          => "nickg",
             "password"          => "worldismine",
             "testEmptyValue"    => "",
-            "testNullValue"     => NULL
+            "testNullValue"     => NULL,
+            "testZeroValue"     => 0
         );  
         $q->insert($table, $data);
-        $this->assertEquals('INSERT INTO `TEST` (`username`, `password`, `testEmptyValue`, `testNullValue`) VALUES (\'nickg\', \'worldismine\', \'\', NULL)', $q->getQuery(true));
+        $this->assertEquals('INSERT INTO `TEST` (`username`, `password`, `testEmptyValue`, `testNullValue`, `testZeroValue`) VALUES (\'nickg\', \'worldismine\', \'\', NULL, 0)', $q->getQuery(true));
     }
 
     public function testEscape(){
-        //SELECT * FROM `StoreProducerClips` WHERE `ProducerID` = '8983' AND `ClipTitle` = 'Avery\'s Lazy Afternoon - (Full HD 720p Version)'
         $q = new ngfw\Query();
         $q->select()
           ->from("TEST")
           ->where("userid = ?", 8983)
           ->andWhere("favorite_book = ?", "The Hitchhiker's Guide to the Galaxy");
-        $this->assertEquals("SELECT * FROM `TEST` WHERE `userid` = '8983' AND `favorite_book` = 'The Hitchhiker\'s Guide to the Galaxy'", $q->getQuery(true));
+        $this->assertEquals("SELECT * FROM `TEST` WHERE `userid` = 8983 AND `favorite_book` = 'The Hitchhiker\'s Guide to the Galaxy'", $q->getQuery(true));
     }
 }
