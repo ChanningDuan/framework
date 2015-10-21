@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.3.1
+ * @version       1.3.2
  * @copyright (c) 2015, Nick Gejadze
  */
 class Pagination {
