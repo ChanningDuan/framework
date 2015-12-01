@@ -777,8 +777,10 @@ class Query {
      * @return string
      */
     private function escapeField($str)
-    {
-        if (strpos($str, '`') === false){
+    {   
+        if ($str === '*') {
+            return $str;
+        }elseif (strpos($str, '`') === false){
             if (strpos($str, ".") === false){
                 if (strpos($str, " ") === false){
                     $str = "`" . $str . "`";

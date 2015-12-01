@@ -20,6 +20,12 @@ class QueryTest extends PHPUnit_Framework_TestCase
         $q->select()->from('TEST');
         $this->assertEquals('SELECT * FROM `TEST`', $q->getQuery(true));
     }
+
+    public function testSelectAllAndSome() {
+        $q = new Query();
+        $q->select('*, `ActivateDate` > NOW() AS futureactive')->from('TEST');
+        $this->assertEquals('SELECT *, `ActivateDate` > NOW() AS futureactive FROM `TEST`', $q->getQuery(true));
+    }
     
     public function testSelectField() {
         $q = new Query();
