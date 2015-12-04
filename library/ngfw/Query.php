@@ -491,11 +491,13 @@ class Query {
      */
     public function where($where, $value = false)
     {
+
         $where = $this->escapeField($where);
         if ($value === '') {
             $this->where = str_replace('?', "''", $where);
         }else{
-            if (!empty($value)){
+
+            if ($value !== false){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && !empty($key)){
@@ -531,7 +533,8 @@ class Query {
         if ($value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (!empty($value)){
+            if ($value !== false){
+                var_dump($value);
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
@@ -568,7 +571,7 @@ class Query {
         if ($value === '') {
             $where = str_replace('?', "''", $where);
         }else{
-            if (!empty($value)){
+            if ($value !== false){
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
@@ -615,7 +618,7 @@ class Query {
         }else{
             $this->query .= "HAVING " . $this->having . " ";
         }
-        
+
         return $this;
     }
 
@@ -629,11 +632,16 @@ class Query {
     public function group($field)
     {
         $this->groupBy = $field;
-        if (isset($this->groupBy)){
-            if (is_array($this->groupBy)){
-                $this->groupBy = implode("`, `", $this->groupBy);
+        if (isset( $this->groupBy )) {
+            if (is_array($this->groupBy)) {
+                foreach ($this->groupBy as $key => $value) {
+                    $this->groupBy[$key] = $this->escapeField($value);
+                }
+                $this->groupBy = implode(", ", $this->groupBy);
+            } else {
+                $this->groupBy = $this->escapeField($this->groupBy);
             }
-            $this->query .= "GROUP BY `" . $this->groupBy . "` ";
+            $this->query .= "GROUP BY " . $this->groupBy . " ";
         }
 
         return $this;
@@ -777,8 +785,10 @@ class Query {
      * @return string
      */
     private function escapeField($str)
-    {
-        if (strpos($str, '`') === false){
+    {   
+        if ($str === '*') {
+            return $str;
+        }elseif (strpos($str, '`') === false){
             if (strpos($str, ".") === false){
                 if (strpos($str, " ") === false){
                     $str = "`" . $str . "`";
