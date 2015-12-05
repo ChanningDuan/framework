@@ -746,7 +746,8 @@ class Query {
         foreach ($array as $key => $value){
             if ($value === false){
                 if (strpos($key, $this->glueForFunctionsSuffix) !== false){
-                    $function = end(explode($this->glueForFunctionsSuffix, $key));
+                    $glueExploded = explode($this->glueForFunctionsSuffix, $key);
+                    $function = end($glueExploded);
                     $string .= $function . ", ";
                 }
             }elseif ($value == null && $value !== "" && !is_numeric($value)){
