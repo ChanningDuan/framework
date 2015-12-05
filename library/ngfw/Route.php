@@ -30,7 +30,7 @@ namespace ngfw;
  *
  * @package       ngfw
  * @subpackage    library
- * @version       1.3.4
+ * @version       1.3.5
  * @copyright (c) 2015, Nick Gejadze
  */
 class Route {
