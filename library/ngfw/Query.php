@@ -534,7 +534,6 @@ class Query {
             $where = str_replace('?', "''", $where);
         }else{
             if ($value !== false){
-                var_dump($value);
                 $key = is_array($value)? $this->buildBindAndFieldObjectsFromArray($value) : $this->buildBindAndFieldObjects($value);
             }
             if (isset($key) && ! empty($key)){
