@@ -30,7 +30,7 @@ namespace ngfw;
  * 
  * @package       ngfw
  * @subpackage    library
- * @version       1.3.5
+ * @version       1.3.6
  * @copyright (c) 2015, Nick Gejadze
  */
 class Registry extends \ArrayObject {
