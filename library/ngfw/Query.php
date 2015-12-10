@@ -722,7 +722,7 @@ class Query {
             if (in_array($functionName, $this->mysqlFunctions)){
                 $this->bind[$generatedKey . $this->glueForFunctionsSuffix . $value] = false;
             }else{
-                $this->bind[$generatedKey] = $this->escapeValue($value);
+                $this->bind[$generatedKey] = $value;
             }
         }elseif ($value == null and $value !== "" && !is_numeric($value)){
             $this->bind[$generatedKey . $this->glueForFunctionsSuffix . "NULL"] = null;
