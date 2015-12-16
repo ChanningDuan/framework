@@ -190,7 +190,7 @@ class Database extends \PDO {
                 $pdostmt = $this->prepare($query);
             }
             if ($pdostmt->execute($data) !== false){
-                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "DESCRIBE")) . ") /i", is_string($query) ? $query : $query->query)){
+                if (preg_match("/^(" . implode("|", array("SELECT", "DESCRIBE", "PRAGMA", "SHOW", "EXPLAIN")) . ") /i", is_string($query) ? $query : $query->query)){
                     if ($this->fetchmode == "all"){
                         return $pdostmt->fetchAll(\PDO::FETCH_ASSOC);
                     }elseif ($this->fetchmode == "row"){
