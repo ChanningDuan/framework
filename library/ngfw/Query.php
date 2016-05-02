@@ -206,6 +206,11 @@ class Query {
     private $glueForFunctionsSuffix = "--";
 
     /**
+     * Add empty construct to make it friendly with other frameworks
+     */
+    public function __construct(){}
+
+    /**
      * Generate uniq id
      *
      * @return string
