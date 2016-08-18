@@ -101,7 +101,7 @@ class Database extends \PDO {
             parent::__construct($dsn, $this->options['username'], $this->options['password'], $attrs);
         } catch (\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT){
-                echo 'Connection failed: ' . $e->getMessage();
+                throw new Exception('Connection failed: ' . $e->getMessage());
             }
         }
     }
@@ -204,7 +204,7 @@ class Database extends \PDO {
             }
         } catch (\PDOException $e) {
             if (defined('DEVELOPMENT_ENVIRONMENT') && DEVELOPMENT_ENVIRONMENT){
-                echo $e->getMessage();
+                throw new Exception($e->getMessage());
             }
 
             return false;
